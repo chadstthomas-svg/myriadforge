@@ -151,7 +151,14 @@ def main():
             if len(seg) < 400:
                 continue
             outs = executable.infer({input_name: logmel(seg)})
-            window_out = {name: np.asarray(t).reshape(-1) for name, t in outs.items()}
+            # MO renames blobs to /<head>/Gemm - canonicalize by head substring
+            heads = ("tool", "room", "device", "scene", "level", "seconds")
+            window_out = {}
+            for name, tensor in outs.items():
+                match = next((h for h in heads if f"/{h}/" in name or name == h), None)
+                if match is None:
+                    raise KeyError(f"cannot map output blob {name!r} to a head")
+                window_out[match] = np.asarray(tensor).reshape(-1)
             tool, call, _conf = decide(window_out, info)
             if tool is not None and tool not in fired_seen:
                 fired_seen.add(tool)
