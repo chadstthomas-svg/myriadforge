@@ -1,0 +1,43 @@
+{
+  "onnx_sha256": "fcf29135f0edec5476c0bf3fb2dc4d5a859c92c79a49b248a507503b0019e418",
+  "available_devices": [
+    "CPU",
+    "GNA",
+    "GPU",
+    "MYRIAD"
+  ],
+  "requested_outputs": [
+    "scores",
+    "value"
+  ],
+  "returned_outputs": [
+    "scores",
+    "value"
+  ],
+  "two_output_supported": true,
+  "output_shapes": {
+    "scores": [
+      1,
+      13
+    ],
+    "value": [
+      1,
+      1
+    ]
+  },
+  "output_stats": {
+    "scores": {
+      "max_abs": 0.8125,
+      "nonfinite_samples": 0
+    },
+    "value": {
+      "max_abs": 1.001953125,
+      "nonfinite_samples": 0
+    }
+  },
+  "all_finite": true,
+  "load_ms": 1359.0,
+  "infer_p50_ms": 5.14,
+  "infer_p95_ms": 5.24,
+  "ncs1_runtime": "OpenVINO 2020.3.2"
+}
