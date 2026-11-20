@@ -5,7 +5,9 @@ import json
 from pathlib import Path
 import random
 
+from adaptive import AdaptiveRuntime, Profiles
 from benchmark import CORPUS_SHA, exact_document, quantiles
+from benchmark_adaptive import json_document
 from policy import LIMIT
 from runtime import Runtime
 
@@ -58,6 +60,29 @@ def main(args):
                   single_utterance_total_ms=quantiles(timing), long_context_tokens=LIMIT,
                   corpus_sha256=CORPUS_SHA, distractor_only=base["result"], long_cases=long_cases,
                   long_matches_clean=sum(case["clean"] == case["with_distractor"] for case in long_cases))
+    if args.scoped:
+        profiles = Profiles()
+        try:
+            query_only = AdaptiveRuntime({"request": lambda: engine}, profiles, scopes={"request": "evidence"})
+            records = []
+            for i, row in enumerate(selected):
+                body = engine.tokenizer.decode(source[1800 * i:1800 * i + LIMIT - 10000])
+                document = json_document(engine.tokenizer, " ".join(body.split()), row["text"])
+                records.append({"id": i, "text": document, "expected": row["expected"]})
+            scoped = query_only.batch({"vertical": "request", "documents": records})
+            proposals = [(row, decision) for row, decision in zip(selected, scoped["documents"])
+                         if decision["result"]["action"] is not None]
+            assert all(decision["needle_tokens"] == LIMIT for decision in scoped["documents"])
+            output["scoped_json"] = {
+                "sample_count": len(selected),
+                "matches_clean": sum(d["feedback"]["joint"] for d in scoped["documents"]),
+                "category_correct": sum(d["result"]["category"] == r["category_label"]
+                                        for r, d in zip(selected, scoped["documents"])),
+                "action_proposed": len(proposals),
+                "action_correct": sum(d["result"]["action"] == r["action_label"] for r, d in proposals),
+            }
+        finally:
+            profiles.close()
     args.output.write_text(json.dumps(output, indent=2) + "\n", encoding="utf8")
     print(json.dumps({key: value for key, value in output.items() if key != "long_cases"}, indent=2))
 
@@ -71,4 +96,5 @@ if __name__ == "__main__":
     parser.add_argument("--lane", choices=["ncs1", "ncs2"], default="ncs1")
     parser.add_argument("--target")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--scoped", action="store_true", help="Also replay with the query in a declared JSON field")
     main(parser.parse_args())

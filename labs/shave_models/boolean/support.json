@@ -1,4 +1,5 @@
 {
+  "name": "magiceightball",
   "rules": {
     "billing": "\"charged twice\" OR \"duplicate charge\"",
     "delivery": "\"package missing\" OR \"parcel missing\"",

@@ -1,0 +1,27 @@
+{
+  "compiler": "Intel myriad_compile 2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "method": "Compile each OpenVINO IR offline with explicit VPU_MYRIAD_PLATFORM and native FP16 output. Values are complete exported binary file sizes.",
+  "platforms": ["VPU_MYRIAD_2450", "VPU_MYRIAD_2480"],
+  "control": {
+    "op": "Gather",
+    "input": "one scalar INT32 index",
+    "bank": [-2048, 2047],
+    "bank_shape": [2],
+    "compiled_bytes": [512, 512]
+  },
+  "same_policy_trials": {
+    "gather_rank_1": [512, 512],
+    "gather_rank_2": [576, 576],
+    "gather_rank_4": [640, 640],
+    "matmul_no_bias": [768, 768],
+    "convolution_channels_no_bias": [1024, 1536],
+    "convolution_spatial_no_bias": [1088, 768]
+  },
+  "magiceightball": {
+    "onnx_sha256": "48f99d6382376b1963b08072c72317c370342184c3eeefa6bf187b2d3283aa79",
+    "ma2450_sha256": "a8b50f81117a82d6bf1234692a0d4104699ae88f728378a650bc333eb4864b79",
+    "ma2480_sha256": "99031c4027be1d5684e6950e8a1284918049ac16b0a801a9ff452ef6d7903cc3",
+    "ma2450_verified_on_hardware": true,
+    "ma2480_verified_on_hardware": false
+  }
+}

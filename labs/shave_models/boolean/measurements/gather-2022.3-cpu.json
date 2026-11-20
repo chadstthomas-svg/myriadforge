@@ -1,0 +1,7 @@
+{
+  "toolchain": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+  "backend": "CPU",
+  "exhaustive_combinations": 128,
+  "onnx_sha256": "48f99d6382376b1963b08072c72317c370342184c3eeefa6bf187b2d3283aa79",
+  "input_type": "i32"
+}

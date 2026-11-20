@@ -1,0 +1,277 @@
+{
+  "backend": "MYRIAD",
+  "lane": "ncs1",
+  "openvino_version": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "onnx_sha256": "9e5112d3a60fdf158747e7c65b5af62aaa988432d8b218ceed3c3401ca7c953b",
+  "load_ms": 1762.5970000000002,
+  "samples_sha256": "de88fd52bfac44f3fe77259969215bacff86a4e7d5b3099c33108e999f11be67",
+  "examples": 2967,
+  "exact_device_agreement": 2967,
+  "correct_category": 1346,
+  "proposals": 216,
+  "correct_proposal": 203,
+  "single_utterance_total_ms": {
+    "p50": 7.365899999999925,
+    "p95": 7.868360000000329,
+    "max": 14.514699999999436
+  },
+  "long_context_tokens": 131072,
+  "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+  "distractor_only": {
+    "answers": {
+      "may_propose_action": false
+    },
+    "category": "play",
+    "action": null
+  },
+  "long_cases": [
+    {
+      "position": "early",
+      "clean": {
+        "answers": {
+          "may_propose_action": true
+        },
+        "category": "weather",
+        "action": "weather_query"
+      },
+      "category_label": "weather",
+      "action_label": "weather_query",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 49.078099999999125
+    },
+    {
+      "position": "middle",
+      "clean": {
+        "answers": {
+          "may_propose_action": true
+        },
+        "category": "transport",
+        "action": "transport_query"
+      },
+      "category_label": "transport",
+      "action_label": "transport_query",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 49.35970000000012
+    },
+    {
+      "position": "late",
+      "clean": {
+        "answers": {
+          "may_propose_action": true
+        },
+        "category": "email",
+        "action": "email_query"
+      },
+      "category_label": "email",
+      "action_label": "email_query",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 47.57880000000014
+    },
+    {
+      "position": "early",
+      "clean": {
+        "answers": {
+          "may_propose_action": true
+        },
+        "category": "email",
+        "action": "email_sendemail"
+      },
+      "category_label": "email",
+      "action_label": "email_sendemail",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 41.95529999999792
+    },
+    {
+      "position": "middle",
+      "clean": {
+        "answers": {
+          "may_propose_action": true
+        },
+        "category": "email",
+        "action": "email_query"
+      },
+      "category_label": "email",
+      "action_label": "email_query",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 43.33710000000224
+    },
+    {
+      "position": "late",
+      "clean": {
+        "answers": {
+          "may_propose_action": true
+        },
+        "category": "weather",
+        "action": "weather_query"
+      },
+      "category_label": "weather",
+      "action_label": "weather_query",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 41.5896999999994
+    },
+    {
+      "position": "early",
+      "clean": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "calendar",
+        "action": null
+      },
+      "category_label": "calendar",
+      "action_label": "calendar_remove",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 46.72259999999895
+    },
+    {
+      "position": "middle",
+      "clean": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "qa",
+        "action": null
+      },
+      "category_label": "recommendation",
+      "action_label": "recommendation_locations",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 48.82180000000247
+    },
+    {
+      "position": "late",
+      "clean": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "qa",
+        "action": null
+      },
+      "category_label": "play",
+      "action_label": "play_music",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 43.865499999999
+    },
+    {
+      "position": "early",
+      "clean": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "qa",
+        "action": null
+      },
+      "category_label": "qa",
+      "action_label": "qa_definition",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 48.56069999999946
+    },
+    {
+      "position": "middle",
+      "clean": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "category_label": "play",
+      "action_label": "play_radio",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 43.52180000000061
+    },
+    {
+      "position": "late",
+      "clean": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "qa",
+        "action": null
+      },
+      "category_label": "cooking",
+      "action_label": "cooking_recipe",
+      "with_distractor": {
+        "answers": {
+          "may_propose_action": false
+        },
+        "category": "play",
+        "action": null
+      },
+      "total_ms": 44.3017999999995
+    }
+  ],
+  "long_matches_clean": 1,
+  "scoped_json": {
+    "sample_count": 12,
+    "matches_clean": 12,
+    "category_correct": 9,
+    "action_proposed": 6,
+    "action_correct": 6
+  }
+}

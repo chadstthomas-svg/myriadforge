@@ -4,7 +4,7 @@ import json
 import lzma
 from pathlib import Path
 import re
-from collections import Counter
+from collections import Counter, OrderedDict
 
 import numpy as np
 
@@ -194,7 +194,7 @@ def load_tokenizer(path=None):
     return spm.SentencePieceProcessor(model_proto=contents)
 
 
-def needle_count(tokenizer, text, fast=True):
+def needle_count(tokenizer, text, fast=True, memo=None):
     if not fast or len(text) < 4096 or " " not in text:
         return len(tokenizer.encode(text, out_type=int))
     # The SHA-pinned BPE has identity normalization, no added leading space,
@@ -203,14 +203,55 @@ def needle_count(tokenizer, text, fast=True):
     # boundaries. Count each distinct space-prefixed segment once per request.
     first, _, rest = text.partition(" ")
     frequency = Counter(rest.split(" "))
+    total = len(tokenizer.encode(first, out_type=int))
+    if memo is not None:
+        missing = {}
+        for segment, repetitions in frequency.items():
+            count = memo.prior.get(segment)
+            if count is None:
+                count = memo.counts.get(segment)
+            if count is None:
+                missing[segment] = repetitions
+            else:
+                total += repetitions * count
+        frequency = missing
+    if not frequency:
+        return total
     segments = list(frequency)
     encodings = tokenizer.encode([" " + s for s in segments], out_type=int, num_threads=4)
-    return len(tokenizer.encode(first, out_type=int)) + sum(
-        frequency[s] * len(ids) for s, ids in zip(segments, encodings))
+    for segment, ids in zip(segments, encodings):
+        count = len(ids)
+        total += frequency[segment] * count
+        if memo is not None and len(segment) <= 96:
+            memo.counts[segment] = count
+            if len(memo.counts) > memo.capacity:
+                memo.counts.popitem(last=False)
+    return total
 
 
-def count_tokens(tokenizer, text, fast=False):
-    count = needle_count(tokenizer, text, fast=fast)
+class SegmentMemo:
+    """Bounded, process-local counts of exact space-prefixed segments."""
+
+    def __init__(self, capacity=8192, prior=None):
+        self.counts = OrderedDict()
+        self.capacity = capacity
+        self.prior = prior if prior is not None else {}
+
+
+def tokenizer_prior(tokenizer):
+    """Seed reusable counts from the pinned vocabulary itself."""
+    metaspace = "\u2581"
+    words = (tokenizer.id_to_piece(i) for i in range(tokenizer.get_piece_size()))
+    segments = [word[1:] for word in words if word.startswith(metaspace)]
+    pieces = tokenizer.encode([" " + word for word in segments], out_type=int, num_threads=4)
+    return {word: len(ids) for word, ids in zip(segments, pieces)}
+
+
+def validate_count(count):
     if count > LIMIT:
         raise ValueError("Input has %d Needle tokens; maximum is %d" % (count, LIMIT))
     return count
+
+
+def count_tokens(tokenizer, text, fast=False):
+    return validate_count(needle_count(tokenizer, text, fast=fast))

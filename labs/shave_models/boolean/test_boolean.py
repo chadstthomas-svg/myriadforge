@@ -1,15 +1,17 @@
 """CPU differential tests for the exact tokenizer and decision compiler."""
 import itertools
+import io
 import json
 from pathlib import Path
 import random
 import subprocess
 import sys
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
-from policy import LIMIT, Policy, count_tokens, load_tokenizer, needle_count
+from policy import LIMIT, Policy, SegmentMemo, count_tokens, load_tokenizer, needle_count, tokenizer_prior
 
 
 HERE = Path(__file__).resolve().parent
@@ -96,7 +98,124 @@ def test_json_protocol_keeps_native_stdout_off_the_wire():
     assert child.stderr == "firmware diagnostic"
 
 
-@pytest.mark.parametrize("variant", ["gates", "lookup", "packed", "dense", "scan"])
+def test_worker_deadline_recovers_for_the_next_batch():
+    from supervisor import supervise
+
+    script = """
+import sys, time
+for line in sys.stdin:
+    if 'stall' in line:
+        time.sleep(30)
+    print(line, end='', flush=True)
+"""
+    inputs = [b'{"id":"normal"}\n', b'{"id":"stall"}\n', b'{"id":"next"}\n']
+    output = io.StringIO()
+    supervise([sys.executable, "-u", "-c", script], inputs, output, 1.0)
+    assert "\r" not in output.getvalue()
+    first, second, third = (json.loads(line) for line in output.getvalue().splitlines())
+    assert first == {"id": "normal"}
+    assert second["id"] == "stall" and "timed out" in second["error"]
+    assert third == {"id": "next"}
+
+
+def test_segment_memo_is_exact_and_bounded(tokenizer):
+    memo = SegmentMemo(capacity=7, prior=tokenizer_prior(tokenizer))
+    fixtures = [
+        (" a space Straße\r\n 東京 " * 230) + "x" * 1000,
+        (" a very different space 東京 markup " * 230),
+        (" a space Straße\r\n 東京 " * 240),
+        " a" * (LIMIT + 1),
+    ]
+    for document in fixtures * 2:
+        assert needle_count(tokenizer, document, memo=memo) == len(tokenizer.encode(document))
+        assert len(memo.counts) <= 7
+        assert all(len(key) <= 96 for key in memo.counts)
+
+
+def test_bandit_quarantines_wrong_lane_and_retests_after_cooldown(monkeypatch):
+    from adaptive import BatchEvidence, COOLDOWN, Profiles
+
+    profiles = Profiles()
+    try:
+        state = profiles.get("support")
+        wrong = {"cached"}
+
+        def measure(_self, lane, text, _evidence):
+            cost = {"projected": 3, "segmented": 2, "cached": 1}[lane]
+            return (len(text), np.array([int(lane not in wrong)]), 0), cost
+
+        monkeypatch.setattr(BatchEvidence, "measure", measure)
+        memo = SegmentMemo()
+        engine = SimpleNamespace(policy=Policy({"answers": {"seen": '"data"'}}))
+        probe = BatchEvidence(engine, state, memo)
+        assert probe.prepare("data")[1].tolist() == [1]
+        assert probe.used == {"segmented": 1}
+        assert "cached" in probe.failures
+        assert state["retry_at"]["cached"] == COOLDOWN
+
+        wrong.clear()
+        state["batches"] = COOLDOWN
+        retry = BatchEvidence(engine, state, memo)
+        assert retry.prepare("data")[1].tolist() == [1]
+        assert retry.used == {"cached": 1}
+        assert not state["retry_at"]
+    finally:
+        profiles.close()
+
+
+def test_batch_routes_verticals_and_recovers_a_failed_device(tokenizer, tmp_path):
+    from adaptive import AdaptiveRuntime, Profiles
+
+    profiles = Profiles(tmp_path / "routing.db")
+    engines = []
+
+    class Device:
+        lane = "ncs1"
+
+        def __init__(self, label, fail):
+            self.tokenizer = tokenizer
+            self.fail = fail
+            self.info = {"variant": "gather", "policy": {"answers": {label: '"match"'}}}
+            self.policy = Policy(self.info["policy"])
+            engines.append(self)
+
+        def decide(self, text, explain, prepare):
+            if self.fail:
+                raise RuntimeError("device failed")
+            tokens, facts, _ = prepare(text)
+            bits = self.policy.reference(facts)
+            result = self.policy.result(bits)
+            return {"needle_tokens": tokens, "result": result, "atoms": facts.tolist(), "bits": bits.tolist()}
+
+    batcher = AdaptiveRuntime({
+        "support": lambda: Device("support_yes", not engines),
+        "ops": lambda: Device("ops_yes", False),
+    }, profiles, scopes={"ops": "query"})
+    support = batcher.batch({"vertical": "support", "documents": [
+        {"id": 1, "text": "match"}, {"id": 2, "text": '{ "event": "match" }'}
+    ]})
+    assert support["documents"][0]["device_reloaded"]
+    assert not support["documents"][1]["device_reloaded"]
+    assert support["documents"][0]["result"]["answers"] == {"support_yes": True}
+    ops = batcher.batch({"vertical": "ops", "documents": [
+        {"id": 3, "text": '{"archive":"match","query":"nothing"}',
+         "expected": {"answers": {"ops_yes": False}, "category": None, "action": None}},
+        {"id": 4, "text": '{"archive":"nothing"}'},
+    ]})
+    assert ops["documents"][0]["result"]["answers"] == {"ops_yes": False}
+    assert ops["routes"][0]["feedback"]["joint"] == 1
+    assert "JSON evidence field" in ops["documents"][1]["error"]
+    profiles.close()
+    reopened = Profiles(tmp_path / "routing.db")
+    try:
+        states = reopened.db.execute("SELECT profile, state FROM lanes ORDER BY profile").fetchall()
+        assert len(states) == 3
+        assert all(json.loads(state)["batches"] == 1 for _, state in states)
+    finally:
+        reopened.close()
+
+
+@pytest.mark.parametrize("variant", ["gates", "lookup", "packed", "gather", "dense", "scan"])
 def test_compile_and_evaluate_all_assignments(tmp_path, variant):
     pytest.importorskip("onnx")
     ort = pytest.importorskip("onnxruntime")
@@ -107,6 +226,7 @@ def test_compile_and_evaluate_all_assignments(tmp_path, variant):
     compile_policy(HERE / "support.json", tmp_path, variant, side=8)
     engine = Runtime.__new__(Runtime)
     engine.info = json.loads((tmp_path / "model.json").read_text(encoding="utf8"))
+    engine.lane = "ncs1"
     engine.policy = Policy(engine.info["policy"])
     engine.output = engine.info["decisions"]
     options = ort.SessionOptions()
@@ -115,7 +235,10 @@ def test_compile_and_evaluate_all_assignments(tmp_path, variant):
 
     class Request:
         def infer(self, inputs):
-            return {engine.output: session.run([engine.output], inputs)[0]}
+            output = session.run([engine.output], inputs)[0]
+            if variant == "gather":
+                output = output.astype(np.float16).view(np.int16)
+            return {engine.output: output}
 
     engine.request = Request()
     for flags in itertools.product((False, True), repeat=len(PHRASES)):

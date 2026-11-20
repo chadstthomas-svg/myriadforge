@@ -155,11 +155,16 @@ def compile_policy(source, directory, variant, side=64):
         features = scanner(g, policy, side)
     else:
         features = "features"
-    if variant == "packed":
+    if variant in ("packed", "gather"):
         table, metadata = packed_table(policy)
-        shapes = {"features": [1, table.shape[1], 1, 1]}
-        decisions = g.conv("features", table, [0])
-        outputs[decisions] = [1, 1, 1, 1]
+        if variant == "gather":
+            shapes = {"features": [1]}
+            decisions = g.op("Gather", [g.const(table.reshape(-1)), "features"], axis=0)
+            outputs[decisions] = [1]
+        else:
+            shapes = {"features": [1, table.shape[1], 1, 1]}
+            decisions = g.conv("features", table, [0])
+            outputs[decisions] = [1, 1, 1, 1]
     elif variant == "lookup":
         if nf > 10:
             raise ValueError("The lookup form is intended for at most 10 literal predicates")
@@ -180,7 +185,9 @@ def compile_policy(source, directory, variant, side=64):
             decisions = g.op("Concat", [features, decisions], axis=1)
         outputs[decisions] = [1, len(policy.outputs) + (nf if variant == "scan" else 0), 1, 1]
     def ports(mapping):
-        return [h.make_tensor_value_info(k, TensorProto.FLOAT, v) for k,v in mapping.items()]
+        return [h.make_tensor_value_info(
+            name, TensorProto.INT32 if variant == "gather" and name == "features" else TensorProto.FLOAT, shape
+        ) for name, shape in mapping.items()]
     # OpenVINO uses producer node names when naming outputs, so keep those names in the manifest.
     graph = h.make_graph(g.nodes, "boolean_" + variant, ports(shapes), ports(outputs), g.constants)
     model = h.make_model(graph, opset_imports=[h.make_opsetid("", 9)], ir_version=6)
@@ -200,7 +207,7 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("policy", type=Path)
     p.add_argument("output", type=Path)
-    p.add_argument("--variant", choices=["gates", "dense", "scan", "lookup", "packed"], required=True)
+    p.add_argument("--variant", choices=["gates", "dense", "scan", "lookup", "packed", "gather"], required=True)
     p.add_argument("--side", type=int, default=64)
     args = p.parse_args()
     compile_policy(args.policy, args.output, args.variant, args.side)

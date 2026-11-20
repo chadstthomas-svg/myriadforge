@@ -9,13 +9,14 @@ import sys
 import time
 
 import numpy as np
-from policy import Policy, count_tokens, load_tokenizer
+from policy import Policy, count_tokens, load_tokenizer, validate_count
 
 
 class Runtime:
     def __init__(self, bundle, toolchain=None, fast_count=True, lane="ncs1", target=None, blob=None):
         self.folder = Path(bundle).resolve()
         self.info = json.loads((self.folder/"model.json").read_text(encoding="utf8"))
+        self.model_name = self.info["policy"].get("name", self.folder.name)
         self.policy = Policy(self.info["policy"])
         self.tokenizer = load_tokenizer()
         self.fast_count = fast_count
@@ -52,14 +53,16 @@ class Runtime:
                 self.compiled = self.core.import_network(str(blob), self.target, num_requests=1)
             else:
                 net = self.core.read_network(model=str(self.ir), weights=str(self.ir.with_suffix(".bin")))
-                if self.output not in net.outputs:
+                if self.output not in net.outputs and not (self.info["variant"] == "gather" and len(net.outputs) == 1):
                     raise ValueError("Unexpected IR outputs: %s" % list(net.outputs))
+                if self.info["variant"] == "gather":
+                    net.outputs[next(iter(net.outputs))].precision = "FP16"
                 self.compiled = self.core.load_network(network=net, device_name=self.target, num_requests=1)
             self.request = self.compiled
         else:
             self.compiled = (self.core.import_model(blob.read_bytes(), self.target) if blob is not None
                              else self.core.compile_model(str(self.ir), self.target))
-            self.output = self.compiled.output(self.output)
+            self.output = self.compiled.output(0 if self.info["variant"] == "gather" else self.output)
             self.request = self.compiled.create_infer_request()
         self.load_ms = 1000*(time.perf_counter()-start)
 
@@ -97,15 +100,29 @@ class Runtime:
 
     def head(self, atoms):
         variant = self.info["variant"]
-        if variant in ("lookup", "packed"):
+        if variant in ("lookup", "packed", "gather"):
             mask = sum(int(bit) << j for j, bit in enumerate(atoms))
             lane_bits = self.info.get("lane_bits", 0)
-            features = np.zeros(self.info["input_shapes"]["features"], dtype=np.float32)
-            features[0, mask >> lane_bits, 0, 0] = 1
-            packed = self.request.infer({"features": features})[self.output].reshape(-1)
+            address = mask >> lane_bits
+            if variant == "gather":
+                features = np.array([address], dtype=np.int32)
+            else:
+                features = np.zeros(self.info["input_shapes"]["features"], dtype=np.float32)
+                features[0, address, 0, 0] = 1
+            outputs = self.request.infer({"features": features})
+            if variant == "gather":
+                # The 2020.3 ONNX converter renames the lone Gather output.
+                if len(outputs) != 1:
+                    raise RuntimeError("Expected exactly one packed Gather result")
+                packed = next(iter(outputs.values())).reshape(-1)
+                if self.lane == "ncs1" and packed.dtype == np.int16:
+                    # IECore 2020.3 exposes native FP16 buffers as signed words.
+                    packed = packed.view(np.float16)
+            else:
+                packed = outputs[self.output].reshape(-1)
             if not np.isfinite(packed).all() or not np.array_equal(packed, packed.round()):
                 raise RuntimeError("Invalid output from exact lookup head")
-            if variant == "packed":
+            if variant in ("packed", "gather"):
                 lane = mask & ((1 << lane_bits) - 1)
                 width = self.info["code_width"]
                 word = int(packed[0]) + self.info["offset"]
@@ -139,29 +156,34 @@ class Runtime:
             prior = values[:n].reshape(1,n,1,1).copy()
         return values[n:].copy(), prior.reshape(-1), count
 
-    def decide(self, text, explain=False):
+    def decide(self, text, explain=False, prepare=None):
         start = time.perf_counter()
-        tokens = count_tokens(self.tokenizer, text, fast=self.fast_count)
-        counted = time.perf_counter()
         lexical_count = None
-        if self.info["variant"] == "scan":
-            projected = self.policy.project(text)
-            lexical_count = len(projected)
-            prepared = time.perf_counter()
-            bits, atoms, calls = self.scan(projected)
+        scanning = self.info["variant"] == "scan"
+        if prepare is not None:
+            if scanning:
+                raise ValueError("Batch lane selection needs a decision head that accepts fact bits")
+            tokens, atoms, counted = prepare(text)
+            validate_count(tokens)
         else:
-            if self.fast_count:
-                atoms = self.policy.text_atoms(text)
-            else:
+            tokens = count_tokens(self.tokenizer, text, fast=self.fast_count)
+            counted = time.perf_counter()
+            if scanning or not self.fast_count:
                 projected = self.policy.project(text)
                 lexical_count = len(projected)
-                atoms = self.policy.atoms(projected)
-            prepared = time.perf_counter()
+                if not scanning:
+                    atoms = self.policy.atoms(projected)
+            else:
+                atoms = self.policy.text_atoms(text)
+        prepared = time.perf_counter()
+        if scanning:
+            bits, atoms, calls = self.scan(projected)
+        else:
             bits = self.head(atoms)
             calls = 1
         result = self.policy.result(bits > 0.5)
         end = time.perf_counter()
-        record = dict(result=result, bits=bits.tolist(), atoms=atoms.tolist(), needle_tokens=tokens,
+        record = dict(model=self.model_name, result=result, bits=bits.tolist(), atoms=atoms.tolist(), needle_tokens=tokens,
                     lexemes=lexical_count, requests=calls,
                     tokenization_ms=(counted-start)*1000, host_projection_ms=(prepared-counted)*1000,
                     inference_path_ms=(end-prepared)*1000, total_ms=(end-start)*1000)

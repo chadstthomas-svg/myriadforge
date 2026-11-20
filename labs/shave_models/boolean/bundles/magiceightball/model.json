@@ -1,0 +1,106 @@
+{
+  "policy": {
+    "name": "magiceightball",
+    "rules": {
+      "billing": "\"charged twice\" OR \"duplicate charge\"",
+      "delivery": "\"package missing\" OR \"parcel missing\"",
+      "permission": "\"review authorized\"",
+      "hold": "\"do not route\" OR \"review cancelled\"",
+      "case_found": "@billing OR @delivery",
+      "ready": "@case_found AND @permission AND NOT @hold"
+    },
+    "answers": {
+      "may_route": "@ready"
+    },
+    "categories": {
+      "mixed": "@billing AND @delivery",
+      "billing": "@billing",
+      "delivery": "@delivery"
+    },
+    "actions": {
+      "triage_mixed": "@ready AND @billing AND @delivery",
+      "review_billing": "@ready AND @billing",
+      "review_delivery": "@ready AND @delivery"
+    }
+  },
+  "variant": "gather",
+  "decisions": "v0",
+  "state_channels": 0,
+  "tile_side": 64,
+  "input_shapes": {
+    "features": [
+      1
+    ]
+  },
+  "onnx_sha256": "48f99d6382376b1963b08072c72317c370342184c3eeefa6bf187b2d3283aa79",
+  "fp16_coefficient_bytes": 64,
+  "learned_parameters": 0,
+  "codebook": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  ],
+  "code_width": 3,
+  "lane_bits": 2,
+  "offset": 2048
+}
