@@ -289,9 +289,9 @@ The genuine rejections (converted fine, firmware refused):
   family (`Reshape`/`Transpose`/`Slice`/`Concat`/`Gather`/`Cast`/`Pad`/`Resize`/…).
 
 Probe artifacts (not firmware verdicts, honestly labelled): `Shape` (batch-0 metadata), `Expand` head-only,
-`Prelu` (onnx 1.7.0 ships **no Prelu schema at all**, so it cannot even be expressed), and `LRN` /
-`BatchNormalization` / `Shape_afterConv` wedged by the host-USB transient this session (re-probe after
-recovery).
+`Prelu` (onnx 1.7.0 ships **no Prelu schema at all**, so it cannot even be expressed). `LRN` /
+`BatchNormalization` / `Shape_afterConv` re-probed 2026-11-20 after recovery and **wedged again** —
+these three are deterministic device wedges, not a one-off USB transient.
 
 This table **finishes the WS1 op-coverage deliverable empirically** — measured firmware truth, which
 captures quirks the plugin source does not show — and powers the predictive partitioner
@@ -381,6 +381,44 @@ not be attempted before 1–4 pay off.
   throughput are separable concerns** (two shims, two gains).
 - Public NCS1 performance data is effectively **unavailable** in a comparable form today; treat any
   unsourced "NCS1 does N FPS" as unverified.
+- **FP16 accumulator saturation.** Raw N(0,1) random kernels produce non-finite outputs on the stick;
+  Xavier-scaled inits are finite everywhere. Training-side weight scaling is a hardware-visibility concern.
+- **Weight-fit boundary (first data point).** A 51.2 MB FP16 MatMul-weights graph (5×20k-column tiles,
+  multi-output) fails device init (`NC_ERROR`) and — worse — **drops the stick off USB enumeration**,
+  requiring a physical replug. The 10k×256 (~10 MB) baseline fits comfortably; bracket the boundary
+  downward (50k ≈ 25.6 MB next). Multi-output compile itself is fine at small scale (§6.4).
+
+---
+
+## 9.5 The voice-to-tool slice (voicetools/1) — first experiment status (2026-11-20)
+
+The research plan's first experiment (one spoken request → ordered, typed tool calls on one MA2450,
+Cactus host stack as reference-to-beat) is underway. Results so far:
+
+- **Task frozen** (`labs/shave_models/tools_spec.py`, `voicetools/1`): 12 benign tools (lighting/timers/
+  media), enum room/device/scene slots, one numeric slot per call, max 2 ordered calls, explicit
+  rejection. Fixtures: 2,680 clips (2,640 SAPI-synthesized utterances over 30 deterministic
+  voice×rate×pitch condition cells — held-out cells are the unseen-speaker proxy — plus 40 noise
+  clips), 3,102 graph windows. Label-vs-spoken-text consistency audited to zero mismatches.
+- **Handoff experiment PASSED** (`labs/shave_models/handoff_probe.py`): MO 2020.3 + IECore return
+  **multiple outputs** (tool-score head + window-value head, both [1,·], finite) — the shared
+  multi-head graph is trainable, no head-splitting needed. Warm p50 **5.14 ms** per 2 s window:
+  the ≤300 ms end-to-end budget has ~58× headroom for framing.
+- **Host reference FAILS all three acceptance gates** (`labs/shave_models/host_reference.py`,
+  Whistle ASR → Needle 3 over the same test split): exact match **35.9%** (gate ≥90%), false-action
+  rate **13.5%** (gate ≤1%), p95 **664 ms** (gate ≤300 ms). The two-stage host stack is both slow and
+  inaccurate on a narrow frozen task schema — the on-device baseline to beat is loose, which
+  strengthens the case for the single trained acoustic graph.
+- **Trainer** (`labs/shave_models/train_voicetools.py`): multi-head (tool[13] + room/device/scene/
+  level/seconds none-indexed heads), per-window training over the eval-contract window set. First
+  recipe collapsed to the all-none prior; inverse-sqrt class weights recover learning (tool acc on
+  firing windows 0.18→0.38 by epoch 8) but the 32-d GAP bottleneck discards the temporal structure
+  the slot heads need — architecture v2 keeps time resolution before the acceptance run.
+- **Device evaluation** (`labs/shave_models/eval_voicetools.py`): ready, blocked on the stick replug.
+
+Honest scope notes: fixtures are TTS (condition-matched for every comparison; real-speaker expansion
+is future work with mini_speech_commands as the real-audio anchor); ordered calls come from the
+per-window decision rule in this slice — sequence/CTC heads are the next slice.
 
 ---
 
@@ -406,8 +444,8 @@ black-box; the decomposition reproduces the pipelined and batched measurements t
 
 ```powershell
 # device lane + a sync and a pipelined bench on the stick
-uv run myriadforge devices
-uv run myriadforge bench onnx-models/mobilenetv2-7 --device ncs1-myriad
+uv run ntvbench devices
+uv run ntvbench bench onnx-models/mobilenetv2-7 --device ncs1-myriad
 tools\ncs1\.venv\Scripts\python.exe tools\ncs1\bridge_runner.py --model models/ncs1/mobilenetv2-7.onnx `
     --device myriad --requests 1 --warmup 5 --runs 50      # sync  (~15.7 inf/s)
 tools\ncs1\.venv\Scripts\python.exe tools\ncs1\bridge_runner.py --model models/ncs1/mobilenetv2-7.onnx `
