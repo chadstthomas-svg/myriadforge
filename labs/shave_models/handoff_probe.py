@@ -8,7 +8,7 @@ the [1,1,40,200] fit-class, which sizes the voice-to-tool budget.
 
 Steps (both inside the NCS1 Python 3.7 venv):
   handoff_probe.py export --out bundles/handoff          build ONNX (onnx 1.7 helpers,
-                                                         seeded numpy weights)
+                                                         seeded numpy weights) + fixture NPZ
   handoff_probe.py probe --out bundles/handoff           MO FP16 -> MYRIAD -> verdict
                           [--toolchain D:/NTVStudy/tools/ncs1]
 
@@ -94,12 +94,13 @@ def cmd_export(out):
     onnx.checker.check_model(onnx.load(str(onnx_path)))
     rng = np.random.RandomState(SEED + 1)
     fixtures = rng.randn(8, 1, 40, 200).astype(np.float32)
-    np.savez(str(out / "fixtures.npz"), x=fixtures)
+    np.savez(str(Path("D:/models/ncs-shave-research/voicetools-handoff-fixtures.npz")),
+             x=fixtures)
     print(f"exported {onnx_path} ({onnx_path.stat().st_size} bytes, opset 11, "
           f"outputs scores[1,13] + value[1,1]), fixtures.npz 8x[1,1,40,200]")
 
 
-def cmd_probe(out, toolchain):
+def cmd_probe(out, toolchain, fixtures_path):
     sys.path.insert(0, str(toolchain.resolve()))
     import ncs1_paths
     ncs1_paths.setup()
@@ -125,7 +126,7 @@ def cmd_probe(out, toolchain):
     executable = core.load_network(network=net, device_name="MYRIAD", num_requests=1)
     load_ms = (time.perf_counter() - start) * 1000
 
-    fixtures = np.load(str(out / "fixtures.npz"))["x"]
+    fixtures = np.load(str(fixtures_path))["x"]
     for _ in range(5):
         executable.infer({input_name: fixtures[0]})
     elapsed, shapes, stats = [], {}, {}
@@ -170,10 +171,12 @@ def main():
     ap.add_argument("--out", type=Path, default=LAB / "bundles" / "handoff")
     ap.add_argument("--toolchain", type=Path,
                     default=Path("D:/NTVStudy/tools/ncs1"))
+    ap.add_argument("--fixtures", type=Path,
+                    default=Path("D:/models/ncs-shave-research/voicetools-handoff-fixtures.npz"))
     args = ap.parse_args()
     import onnx  # noqa: F401  (both steps live in the NCS1 venv; fail fast if missing)
     {"export": lambda: cmd_export(args.out),
-     "probe": lambda: cmd_probe(args.out, args.toolchain)}[args.step]()
+     "probe": lambda: cmd_probe(args.out, args.toolchain, args.fixtures)}[args.step]()
 
 
 if __name__ == "__main__":
