@@ -1,0 +1,232 @@
+{
+  "host_python": "3.7.9",
+  "release": {
+    "bytes": 735,
+    "sha256": "6076cc698d9948e5a133ea63b331195aa5c0e2e00c4173310a84614748917850"
+  },
+  "tokenizer": {
+    "bytes": 26136,
+    "sha256": "36747e603fcafa0726d38a25d7f71861da227b6d074746e06e9a77c6b1bec8e6"
+  },
+  "shipped_data_bytes": 26871,
+  "restored_native_bytes": {
+    "ncs1": {
+      "bytes": 512,
+      "sha256": "6c3b0d0cd33174e45cff98b474e7b86f698daee46c02a10c9a17b48ce69b629f",
+      "version": [
+        5,
+        0
+      ],
+      "inputs": 1,
+      "outputs": 1,
+      "stage_count": 1,
+      "input_bytes": 512,
+      "output_bytes": 256,
+      "sections": {
+        "headers": 192,
+        "input_descriptor": 64,
+        "output_descriptor": 64,
+        "stages": 128,
+        "constants": 64
+      },
+      "sole_stage": {
+        "length": 128,
+        "type": 100,
+        "shaves_field": 12
+      }
+    },
+    "ncs2": {
+      "bytes": 512,
+      "sha256": "ce65466cd18f6490ace177b3386afac485300d479de4659b3f9b3b2d9791d8fb",
+      "version": [
+        5,
+        0
+      ],
+      "inputs": 1,
+      "outputs": 1,
+      "stage_count": 1,
+      "input_bytes": 512,
+      "output_bytes": 256,
+      "sections": {
+        "headers": 192,
+        "input_descriptor": 64,
+        "output_descriptor": 64,
+        "stages": 128,
+        "constants": 64
+      },
+      "sole_stage": {
+        "length": 128,
+        "type": 100,
+        "shaves_field": 1
+      }
+    }
+  },
+  "stock_controls": {
+    "input": "128-element FP16 vector",
+    "outputs": "128-element FP16 vector",
+    "compiler_version": "OpenVINO 2020.3.2",
+    "purpose": "Measure native container overhead with simple unary stages",
+    "operations": {
+      "Relu": {
+        "2450": {
+          "bytes": 448,
+          "sha256": "4f5394fe2c41648e495e6d5b5033ff9fd28e3a90b79ea7e4ce165555ec97e0a1",
+          "version": [
+            5,
+            0
+          ],
+          "inputs": 1,
+          "outputs": 1,
+          "stage_count": 1,
+          "input_bytes": 256,
+          "output_bytes": 256,
+          "sections": {
+            "headers": 192,
+            "input_descriptor": 64,
+            "output_descriptor": 64,
+            "stages": 128,
+            "constants": 0
+          },
+          "sole_stage": {
+            "length": 104,
+            "type": 6,
+            "shaves_field": 12
+          }
+        },
+        "2480": {
+          "bytes": 448,
+          "sha256": "41889e3d48e7177b626b5d425ff61e1c63ec1df8e72241535e15c611abc6326f",
+          "version": [
+            5,
+            0
+          ],
+          "inputs": 1,
+          "outputs": 1,
+          "stage_count": 1,
+          "input_bytes": 256,
+          "output_bytes": 256,
+          "sections": {
+            "headers": 192,
+            "input_descriptor": 64,
+            "output_descriptor": 64,
+            "stages": 128,
+            "constants": 0
+          },
+          "sole_stage": {
+            "length": 104,
+            "type": 6,
+            "shaves_field": 2
+          }
+        }
+      },
+      "Clip": {
+        "2450": {
+          "bytes": 448,
+          "sha256": "c6bccba08e5269c77500f35eb7d67a30e8c136d1dcd18d1461bdf46b794aa89e",
+          "version": [
+            5,
+            0
+          ],
+          "inputs": 1,
+          "outputs": 1,
+          "stage_count": 1,
+          "input_bytes": 256,
+          "output_bytes": 256,
+          "sections": {
+            "headers": 192,
+            "input_descriptor": 64,
+            "output_descriptor": 64,
+            "stages": 128,
+            "constants": 0
+          },
+          "sole_stage": {
+            "length": 104,
+            "type": 57,
+            "shaves_field": 12
+          }
+        },
+        "2480": {
+          "bytes": 448,
+          "sha256": "bc4044d072a4a23983c6ab834b22b18f08abfb60cad55a21a62a9c3f35eacb64",
+          "version": [
+            5,
+            0
+          ],
+          "inputs": 1,
+          "outputs": 1,
+          "stage_count": 1,
+          "input_bytes": 256,
+          "output_bytes": 256,
+          "sections": {
+            "headers": 192,
+            "input_descriptor": 64,
+            "output_descriptor": 64,
+            "stages": 128,
+            "constants": 0
+          },
+          "sole_stage": {
+            "length": 104,
+            "type": 57,
+            "shaves_field": 2
+          }
+        }
+      },
+      "Sigmoid": {
+        "2450": {
+          "bytes": 448,
+          "sha256": "533ad6beb31e35fe3db2490f7b8e981f6f63b44f9037103c7ddcd637042b71ea",
+          "version": [
+            5,
+            0
+          ],
+          "inputs": 1,
+          "outputs": 1,
+          "stage_count": 1,
+          "input_bytes": 256,
+          "output_bytes": 256,
+          "sections": {
+            "headers": 192,
+            "input_descriptor": 64,
+            "output_descriptor": 64,
+            "stages": 128,
+            "constants": 0
+          },
+          "sole_stage": {
+            "length": 96,
+            "type": 20,
+            "shaves_field": 12
+          }
+        },
+        "2480": {
+          "bytes": 448,
+          "sha256": "7831b38be8547dc999290ded3d01427b5ad0e7ee134b4fdd47c8ee677b455662",
+          "version": [
+            5,
+            0
+          ],
+          "inputs": 1,
+          "outputs": 1,
+          "stage_count": 1,
+          "input_bytes": 256,
+          "output_bytes": 256,
+          "sections": {
+            "headers": 192,
+            "input_descriptor": 64,
+            "output_descriptor": 64,
+            "stages": 128,
+            "constants": 0
+          },
+          "sole_stage": {
+            "length": 96,
+            "type": 20,
+            "shaves_field": 2
+          }
+        }
+      },
+      "Abs": {
+        "2450": "unsupported layer type"
+      }
+    }
+  },
+  "physical_release_verified": false
+}

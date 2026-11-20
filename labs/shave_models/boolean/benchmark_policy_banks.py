@@ -114,7 +114,8 @@ if __name__ == "__main__":
     if args.repeats < 1:
         parser.error("--repeats must be positive")
     identity = windows_usb_identity(args.expect_stick) if args.expect_stick else None
-    engine = Runtime(args.bundle, args.toolchain, lane=args.lane, blob=args.blob)
+    engine = Runtime(args.bundle, args.toolchain, lane=args.lane, blob=args.blob,
+                     release_stick=args.expect_stick or "ncs1")
     report = evaluate(engine, args.corpus, args.repeats)
     if identity:
         report["physical_usb_preflight"] = identity

@@ -3,4 +3,5 @@
 *.onnx binary
 *.bin binary
 *.blob binary
+*.m8b binary
 *.xml -text

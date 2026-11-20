@@ -35,13 +35,26 @@ Each Gather row covers one NCS1 session. Ranges for the earlier variants cover t
 
 For the packed model, the VPU request and output decoding took 2.2–2.3 ms at p50. Counting the 397,562-byte input took 27.3–27.6 ms at p50. Model load took 1.62–1.82 s. The CPU-only implementation of the same policy took 30.5–31.7 ms at p50. The VPU scan variant also performs phrase matching on the stick. Its host counts Needle tokens, maps lexemes and passes the accumulated evidence bits between tiles.
 
-The 128-slot direct-import data files total **28,545 bytes** on Windows. That includes the [512-byte NCS1 blob](bundles/magiceightball-batch/ncs1-native.blob), its 1,757-byte manifest and the 26,276-byte [compact tokenizer](needle3-tokenizer.m8t.xz). Host code, Python, OpenVINO and firmware are additional.
+The 128-slot [release archive](bundles/magiceightball.m8b) and [compact tokenizer](needle3-tokenizer.m8t.xz) total **26,871 bytes**. The 735-byte release contains the policy manifest and both native 2020.3 executable images. The 26,136-byte tokenizer is shared between targets. Host code, Python, OpenVINO and firmware are additional.
 
-The tokenizer archive stores vocabulary strings in their original order and reconstructs the redundant SentencePiece scores from their ranks. It restores all 126,520 original bytes and verifies their SHA-256 before passing the model to SentencePiece. The earlier archive occupied 45,492 bytes. The [rebuild tool](compact_tokenizer.py) accepts the pinned raw `.model` or the earlier `.model.xz` file.
+The tokenizer archive stores vocabulary strings in their original order and reconstructs the redundant SentencePiece scores from their ranks. It restores all 126,520 original bytes and verifies their SHA-256 before passing the model to SentencePiece. Earlier archives occupied 45,492 and 26,276 bytes. The [rebuild tool](compact_tokenizer.py) accepts the pinned raw `.model` or either earlier archive.
 
 On the NCS1 host's Python 3.7 runtime, tokenizer load plus adaptive vocabulary initialization took **13.6 ms median** across 40 trials, compared with 15.7 ms before compaction and precomputed seeding. The physical NCS1 replay with the compact archive passed the full truth table and mixed-length inputs, with one 128-decision request taking 5.4 ms median. [Startup measurements](measurements/compact-tokenizer-startup.json) · [Compact archive device replay](measurements/compact-batch-ncs1.json)
 
+### Native release format
+
+The release restores the manifest and both 512-byte native graphs byte for byte. The runtime checks the graph layout and selects the requested physical target through the 2020.3 plugin. The standard 2022.3 NCS2 lane uses the common IR. The release loader has software tests for both platform selections and exact restoration. Physical replay of the release remains pending.
+
+```powershell
+python "$b/release.py" "$b/bundles/magiceightball-batch" "$b/bundles/magiceightball.m8b"
+& $ncs1 "$b/runtime.py" "$b/bundles/magiceightball.m8b" --release-stick ncs1 --text 'package missing. review authorized.'
+```
+
+On the 2020.3 runtime with an NCS2, use `--release-stick ncs2`. The hardware benchmark can select the corresponding release image with `--expect-stick ncs2` when run inside that runtime.
+
 The [128-slot NCS1 blob](bundles/magiceightball-batch/ncs1-native.blob) also occupies 512 bytes. Both builds use a single rank-one Gather over the same 64-byte table. The 2020.3.2 serializer aligns each section to 64 bytes. These blobs contain 192 bytes of headers, 64 each for input and output descriptors, 128 for the Gather stage and 64 for the table. The compiler emits the same byte count for a two-entry bank. This establishes the size floor for this resident rank-one Gather layout under that compiler. [Intel serializer source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/backend/serialize.cpp#L150-L175) · [Intel Gather stage source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/stages/gather.cpp#L67-L82) · [Parsed artifact layouts](measurements/batch-head-compatibility.json)
+
+ReLU, Clip and Sigmoid controls compiled to **448 bytes** on both targets with 128-element FP16 vectors. These controls have no resident constants section and measure container overhead for simpler operations. The tested graph that keeps the complete decision table on the VPU remains 512 bytes. [Release and stock-stage controls](measurements/native-release-and-stock-controls.json)
 
 The [512-byte Myriad X target blob](bundles/magiceightball/ncs2-2020.3.blob) was compiled offline by Intel's 2020.3.2 `myriad_compile` for `VPU_MYRIAD_2480`. Blob format is toolchain-specific. OpenVINO 2022.3.1 rejects the 2020.3 binary version, so use the common IR on the NCS2 lane. The Gather IR passed all 128 combinations on the [2022.3.1 CPU plugin](measurements/gather-2022.3-cpu.json). Physical Myriad X correctness and speed are still pending. [Intel runtime support](https://www.intel.com/content/www/us/en/support/articles/000091265/software.html)
 

@@ -301,6 +301,7 @@ def main():
     parser.add_argument("--lane", choices=["ncs1", "ncs2"], default="ncs1")
     parser.add_argument("--toolchain", type=Path)
     parser.add_argument("--target")
+    parser.add_argument("--release-stick", choices=["ncs1", "ncs2"], help="Physical target for a .m8b archive")
     parser.add_argument("--explain", action="store_true")
     parser.add_argument("--batch-timeout", type=float, help="Worker deadline in seconds, including cold model load")
     args = parser.parse_args()
@@ -312,6 +313,8 @@ def main():
             value = getattr(args, key)
             if value is not None:
                 command.extend(("--" + key, str(value)))
+        if args.release_stick:
+            command.extend(("--release-stick", args.release_stick))
         if args.explain:
             command.append("--explain")
         with json_output_stream() as output:
@@ -328,7 +331,8 @@ def main():
                 parser.error("Vertical %r requires a string for %s" % (name, field))
 
     def load(bundle, blob):
-        return Runtime(bundle, args.toolchain, lane=args.lane, target=args.target, blob=blob)
+        return Runtime(bundle, args.toolchain, lane=args.lane, target=args.target, blob=blob,
+                       release_stick=args.release_stick or "ncs1")
 
     root = args.config.resolve().parent
     by_bundle, factories = {}, {}

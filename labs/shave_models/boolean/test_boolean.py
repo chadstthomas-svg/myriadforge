@@ -47,7 +47,7 @@ def test_compact_tokenizer_restores_the_pinned_model(tokenizer, tmp_path):
 
     compact = HERE / "needle3-tokenizer.m8t.xz"
     original = read_tokenizer(compact)
-    assert compact.stat().st_size == 26276
+    assert compact.stat().st_size == 26136
     assert len(original) == 126520
     assert hashlib.sha256(original).hexdigest() == TOKENIZER_HASH
     assert tokenizer.serialized_model_proto() == original
@@ -134,6 +134,55 @@ def test_published_batch_blobs_still_use_one_stage_and_512_bytes():
         assert layout["input_bytes"] == 128 * 4 and layout["output_bytes"] == 128 * 2
         with pytest.raises(ValueError, match="layout"):
             inspect_blob(data[:-1])
+
+
+def test_native_release_round_trips_both_devices_and_banked_manifest(tmp_path):
+    from release import TARGETS, pack_bundle, read_release
+
+    for name in ("magiceightball-batch", "magiceightball-banks"):
+        bundle = HERE / "bundles" / name
+        archive = tmp_path / "candidate.m8b"
+        archive.write_bytes(pack_bundle(bundle))
+        manifest, blobs = read_release(archive)
+        assert manifest == json.loads((bundle / "model.json").read_bytes())
+        assert all(blobs[stick] == (bundle / filename).read_bytes()
+                   for stick, (filename, _) in TARGETS.items())
+        if name == "magiceightball-batch":
+            published = HERE / "bundles" / "magiceightball.m8b"
+            assert len(published.read_bytes()) == 735
+            assert archive.read_bytes() == published.read_bytes()
+        archive.write_bytes(archive.read_bytes()[:-3])
+        with pytest.raises(ValueError, match="Unreadable"):
+            read_release(archive)
+
+
+@pytest.mark.parametrize("stick", ["ncs1", "ncs2"])
+def test_runtime_imports_release_with_exact_target_tag(monkeypatch, tmp_path, tokenizer, stick):
+    from release import TARGETS
+    from runtime import Runtime
+
+    legacy = SimpleNamespace(setup=lambda: None)
+    monkeypatch.setitem(sys.modules, "ncs1_paths", legacy)
+    monkeypatch.setattr(sys, "path", sys.path.copy())
+    imports = []
+
+    class FakeCore:
+        available_devices = ["MYRIAD"]
+
+        def import_network(self, filename, target, config, num_requests):
+            path = Path(filename)
+            imports.append((path, path.read_bytes(), target, config, num_requests))
+            return object()
+
+    monkeypatch.setitem(sys.modules, "openvino.inference_engine",
+                        SimpleNamespace(IECore=FakeCore, get_version=lambda: "test"))
+    engine = Runtime(HERE / "bundles" / "magiceightball.m8b", toolchain=tmp_path,
+                     release_stick=stick)
+    path, blob, target, config, requests = imports[0]
+    filename, platform = TARGETS[stick]
+    assert blob == (HERE / "bundles" / "magiceightball-batch" / filename).read_bytes()
+    assert target == "MYRIAD" and requests == 1 and config["VPU_MYRIAD_PLATFORM"] == platform
+    assert not path.exists() and engine.batch_capacity == 128 and engine.ir is None
 
 
 def test_usb_identity_distinguishes_both_cold_sticks():

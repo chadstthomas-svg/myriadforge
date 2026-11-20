@@ -8,12 +8,14 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import time
 from typing import Optional
 
 import numpy as np
 from policy import Policy, count_tokens, load_tokenizer, validate_count
 from radix import decode_ranks
+from release import TARGETS, read_release
 
 
 @dataclass
@@ -27,9 +29,19 @@ class Prepared:
 
 
 class Runtime:
-    def __init__(self, bundle, toolchain=None, fast_count=True, lane="ncs1", target=None, blob=None, bank=None):
+    def __init__(self, bundle, toolchain=None, fast_count=True, lane="ncs1", target=None, blob=None, bank=None,
+                 release_stick="ncs1"):
         self.folder = Path(bundle).resolve()
-        self.bundle_info = json.loads((self.folder/"model.json").read_text(encoding="utf8"))
+        native_release = None
+        if self.folder.suffix.lower() == ".m8b":
+            if lane != "ncs1" or blob is not None:
+                raise ValueError("Release archives use the 2020.3 runtime and contain their own native blobs")
+            if release_stick not in TARGETS:
+                raise ValueError("Choose ncs1 or ncs2 for the native release")
+            self.bundle_info, blobs = read_release(self.folder)
+            native_release = blobs[release_stick]
+        else:
+            self.bundle_info = json.loads((self.folder/"model.json").read_text(encoding="utf8"))
         self._use_bank(bank)
         self.tokenizer = load_tokenizer()
         self.fast_count = fast_count
@@ -59,10 +71,17 @@ class Runtime:
         if self.target not in myriad:
             raise ValueError("Expected a visible MYRIAD device from %s" % myriad)
 
-        self.ir = None if blob is not None else self.resolve_ir()
+        self.ir = None if blob is not None or native_release is not None else self.resolve_ir()
         start = time.perf_counter()
         if lane == "ncs1":
-            if blob is not None:
+            if native_release is not None:
+                platform = TARGETS[release_stick][1]
+                config = {"VPU_MYRIAD_PLATFORM": platform, "VPU_MYRIAD_PROTOCOL": "VPU_MYRIAD_USB"}
+                with tempfile.TemporaryDirectory(prefix="magiceightball-") as directory:
+                    native = Path(directory) / "network.blob"
+                    native.write_bytes(native_release)
+                    self.compiled = self.core.import_network(str(native), self.target, config=config, num_requests=1)
+            elif blob is not None:
                 self.compiled = self.core.import_network(str(blob), self.target, num_requests=1)
             else:
                 net = self.core.read_network(model=str(self.ir), weights=str(self.ir.with_suffix(".bin")))
@@ -386,6 +405,8 @@ def main():
     parser.add_argument("--target", help="Explicit OpenVINO name when several MYRIAD devices are visible")
     parser.add_argument("--blob", type=Path, help="Load a binary exported by the matching device/toolchain")
     parser.add_argument("--bank", help="Default policy bank for a banked bundle")
+    parser.add_argument("--release-stick", choices=list(TARGETS), default="ncs1",
+                        help="Physical target for a .m8b archive on OpenVINO 2020.3")
     parser.add_argument("--explain", action="store_true")
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--text")
@@ -393,7 +414,8 @@ def main():
     source.add_argument("--serve", action="store_true", help="Read one JSON request with text and optional id per line")
     args = parser.parse_args()
     with json_output_stream() as output:
-        engine = Runtime(args.bundle, args.toolchain, lane=args.lane, target=args.target, blob=args.blob, bank=args.bank)
+        engine = Runtime(args.bundle, args.toolchain, lane=args.lane, target=args.target, blob=args.blob, bank=args.bank,
+                         release_stick=args.release_stick)
         if args.serve:
             for line in sys.stdin.buffer:
                 request_id = None

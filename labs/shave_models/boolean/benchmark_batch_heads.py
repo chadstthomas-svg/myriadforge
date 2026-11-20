@@ -128,12 +128,15 @@ if __name__ == "__main__":
     if args.repeats < 1:
         parser.error("--repeats must be positive")
     identity = windows_usb_identity(args.expect_stick) if args.expect_stick else None
-    runtime = Runtime(args.bundle, args.toolchain, lane=args.lane, target=args.target, blob=args.blob)
+    runtime = Runtime(args.bundle, args.toolchain, lane=args.lane, target=args.target, blob=args.blob,
+                      release_stick=args.expect_stick or "ncs1")
     report = evaluate(runtime, args.repeats, args.corpus)
     if identity:
         report["physical_usb_preflight"] = identity
     if args.export:
         runtime.export_blob(args.export)
+    if args.bundle.suffix.lower() == ".m8b":
+        report["release_archive_bytes"] = args.bundle.stat().st_size
     compiled_path = args.export or args.blob
     if compiled_path:
         compiled = compiled_path.read_bytes()

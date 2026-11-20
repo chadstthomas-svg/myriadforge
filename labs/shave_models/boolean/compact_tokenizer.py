@@ -80,7 +80,8 @@ def pack_tokenizer(original):
     packed = header + prefix + suffix + bytes(map(len, words)) + b"".join(words)
     if _restore(packed) != original:
         raise ValueError("Compact format failed to reproduce the exact SentencePiece bytes")
-    return lzma.compress(packed, preset=9)
+    filters = [{"id": lzma.FILTER_LZMA2, "preset": 9, "dict_size": 65536, "pb": 0}]
+    return lzma.compress(packed, filters=filters)
 
 
 if __name__ == "__main__":
