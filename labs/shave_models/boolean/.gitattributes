@@ -1,0 +1,6 @@
+*.model binary
+*.xz binary
+*.onnx binary
+*.bin binary
+*.blob binary
+*.xml -text
