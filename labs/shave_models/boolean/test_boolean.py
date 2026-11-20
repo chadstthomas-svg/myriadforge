@@ -70,7 +70,9 @@ def test_regex_projection_and_boolean_semantics():
                 "Straße", "東京", "é", "💡", "b", "☀️", "other", "(", ")", "!"]
     for _ in range(1100):
         doc = "".join(rng.choices(alphabet, k=rng.randrange(1, 500)))
-        assert np.array_equal(policy.text_atoms(doc), policy.atoms(policy.project(doc)))
+        oracle = policy.atoms(policy.project(doc))
+        assert np.array_equal(policy.text_atoms(doc), oracle)
+        assert np.array_equal(policy.anchored_atoms(doc), oracle)
     assert policy.result(policy.reference(policy.text_atoms("STRASSE")))["answers"] == {"matched": True}
     assert policy.result(policy.reference(policy.text_atoms("STRASSE + a-a")))["answers"] == {"matched": False}
 
@@ -84,6 +86,31 @@ def test_unused_explanation_rule_keeps_device_input_small():
     assert policy.explain(document, atoms) == {
         "matched": ["evidence", "only for explanation"], "named_rules": {"annotation": True}
     }
+
+
+def test_anchored_match_falls_back_without_losing_late_evidence():
+    policy = Policy({"answers": {"found": '"package missing" OR "not a veto"'}})
+    document = "subpackage delivered ; package reported " * 400 + "Package\tmissing"
+    oracle = policy.atoms(policy.project(document))
+    assert oracle.tolist() == [1, 0]
+    assert np.array_equal(policy.anchored_atoms(document), oracle)
+
+
+def test_published_batch_blobs_still_use_one_stage_and_512_bytes():
+    from blob_layout import inspect_blob
+
+    folder = HERE / "bundles" / "magiceightball-batch"
+    for filename in ("ncs1-native.blob", "ncs2-2020.3.blob"):
+        data = (folder / filename).read_bytes()
+        layout = inspect_blob(data)
+        assert layout["sections"] == {
+            "headers": 192, "input_descriptor": 64, "output_descriptor": 64,
+            "stages": 128, "constants": 64,
+        }
+        assert layout["bytes"] == 512 and layout["stage_count"] == 1
+        assert layout["input_bytes"] == 128 * 4 and layout["output_bytes"] == 128 * 2
+        with pytest.raises(ValueError, match="layout"):
+            inspect_blob(data[:-1])
 
 
 def test_json_protocol_keeps_native_stdout_off_the_wire():
@@ -133,7 +160,7 @@ def test_segment_memo_is_exact_and_bounded(tokenizer):
 
 
 def test_bandit_quarantines_wrong_lane_and_retests_after_cooldown(monkeypatch):
-    from adaptive import BatchEvidence, COOLDOWN, Profiles
+    from adaptive import BatchEvidence, COOLDOWN, Profiles, REFERENCE
 
     profiles = Profiles()
     try:
@@ -141,7 +168,7 @@ def test_bandit_quarantines_wrong_lane_and_retests_after_cooldown(monkeypatch):
         wrong = {"cached"}
 
         def measure(_self, lane, text, _evidence):
-            cost = {"projected": 3, "segmented": 2, "cached": 1}[lane]
+            cost = {REFERENCE: 3, "segmented": 2, "cached": 1}[lane]
             return (len(text), np.array([int(lane not in wrong)]), 0), cost
 
         monkeypatch.setattr(BatchEvidence, "measure", measure)
@@ -171,6 +198,7 @@ def test_batch_routes_verticals_and_recovers_a_failed_device(tokenizer, tmp_path
 
     class Device:
         lane = "ncs1"
+        batch_capacity = 2
 
         def __init__(self, label, fail):
             self.tokenizer = tokenizer
@@ -179,13 +207,19 @@ def test_batch_routes_verticals_and_recovers_a_failed_device(tokenizer, tmp_path
             self.policy = Policy(self.info["policy"])
             engines.append(self)
 
-        def decide(self, text, explain, prepare):
+        def prepare_decision(self, text, prepare):
+            tokens, facts, _ = prepare(text)
+            return tokens, facts
+
+        def decide_prepared(self, documents):
             if self.fail:
                 raise RuntimeError("device failed")
-            tokens, facts, _ = prepare(text)
-            bits = self.policy.reference(facts)
-            result = self.policy.result(bits)
-            return {"needle_tokens": tokens, "result": result, "atoms": facts.tolist(), "bits": bits.tolist()}
+            results = []
+            for tokens, facts in documents:
+                bits = self.policy.reference(facts)
+                result = self.policy.result(bits)
+                results.append({"needle_tokens": tokens, "result": result, "atoms": facts.tolist(), "bits": bits.tolist()})
+            return results
 
     batcher = AdaptiveRuntime({
         "support": lambda: Device("support_yes", not engines),
@@ -195,7 +229,8 @@ def test_batch_routes_verticals_and_recovers_a_failed_device(tokenizer, tmp_path
         {"id": 1, "text": "match"}, {"id": 2, "text": '{ "event": "match" }'}
     ]})
     assert support["documents"][0]["device_reloaded"]
-    assert not support["documents"][1]["device_reloaded"]
+    assert support["documents"][1]["device_reloaded"]
+    assert support["device_requests"] == 2  # Failed submission, then one shared retry.
     assert support["documents"][0]["result"]["answers"] == {"support_yes": True}
     ops = batcher.batch({"vertical": "ops", "documents": [
         {"id": 3, "text": '{"archive":"match","query":"nothing"}',
@@ -205,6 +240,7 @@ def test_batch_routes_verticals_and_recovers_a_failed_device(tokenizer, tmp_path
     assert ops["documents"][0]["result"]["answers"] == {"ops_yes": False}
     assert ops["routes"][0]["feedback"]["joint"] == 1
     assert "JSON evidence field" in ops["documents"][1]["error"]
+    assert ops["device_requests"] == 1
     profiles.close()
     reopened = Profiles(tmp_path / "routing.db")
     try:
@@ -223,7 +259,7 @@ def test_compile_and_evaluate_all_assignments(tmp_path, variant):
     from build import compile_policy
     from runtime import Runtime
 
-    compile_policy(HERE / "support.json", tmp_path, variant, side=8)
+    compile_policy(HERE / "support.json", tmp_path, variant, side=8, slots=8 if variant == "gather" else 1)
     engine = Runtime.__new__(Runtime)
     engine.info = json.loads((tmp_path / "model.json").read_text(encoding="utf8"))
     engine.lane = "ncs1"
@@ -241,6 +277,7 @@ def test_compile_and_evaluate_all_assignments(tmp_path, variant):
             return {engine.output: output}
 
     engine.request = Request()
+    fixtures = []
     for flags in itertools.product((False, True), repeat=len(PHRASES)):
         selected = [i for i, yes in enumerate(flags) if yes]
         phrase_text = "neutral " * 63 + " ; ".join(PHRASES[i] for i in selected)
@@ -250,5 +287,11 @@ def test_compile_and_evaluate_all_assignments(tmp_path, variant):
             assert np.array_equal(found, atoms)
         else:
             bits = engine.head(atoms)
+            fixtures.append((atoms, bits))
         assert np.array_equal(bits, engine.policy.reference(atoms))
         assert engine.policy.result(bits) == expected(selected)
+    if variant == "gather":
+        for start in range(0, len(fixtures), 7):
+            batch = fixtures[start:start + 7]
+            outputs = engine.gather_heads([atoms for atoms, _ in batch])
+            assert np.array_equal(outputs, [bits for _, bits in batch])

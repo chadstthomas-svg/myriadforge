@@ -1,0 +1,152 @@
+{
+  "model": "magiceightball",
+  "backend": "MYRIAD",
+  "lane": "ncs1",
+  "toolchain": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "capacity": 128,
+  "onnx_sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7",
+  "truth_table_cases": 128,
+  "repeats": 13,
+  "timing": {
+    "1": {
+      "ms_per_128_documents": {
+        "p50": 221.1590999999995,
+        "p95": 235.6213400000002,
+        "max": 239.2013000000004
+      },
+      "device_requests": 128
+    },
+    "2": {
+      "ms_per_128_documents": {
+        "p50": 114.08350000000044,
+        "p95": 133.63267999999985,
+        "max": 134.79799999999997
+      },
+      "device_requests": 64
+    },
+    "8": {
+      "ms_per_128_documents": {
+        "p50": 31.564300000000323,
+        "p95": 32.702259999999846,
+        "max": 32.71209999999947
+      },
+      "device_requests": 16
+    },
+    "16": {
+      "ms_per_128_documents": {
+        "p50": 17.827299999998658,
+        "p95": 18.35374000000005,
+        "max": 18.83619999999997
+      },
+      "device_requests": 8
+    },
+    "32": {
+      "ms_per_128_documents": {
+        "p50": 10.849200000000003,
+        "p95": 11.826280000000187,
+        "max": 12.595300000000087
+      },
+      "device_requests": 4
+    },
+    "64": {
+      "ms_per_128_documents": {
+        "p50": 7.294600000000262,
+        "p95": 7.851660000000038,
+        "max": 7.883699999999827
+      },
+      "device_requests": 2
+    },
+    "128": {
+      "ms_per_128_documents": {
+        "p50": 5.428499999999836,
+        "p95": 6.154819999999538,
+        "max": 6.58039999999982
+      },
+      "device_requests": 1
+    }
+  },
+  "mixed_length_device_requests": 1,
+  "mixed_length_results": [
+    {
+      "id": "early",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "billing",
+        "action": "review_billing"
+      },
+      "error": null
+    },
+    {
+      "id": "overflow",
+      "tokens": null,
+      "result": null,
+      "error": "Input has 131073 Needle tokens; maximum is 131072"
+    },
+    {
+      "id": "late",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "delivery",
+        "action": "review_delivery"
+      },
+      "error": null
+    },
+    {
+      "id": "veto",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "delivery",
+        "action": null
+      },
+      "error": null
+    },
+    {
+      "id": "empty",
+      "tokens": 0,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "error": null
+    }
+  ],
+  "compiled_blob_bytes": 512,
+  "compiled_blob_sha256": "6c3b0d0cd33174e45cff98b474e7b86f698daee46c02a10c9a17b48ce69b629f",
+  "legacy_layout": {
+    "bytes": 512,
+    "sha256": "6c3b0d0cd33174e45cff98b474e7b86f698daee46c02a10c9a17b48ce69b629f",
+    "version": [
+      5,
+      0
+    ],
+    "inputs": 1,
+    "outputs": 1,
+    "stage_count": 1,
+    "input_bytes": 512,
+    "output_bytes": 256,
+    "sections": {
+      "headers": 192,
+      "input_descriptor": 64,
+      "output_descriptor": 64,
+      "stages": 128,
+      "constants": 64
+    },
+    "sole_stage": {
+      "length": 128,
+      "type": 100,
+      "shaves_field": 12
+    }
+  }
+}

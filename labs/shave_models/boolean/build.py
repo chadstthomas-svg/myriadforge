@@ -139,9 +139,11 @@ def packed_table(policy):
     return table, dict(codebook=codebook, code_width=code_width, lane_bits=lane_bits, offset=offset)
 
 
-def compile_policy(source, directory, variant, side=64):
+def compile_policy(source, directory, variant, side=64, slots=1):
     if side < 2 or side & (side-1):
         raise ValueError("Tile side must be a power of two")
+    if slots < 1 or (slots != 1 and variant != "gather"):
+        raise ValueError("Multiple positive slots are supported only with Gather")
     spec = json.loads(source.read_text(encoding="utf8"))
     policy = Policy(spec)
     g = Graph()
@@ -158,9 +160,9 @@ def compile_policy(source, directory, variant, side=64):
     if variant in ("packed", "gather"):
         table, metadata = packed_table(policy)
         if variant == "gather":
-            shapes = {"features": [1]}
+            shapes = {"features": [slots]}
             decisions = g.op("Gather", [g.const(table.reshape(-1)), "features"], axis=0)
-            outputs[decisions] = [1]
+            outputs[decisions] = [slots]
         else:
             shapes = {"features": [1, table.shape[1], 1, 1]}
             decisions = g.conv("features", table, [0])
@@ -209,5 +211,6 @@ if __name__ == "__main__":
     p.add_argument("output", type=Path)
     p.add_argument("--variant", choices=["gates", "dense", "scan", "lookup", "packed", "gather"], required=True)
     p.add_argument("--side", type=int, default=64)
+    p.add_argument("--slots", type=int, default=1, help="Independent decisions per Gather request")
     args = p.parse_args()
-    compile_policy(args.policy, args.output, args.variant, args.side)
+    compile_policy(args.policy, args.output, args.variant, args.side, args.slots)

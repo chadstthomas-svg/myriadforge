@@ -1,5 +1,6 @@
-"""Persistent, batch-one MYRIAD runner for document-wide Boolean policies."""
+"""Persistent MYRIAD runner for document-wide Boolean policies."""
 import argparse
+from dataclasses import dataclass
 import hashlib
 import json
 import os
@@ -7,9 +8,20 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+from typing import Optional
 
 import numpy as np
 from policy import Policy, count_tokens, load_tokenizer, validate_count
+
+
+@dataclass
+class Prepared:
+    tokens: int
+    atoms: Optional[np.ndarray]
+    projected: Optional[bytes]
+    started: float
+    counted: float
+    ready: float
 
 
 class Runtime:
@@ -100,41 +112,60 @@ class Runtime:
 
     def head(self, atoms):
         variant = self.info["variant"]
-        if variant in ("lookup", "packed", "gather"):
+        if variant == "gather":
+            return self.gather_heads([atoms])[0]
+        if variant in ("lookup", "packed"):
             mask = sum(int(bit) << j for j, bit in enumerate(atoms))
-            lane_bits = self.info.get("lane_bits", 0)
-            address = mask >> lane_bits
-            if variant == "gather":
-                features = np.array([address], dtype=np.int32)
-            else:
-                features = np.zeros(self.info["input_shapes"]["features"], dtype=np.float32)
-                features[0, address, 0, 0] = 1
-            outputs = self.request.infer({"features": features})
-            if variant == "gather":
-                # The 2020.3 ONNX converter renames the lone Gather output.
-                if len(outputs) != 1:
-                    raise RuntimeError("Expected exactly one packed Gather result")
-                packed = next(iter(outputs.values())).reshape(-1)
-                if self.lane == "ncs1" and packed.dtype == np.int16:
-                    # IECore 2020.3 exposes native FP16 buffers as signed words.
-                    packed = packed.view(np.float16)
-            else:
-                packed = outputs[self.output].reshape(-1)
-            if not np.isfinite(packed).all() or not np.array_equal(packed, packed.round()):
-                raise RuntimeError("Invalid output from exact lookup head")
-            if variant in ("packed", "gather"):
-                lane = mask & ((1 << lane_bits) - 1)
-                width = self.info["code_width"]
-                word = int(packed[0]) + self.info["offset"]
-                code = (word >> (lane * width)) & ((1 << width) - 1)
-                codebook = self.info["codebook"]
-                if not 0 <= word < 2 * self.info["offset"] or code >= len(codebook):
-                    raise RuntimeError("Invalid codeword from exact packed head")
-                return np.asarray(codebook[code], dtype=np.float32)
+            features = np.zeros(self.info["input_shapes"]["features"], dtype=np.float32)
+            features[0, mask >> self.info.get("lane_bits", 0), 0, 0] = 1
+            packed = self.request.infer({"features": features})[self.output].reshape(-1)
+            self.validate_words(packed)
+            if variant == "packed":
+                return self.unpack(packed[0], mask)
             return np.array([(int(packed[k//10]) >> (k%10)) & 1
                              for k in range(len(self.policy.outputs))],dtype=np.float32)
         result = self.request.infer({"features": atoms.reshape(1,-1,1,1)})
         return result[self.output].reshape(-1).copy()
+
+    @property
+    def batch_capacity(self):
+        return self.info["input_shapes"]["features"][0] if self.info["variant"] == "gather" else 1
+
+    @staticmethod
+    def validate_words(packed):
+        if not np.isfinite(packed).all() or not np.array_equal(packed, packed.round()):
+            raise RuntimeError("Invalid output from exact lookup head")
+
+    def unpack(self, number, mask):
+        lane = mask & ((1 << self.info["lane_bits"]) - 1)
+        width = self.info["code_width"]
+        offset = self.info["offset"]
+        word = int(number) + offset
+        code = (word >> (lane * width)) & ((1 << width) - 1)
+        codebook = self.info["codebook"]
+        if not 0 <= word < 2 * offset or code >= len(codebook):
+            raise RuntimeError("Invalid codeword from exact packed head")
+        return np.asarray(codebook[code], dtype=np.float32)
+
+    def gather_heads(self, facts):
+        if not 1 <= len(facts) <= self.batch_capacity:
+            raise ValueError("Gather needs 1–%d decisions per request" % self.batch_capacity)
+        masks = [sum(int(bit) << j for j, bit in enumerate(row)) for row in facts]
+        addresses = np.zeros(self.batch_capacity, dtype=np.int32)
+        addresses[:len(masks)] = [mask >> self.info["lane_bits"] for mask in masks]
+        outputs = self.request.infer({"features": addresses})
+        # The legacy ONNX converter renames the sole Gather output.
+        if len(outputs) != 1:
+            raise RuntimeError("Expected exactly one packed Gather result")
+        words = next(iter(outputs.values())).reshape(-1)
+        if words.size != self.batch_capacity:
+            raise RuntimeError("Unexpected Gather result width")
+        if self.lane == "ncs1" and words.dtype == np.int16:
+            # IECore 2020.3 exposes native FP16 buffers as signed words.
+            words = words.view(np.float16)
+        used = words[:len(masks)]
+        self.validate_words(used)
+        return [self.unpack(word, mask) for word, mask in zip(used, masks)]
 
     def scan(self, projected):
         side = self.info["tile_side"]
@@ -156,9 +187,9 @@ class Runtime:
             prior = values[:n].reshape(1,n,1,1).copy()
         return values[n:].copy(), prior.reshape(-1), count
 
-    def decide(self, text, explain=False, prepare=None):
+    def prepare_decision(self, text, prepare=None):
         start = time.perf_counter()
-        lexical_count = None
+        projected = atoms = None
         scanning = self.info["variant"] == "scan"
         if prepare is not None:
             if scanning:
@@ -170,25 +201,47 @@ class Runtime:
             counted = time.perf_counter()
             if scanning or not self.fast_count:
                 projected = self.policy.project(text)
-                lexical_count = len(projected)
                 if not scanning:
                     atoms = self.policy.atoms(projected)
             else:
                 atoms = self.policy.text_atoms(text)
-        prepared = time.perf_counter()
-        if scanning:
-            bits, atoms, calls = self.scan(projected)
-        else:
-            bits = self.head(atoms)
+        return Prepared(tokens, atoms, projected, start, counted, time.perf_counter())
+
+    def decide_prepared(self, documents):
+        if not 1 <= len(documents) <= self.batch_capacity:
+            raise ValueError("Unexpected number of prepared documents")
+        start = time.perf_counter()
+        variant = self.info["variant"]
+        if variant == "scan":
+            document = documents[0]
+            bits, atoms, calls = self.scan(document.projected)
+            decisions = [(bits, atoms)]
+        elif variant == "gather":
+            facts = [document.atoms for document in documents]
+            decisions = list(zip(self.gather_heads(facts), facts))
             calls = 1
-        result = self.policy.result(bits > 0.5)
-        end = time.perf_counter()
-        record = dict(model=self.model_name, result=result, bits=bits.tolist(), atoms=atoms.tolist(), needle_tokens=tokens,
-                    lexemes=lexical_count, requests=calls,
-                    tokenization_ms=(counted-start)*1000, host_projection_ms=(prepared-counted)*1000,
-                    inference_path_ms=(end-prepared)*1000, total_ms=(end-start)*1000)
+        else:
+            atoms = documents[0].atoms
+            decisions = [(self.head(atoms), atoms)]
+            calls = 1
+        results = []
+        for document, (bits, atoms) in zip(documents, decisions):
+            result = self.policy.result(bits > 0.5)
+            end = time.perf_counter()
+            lexemes = len(document.projected) if document.projected is not None else None
+            results.append(dict(
+                model=self.model_name, result=result, bits=bits.tolist(), atoms=atoms.tolist(),
+                needle_tokens=document.tokens, lexemes=lexemes, requests=calls, request_documents=len(documents),
+                tokenization_ms=(document.counted-document.started)*1000,
+                host_projection_ms=(document.ready-document.counted)*1000,
+                inference_path_ms=(end-start)*1000, total_ms=(end-document.started)*1000,
+            ))
+        return results
+
+    def decide(self, text, explain=False, prepare=None):
+        record = self.decide_prepared([self.prepare_decision(text, prepare)])[0]
         if explain:
-            record["explanation"] = self.policy.explain(text, atoms)
+            record["explanation"] = self.policy.explain(text, record["atoms"])
         return record
 
 

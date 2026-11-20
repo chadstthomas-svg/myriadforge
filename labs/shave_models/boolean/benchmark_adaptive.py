@@ -100,6 +100,8 @@ def measure(engine, corpus_path, batches):
                     raise AssertionError("Unexpected route quarantine on valid data")
             results[vertical].append(dict(
                 documents=len(pairs), fixed_ms=baseline["wall_ms"], adaptive_ms=adaptive["wall_ms"],
+                fixed_device_requests=sum(row["requests"] for row in baseline["records"]),
+                adaptive_device_requests=adaptive["device_requests"],
                 lanes=dict(lanes), fixture_sha256=[hashlib.sha256(text.encode("utf8")).hexdigest() for text, _ in pairs]
             ))
     finally:
@@ -111,6 +113,8 @@ def measure(engine, corpus_path, batches):
             counts.update(row["lanes"])
         stats[name] = dict(
             documents=sum(row["documents"] for row in rows), lanes=dict(counts),
+            fixed_device_requests=sum(row["fixed_device_requests"] for row in rows),
+            adaptive_device_requests=sum(row["adaptive_device_requests"] for row in rows),
             fixed_ms=quantiles([row["fixed_ms"] for row in rows]),
             adaptive_ms=quantiles([row["adaptive_ms"] for row in rows]),
         )

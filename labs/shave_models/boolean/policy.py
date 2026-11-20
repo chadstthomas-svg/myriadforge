@@ -89,6 +89,51 @@ def value(node, facts):
     return value(node[1], facts) or value(node[2], facts)
 
 
+def word_character(character):
+    return character == "_" or character.isalnum()
+
+
+def token_at(text, token, start):
+    if start < 0 or not text.startswith(token, start):
+        return False
+    if not word_character(token[0]):
+        return True
+    end = start + len(token)
+    return ((start == 0 or not word_character(text[start - 1]))
+            and (end == len(text) or not word_character(text[end])))
+
+
+def anchored_match(text, phrase, anchor):
+    offset = 0
+    word = phrase[anchor]
+    # A dense adversarial anchor is cheaper to check with the full projection.
+    for _ in range(64):
+        match = text.find(word, offset)
+        if match < 0:
+            return False
+        offset = match + 1
+        if not token_at(text, word, match):
+            continue
+        left = match
+        for token in reversed(phrase[:anchor]):
+            while left and text[left - 1].isspace():
+                left -= 1
+            left -= len(token)
+            if not token_at(text, token, left):
+                break
+        else:
+            right = match + len(word)
+            for token in phrase[anchor + 1:]:
+                while right < len(text) and text[right].isspace():
+                    right += 1
+                if not token_at(text, token, right):
+                    break
+                right += len(token)
+            else:
+                return True
+    return None
+
+
 class Policy:
     def __init__(self, spec):
         if not isinstance(spec, dict):
@@ -126,6 +171,7 @@ class Policy:
         self.word_ids = {w: i+1 for i, w in enumerate(words)}
         self.patterns = [bytes(self.word_ids[w] for w in p) for p in self.literals]
         self.text_patterns = [self.literal_regex(words) for words in self.literals]
+        self.anchors = [max(range(len(words)), key=lambda i: len(words[i])) for words in self.literals]
         explained = list(self.literals)
         for node in self.rules.values():
             visit(node, explained)
@@ -150,6 +196,17 @@ class Policy:
         folded = text.casefold()
         return np.array([pattern.search(folded) is not None for pattern in self.text_patterns],
                         dtype=np.float32)
+
+    def anchored_atoms(self, text):
+        """Independently verify literal evidence, with a bounded projection fallback."""
+        folded = text.casefold()
+        flags = []
+        for phrase, anchor in zip(self.literals, self.anchors):
+            matched = anchored_match(folded, phrase, anchor)
+            if matched is None:
+                return self.atoms(self.project(text))
+            flags.append(matched)
+        return np.asarray(flags, dtype=np.float32)
 
     def project(self, text):
         # 0 represents every lexeme unused by this policy. Preserve occurrences

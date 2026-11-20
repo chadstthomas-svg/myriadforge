@@ -37,7 +37,11 @@ For the packed model, the VPU request and output decoding took 2.2–2.3 ms at p
 
 The [512-byte NCS1 blob](bundles/magiceightball/ncs1-native.blob), 1,755-byte Windows manifest and 45,492-byte losslessly compressed tokenizer total **47,759 bytes**. Host code, Python, OpenVINO and firmware are additional. The tokenizer is decompressed and checked once per resident process.
 
+The [128-slot NCS1 blob](bundles/magiceightball-batch/ncs1-native.blob) also occupies 512 bytes. Both builds use a single rank-one Gather over the same 64-byte table. The 2020.3.2 serializer aligns each section to 64 bytes. These blobs contain 192 bytes of headers, 64 each for input and output descriptors, 128 for the Gather stage and 64 for the table. The compiler emits the same byte count for a two-entry bank. This establishes the size floor for this resident rank-one Gather layout under that compiler. [Intel serializer source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/backend/serialize.cpp#L150-L175) · [Intel Gather stage source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/stages/gather.cpp#L67-L82) · [Parsed artifact layouts](measurements/batch-head-compatibility.json)
+
 The [512-byte Myriad X target blob](bundles/magiceightball/ncs2-2020.3.blob) was compiled offline by Intel's 2020.3.2 `myriad_compile` for `VPU_MYRIAD_2480`. Blob format is toolchain-specific. OpenVINO 2022.3.1 rejects the 2020.3 binary version, so use the common IR on the NCS2 lane. The Gather IR passed all 128 combinations on the [2022.3.1 CPU plugin](measurements/gather-2022.3-cpu.json). Physical Myriad X correctness and speed are still pending. [Intel runtime support](https://www.intel.com/content/www/us/en/support/articles/000091265/software.html)
+
+The [128-slot Myriad X blob](bundles/magiceightball-batch/ncs2-2020.3.blob) also compiled offline to 512 bytes. OpenVINO 2022.3.1 accepted all 128 decisions in one vector with the common IR on its CPU plugin. [Batch compatibility record](measurements/batch-head-compatibility.json)
 
 ## Run on Windows
 
@@ -58,11 +62,13 @@ Use `--file` for UTF-8 files. Use `--serve` to keep the model loaded and send on
 
 ## Adaptive batches
 
-[`adaptive.py`](adaptive.py) maintains a latency estimate for each combination of device lane, vertical, policy, document structure and length range. It compares three exact host preparation paths. They use projected lexemes, regular expressions with uncached token counting, or regular expressions with a bounded cache of exact token counts. Each document still submits its decision to the physical stick.
+[`adaptive.py`](adaptive.py) maintains a latency estimate for each combination of device lane, vertical, policy, document structure and length range. It compares three exact host preparation paths. They use an independent literal substring search with lexical boundary checks, regular expressions with uncached token counting, or regular expressions with a bounded cache of exact token counts. The independent matcher falls back to full lexical projection when a document has many hits for an anchor.
 
 The router checks the first batch in each profile and repeats the check every eight batches. It compares alternate token and evidence paths on an excerpt, then checks the chosen lane's full-document evidence and VPU outputs against the references. A disagreeing or failing lane is quarantined for 16 batches before a fresh check. A device exception triggers one reload and retry. Set `--batch-timeout` to supervise the native worker, return a batch error on a stall and start a new worker for the next batch. If firmware stalls during shutdown, the supervisor bounds its cleanup wait. SQLite retains optional profile timings, health and aggregate scores from labeled inputs. Document text and token-cache entries remain process-local.
 
 Each vertical can point to a different compiled policy. With `evidence_field`, the runner checks the token limit on the whole JSON document and evaluates the Boolean evidence only in the named top-level string. The [sample config](adaptive-support.json) uses full-text evidence for support notes and the `evidence` field for structured cases.
+
+With the 128-slot bundle, the runner sends up to 128 valid documents from one batch in a single Gather request. It preserves response order, skips over-limit or invalid documents, pads unused slots and discards padded results. The response's `device_requests` counts submissions including any retry. Each document's `request_documents` reports how many documents shared its native request.
 
 ```powershell
 '{"id":"batch-1","vertical":"case_records","documents":[{"id":"case-9","text":"{\"evidence\":\"package missing. review authorized.\",\"archive\":\"review cancelled\"}"}]}' |
@@ -73,26 +79,29 @@ For a labeled replay, optionally supply an `expected` object on each document wi
 
 ### Measured batch routing on NCS1
 
-Ten two-document batches per profile used overlapping excerpts of the same source corpus, with distinct documents of exactly 131,072 tokens each. Both routes used the same evidence scope per profile and passed all 40 decisions. The adaptive runner used its cache for 19 of 20 documents in each profile. Values below are per batch and include periodic checks. [Raw matched-scope measurements](measurements/adaptive-ncs1-matched-scope.json)
+On the 128-slot graph, 128 short documents spanning the entire truth table took **5.4 ms median** in one request versus **221.2 ms** when the same graph processed them individually. These timings include text processing and result decoding. The batched p95 was 6.2 ms across 13 warmed trials. A mixed-length batch also returned correct results for three 131,072-token documents and an empty document in one request, while rejecting a 131,073-token document. [Native vector benchmark](measurements/batch-head-ncs1.json)
+
+Ten two-document batches per profile used overlapping excerpts of the same source corpus, with distinct documents of exactly 131,072 tokens each. Both routes used the same evidence scope per profile and passed all 40 decisions. The adaptive runner used its cache for 19 of 20 documents in each profile and cut USB requests from 20 to 10 per profile. Values below are per batch and include periodic checks. [Raw vector measurements](measurements/adaptive-ncs1-vector-gather.json)
 
 | Profile | Fixed p50 | Adaptive p50 | Fixed p95 | Adaptive p95 |
 |---|---:|---:|---:|---:|
-| Full-text support notes | 76.3 ms | 52.0 ms | 91.8 ms | 114.9 ms |
-| JSON records with a declared evidence field | 49.8 ms | 29.9 ms | 60.9 ms | 45.5 ms |
+| Full-text support notes | 83.3 ms | 50.5 ms | 89.0 ms | 84.2 ms |
+| JSON records with a declared evidence field | 52.5 ms | 29.1 ms | 60.5 ms | 46.4 ms |
 
-Full-document evidence checks added latency to the tail for prose. The dictionary cache benefits workloads with repeated vocabulary.
+The dictionary cache benefits workloads with repeated vocabulary. The earlier implementation used a full lexical projection during each prose audit and measured 114.9 ms at p95. [Earlier matched-scope run](measurements/adaptive-ncs1-matched-scope.json)
 
 ### Rebuild and benchmark
 
 Use a current host Python with `numpy` and `onnx` to compile the rules. Gather, packed and lookup forms support up to ten evidence predicates. Use `gates` for a larger policy or `scan` for on-stick evidence matching. The runner creates an FP16 IR from ONNX if the bundle lacks one. If your NCS1 toolchain lives outside this checkout, pass its directory with `--toolchain`.
 
 ```powershell
-python "$b/build.py" "$b/support.json" "$b/bundles/my-policy" --variant gather
+python "$b/build.py" "$b/support.json" "$b/bundles/my-policy" --variant gather --slots 128
 $corpus = Join-Path (Get-Location) 'decision-corpus.txt'
 Invoke-WebRequest 'https://raw.githubusercontent.com/GITenberg/Pride-and-Prejudice_1342/81db45c9c48c592f0b77f01fc59e677ad0a5634e/1342-0.txt' -OutFile $corpus
 & $ncs1 "$b/benchmark.py" "$b/bundles/magiceightball" --lane ncs1 --corpus $corpus --output ncs1-gather.json --export ncs1-gather.blob --fast-count --repeats 35
 & $ncs2 "$b/benchmark.py" "$b/bundles/magiceightball" --lane ncs2 --corpus $corpus --output ncs2-gather.json --export ncs2-gather.blob --fast-count --repeats 35
-& $ncs1 "$b/benchmark_adaptive.py" "$b/bundles/magiceightball" --corpus $corpus --output adaptive.json
+& $ncs1 "$b/benchmark_adaptive.py" "$b/bundles/magiceightball-batch" --corpus $corpus --output adaptive.json
+& $ncs1 "$b/benchmark_batch_heads.py" "$b/bundles/magiceightball-batch" --corpus $corpus --output gather-vector.json
 ```
 
 The benchmark verifies the SHA-256 of its pinned copy of Jane Austen’s public-domain *Pride and Prejudice*. Token lengths use the Apache 2.0 [Cactus Compute Needle 3 SentencePiece model](https://huggingface.co/Cactus-Compute/needle3/blob/d6c7d6a2e9655505e0f8e23339356dd1705900eb/tokenizer/tokenizer.model), SHA-256 `97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25`. The [license text](../bundles/needle-ui/LICENSE) also applies to this unmodified tokenizer. Tests compare optimized and original counts on Unicode, special tokens, newlines, repeated spaces and the full token limit.

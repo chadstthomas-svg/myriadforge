@@ -16,7 +16,7 @@ from runtime import Runtime, json_output_stream
 from supervisor import supervise
 
 
-REFERENCE = "projected"
+REFERENCE = "anchored"
 LANES = (REFERENCE, "segmented", "cached")
 EXPLORATION_ORDER = ("cached", "segmented", REFERENCE)
 PROBE_INTERVAL = 8
@@ -91,7 +91,7 @@ class BatchEvidence:
         tokens = needle_count(self.engine.tokenizer, text, memo=memo)
         counted = time.perf_counter()
         policy = self.engine.policy
-        atoms = (policy.atoms(policy.project(evidence_text)) if lane == REFERENCE
+        atoms = (policy.anchored_atoms(evidence_text) if lane == REFERENCE
                  else policy.text_atoms(evidence_text))
         return (tokens, atoms, counted), (time.perf_counter() - start) * 1000
 
@@ -144,7 +144,7 @@ class BatchEvidence:
             result, elapsed = self.measure(selected, text, evidence_text)
         if checking and selected != REFERENCE:
             policy = self.engine.policy
-            reference_atoms = policy.atoms(policy.project(evidence_text))
+            reference_atoms = policy.anchored_atoms(evidence_text)
             if not np.array_equal(result[1], reference_atoms):
                 self.quarantine(selected, "full-document evidence disagreed with the reference")
                 selected = REFERENCE
@@ -152,17 +152,6 @@ class BatchEvidence:
         self.observe(selected, elapsed)
         self.used[selected] = self.used.get(selected, 0) + 1
         return result
-
-    def decide(self, text, evidence_text, audit):
-        prepare = partial(self.prepare, evidence_text=evidence_text)
-        result = self.engine.decide(text, explain=False, prepare=prepare)
-        if audit:
-            reference = self.engine.policy.reference(result["atoms"])
-            if not np.array_equal(reference, result["bits"]):
-                raise RuntimeError("Device disagreed with the Boolean reference")
-            self.audited = True
-        return result
-
 
 class AdaptiveRuntime:
     """Use the requested policy on the physical stick and retry a failed device session once."""
@@ -206,41 +195,56 @@ class AdaptiveRuntime:
                            for key in ("category", "action"))):
                 raise ValueError("Expected feedback with Boolean answers, a category and an action")
         engine = self.engine(vertical)
-        policy_hash = hashlib.sha256(json.dumps(engine.info["policy"]).encode("utf8")).hexdigest()
+        signature = (engine.info["policy"], engine.info.get("onnx_sha256"))
+        policy_hash = hashlib.sha256(json.dumps(signature[0]).encode("utf8")).hexdigest()
         if self.prior is None:
             self.prior = tokenizer_prior(engine.tokenizer)
         memo = self.memos.setdefault(vertical, SegmentMemo(prior=self.prior))
         scope = self.scopes.get(vertical)
-        contexts, outputs = {}, []
-        for row in rows:
-            text = row["text"]
-            shape = profile_key(text)
-            if shape not in contexts:
-                key = json.dumps(["v1", engine.lane, vertical, policy_hash, scope, *shape])
-                contexts[shape] = key, BatchEvidence(engine, self.profiles.get(key), memo)
-            _, evidence = contexts[shape]
+        contexts, outputs = {}, [None] * len(rows)
+        pending = []
+        device_requests = 0
+
+        def flush():
+            nonlocal engine, device_requests
+            if not pending:
+                return
+            prepared = [job[3] for job in pending]
+
+            def infer():
+                nonlocal device_requests
+                device_requests += 1
+                results = engine.decide_prepared(prepared)
+                if len(results) != len(pending):
+                    raise RuntimeError("Device returned an unexpected number of decisions")
+                for (_, evidence, _, _), result in zip(pending, results):
+                    if evidence.audited or evidence.state["batches"] % PROBE_INTERVAL != 0:
+                        continue
+                    reference = engine.policy.reference(result["atoms"])
+                    if not np.array_equal(reference, result["bits"]):
+                        raise RuntimeError("Device disagreed with the Boolean reference")
+                    evidence.audited = True
+                return results
+
             recovered = False
             try:
-                evidence_text = text
-                if scope is not None:
-                    document = json.loads(text)
-                    if not isinstance(document, dict) or not isinstance(document.get(scope), str):
-                        raise ValueError("Expected a string in JSON evidence field %r" % scope)
-                    evidence_text = document[scope]
-                audit = not evidence.audited and evidence.state["batches"] % PROBE_INTERVAL == 0
-                try:
-                    result = evidence.decide(text, evidence_text, audit)
-                except RuntimeError:
-                    recovered = True
-                if recovered:
-                    self.engines.pop(self.factories[vertical], None)
-                    for _, context in contexts.values():
-                        context.engine = None
-                    del engine
-                    engine = self.engine(vertical)
-                    for _, context in contexts.values():
-                        context.engine = engine
-                    result = evidence.decide(text, evidence_text, audit)
+                results = infer()
+            except RuntimeError:
+                recovered = True
+            if recovered:
+                self.engines.pop(self.factories[vertical], None)
+                for _, context in contexts.values():
+                    context.engine = None
+                    context.audited = False
+                del engine
+                engine = self.engine(vertical)
+                if (engine.info["policy"], engine.info.get("onnx_sha256")) != signature:
+                    raise RuntimeError("Model changed during recovery")
+                for _, context in contexts.values():
+                    context.engine = engine
+                results = infer()
+            for (index, evidence, evidence_text, _), result in zip(pending, results):
+                row = rows[index]
                 if explain:
                     result["explanation"] = engine.policy.explain(evidence_text, result["atoms"])
                 if "expected" in row:
@@ -249,9 +253,32 @@ class AdaptiveRuntime:
                     for name, score in scores.items():
                         totals[name] = totals.get(name, 0) + score
                     result["feedback"] = scores
-                outputs.append(dict(result, id=row.get("id"), device_reloaded=recovered))
+                outputs[index] = dict(result, id=row.get("id"), device_reloaded=recovered)
+            pending.clear()
+
+        for index, row in enumerate(rows):
+            text = row["text"]
+            shape = profile_key(text)
+            if shape not in contexts:
+                key = json.dumps(["v2", engine.lane, vertical, policy_hash, scope, *shape])
+                contexts[shape] = key, BatchEvidence(engine, self.profiles.get(key), memo)
+            _, evidence = contexts[shape]
+            try:
+                evidence_text = text
+                if scope is not None:
+                    document = json.loads(text)
+                    if not isinstance(document, dict) or not isinstance(document.get(scope), str):
+                        raise ValueError("Expected a string in JSON evidence field %r" % scope)
+                    evidence_text = document[scope]
+                prepare = partial(evidence.prepare, evidence_text=evidence_text)
+                prepared = engine.prepare_decision(text, prepare=prepare)
             except ValueError as exc:
-                outputs.append({"id": row.get("id"), "error": str(exc)})
+                outputs[index] = {"id": row.get("id"), "error": str(exc)}
+                continue
+            pending.append((index, evidence, evidence_text, prepared))
+            if len(pending) == engine.batch_capacity:
+                flush()
+        flush()
         updates, routes = {}, []
         for (structure, size), (key, evidence) in contexts.items():
             if evidence.used:
@@ -260,7 +287,8 @@ class AdaptiveRuntime:
             routes.append(dict(structure=structure, size=size, used=evidence.used,
                                quarantined=evidence.failures, feedback=evidence.state.get("feedback", {})))
         self.profiles.save(updates)
-        return {"id": request.get("id"), "vertical": vertical, "routes": routes, "documents": outputs}
+        return {"id": request.get("id"), "vertical": vertical, "routes": routes,
+                "documents": outputs, "device_requests": device_requests}
 
 
 def main():
