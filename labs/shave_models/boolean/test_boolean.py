@@ -156,6 +156,86 @@ def test_native_release_round_trips_both_devices_and_banked_manifest(tmp_path):
             read_release(archive)
 
 
+def test_stream_matches_full_tokenizer_and_evidence_for_each_append(tokenizer):
+    from runtime import Runtime
+    from stream import DecisionStream
+
+    engine = Runtime.__new__(Runtime)
+    engine.info = {"variant": "gates"}
+    engine.model_name = "test"
+    engine.policy = Policy({
+        "rules": {"unused": '"zero crossing"'},
+        "answers": {"accept": '"review authorized" AND "package missing" AND NOT "do not route"'},
+        "categories": {"seen": '"Ångström" OR "東京" OR "zero crossing here"'},
+        "actions": {"review": '"review authorized"'},
+    })
+    engine.tokenizer = tokenizer
+    engine.head = engine.policy.reference
+    stream = DecisionStream(engine, explain=True)
+    rng = random.Random(128)
+    phrases = ["review authorized", " package missing", " do not route", "ÅNGSTRÖM", "東京",
+               "zero crossing here", "가", "\r\n", " ", "▁", "<think>", "ß"]
+    for number in range(9):
+        whole = ""
+        parts = ["package", " missing", " review authorized", "_later", ". "]
+        text = " ".join(rng.choices(phrases, k=30))
+        while text:
+            width = rng.randrange(1, 12)
+            parts.append(text[:width])
+            text = text[width:]
+        for i, fragment in enumerate(parts):
+            row = stream.append(fragment, reset=i == 0)
+            whole += fragment
+            expected_facts = engine.policy.atoms(engine.policy.project(whole))
+            assert row["needle_tokens"] == len(tokenizer.encode(whole, out_type=int))
+            assert row["atoms"] == expected_facts.tolist()
+            assert row["explanation"] == engine.policy.explain(whole, expected_facts)
+            if i in (2, 3):
+                assert row["result"]["answers"]["accept"] == (i == 2)
+
+    # The cold fast path projects only a trailing window. The final literal
+    # spans the boundary between the committed text and the mutable suffix.
+    whole = "review authorized. " + "neutral " * 1000 + "package missing"
+    row = stream.append(whole, reset=True)
+    assert row["result"]["answers"]["accept"]
+    assert row["needle_tokens"] == len(tokenizer.encode(whole, out_type=int))
+    row = stream.append("_pending")
+    whole += "_pending"
+    assert not row["result"]["answers"]["accept"]
+    assert row["atoms"] == engine.policy.atoms(engine.policy.project(whole)).tolist()
+    assert row["needle_tokens"] == len(tokenizer.encode(whole, out_type=int))
+
+
+def test_stream_rolls_back_overflow_and_failed_inference(tokenizer, monkeypatch):
+    from runtime import Runtime
+    from stream import DecisionStream
+
+    engine = Runtime.__new__(Runtime)
+    engine.info = {"variant": "gates"}
+    engine.model_name = "test"
+    engine.tokenizer = tokenizer
+    engine.policy = Policy({"answers": {"ok": '"a" AND NOT "b"'}})
+    engine.head = engine.policy.reference
+    stream = DecisionStream(engine)
+    assert stream.append(" a" * (LIMIT - 1))["needle_tokens"] == LIMIT - 1
+    saved = stream.state
+    with pytest.raises(ValueError, match="131073"):
+        stream.append(" b b")
+    assert stream.state is saved
+    with monkeypatch.context() as patch:
+        def fail(atoms):
+            raise RuntimeError("test device failure")
+
+        patch.setattr(engine, "head", fail)
+        with pytest.raises(RuntimeError, match="device failure"):
+            stream.append(" b")
+    assert stream.state is saved
+    row = stream.append(" b")
+    assert row["needle_tokens"] == LIMIT and not row["result"]["answers"]["ok"]
+    assert stream.append(" a", reset=True)["result"]["answers"]["ok"]
+    assert stream.state.explanation_text == ""
+
+
 @pytest.mark.parametrize("stick", ["ncs1", "ncs2"])
 def test_runtime_imports_release_with_exact_target_tag(monkeypatch, tmp_path, tokenizer, stick):
     from release import TARGETS

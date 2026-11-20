@@ -412,11 +412,16 @@ def main():
     source.add_argument("--text")
     source.add_argument("--file", type=Path)
     source.add_argument("--serve", action="store_true", help="Read one JSON request with text and optional id per line")
+    source.add_argument("--stream", action="store_true", help="Append JSONL fragments to one resident document")
     args = parser.parse_args()
     with json_output_stream() as output:
         engine = Runtime(args.bundle, args.toolchain, lane=args.lane, target=args.target, blob=args.blob, bank=args.bank,
                          release_stick=args.release_stick)
-        if args.serve:
+        if args.serve or args.stream:
+            stream = None
+            if args.stream:
+                from stream import DecisionStream
+                stream = DecisionStream(engine, args.explain)
             for line in sys.stdin.buffer:
                 request_id = None
                 try:
@@ -424,13 +429,21 @@ def main():
                     if not isinstance(request, dict):
                         raise ValueError("Expected an object with a text string")
                     request_id = request.get("id")
-                    if "documents" in request:
+                    if stream is not None:
+                        if "append" not in request and request.get("reset") is not True:
+                            raise ValueError("Expected an append string or reset=true")
+                        response = stream.append(request.get("append", ""), request.get("reset", False))
+                    elif "documents" in request:
                         response = engine.decide_mixed(request["documents"], args.explain)
                     elif not isinstance(request.get("text"), str):
                         raise ValueError("Expected an object with a text string")
                     else:
                         response = engine.policy_view(request.get("bank")).decide(request["text"], args.explain)
                 except ValueError as exc:
+                    response = {"error": str(exc)}
+                except RuntimeError as exc:
+                    if stream is None:
+                        raise
                     response = {"error": str(exc)}
                 print(json.dumps(dict(response, id=request_id)), file=output, flush=True)
         else:

@@ -61,6 +61,32 @@
       }
     }
   },
+  "rank_zero_gather": {
+    "source": "bundles/magiceightball-radix/model.onnx with the input and output dimensions cleared",
+    "onnx_sha256": "0aeec48cd7832c5ba7483560fdbd8c6ce15aef9af4a878dfba2477cb7313c811",
+    "compiler_version": "OpenVINO 2020.3.2",
+    "offline_protocol": "VPU_MYRIAD_PCIE",
+    "force_reset": false,
+    "rank_zero_shape_in_ir": [],
+    "rank_one_control_shape_in_ir": [128],
+    "cpu_control_version": "OpenVINO 2022.3.1",
+    "matching_cpu_lookup_words": 16,
+    "rank_zero_native_blobs_emitted": 0,
+    "compiler_exit": {
+      "2450": -1073741819,
+      "2480": -1073741819
+    },
+    "rank_one_control": {
+      "2450": {
+        "bytes": 512,
+        "sha256": "812c8f393db056c68cbca7f42fe7ac72ec9570d18f4e15f8e6eac2460ca04e46"
+      },
+      "2480": {
+        "bytes": 512,
+        "sha256": "6ca8785bd10a0c2f7f8cb97d1a922cffdc238a5669dfae7fb4a520d75f709d8b"
+      }
+    }
+  },
   "stock_controls": {
     "input": "128-element FP16 vector",
     "outputs": "128-element FP16 vector",

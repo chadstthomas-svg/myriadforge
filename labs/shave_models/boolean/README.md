@@ -56,6 +56,8 @@ The [128-slot NCS1 blob](bundles/magiceightball-batch/ncs1-native.blob) also occ
 
 ReLU, Clip and Sigmoid controls compiled to **448 bytes** on both targets with 128-element FP16 vectors. These controls have no resident constants section and measure container overhead for simpler operations. The tested graph that keeps the complete decision table on the VPU remains 512 bytes. [Release and stock-stage controls](measurements/native-release-and-stock-controls.json)
 
+An exact rank-zero Gather with a scalar index and output matched all 16 packed words on the CPU plugin. The 2020.3.2 offline compiler exited with a Windows access violation on both MYRIAD targets. The rank-one vector control rebuilt byte for byte at 512 bytes on each target using the same offline configuration. [Rank-zero experiment](measurements/native-release-and-stock-controls.json) · [Intel descriptor serializer](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/model/data.cpp#L447-L484)
+
 The [512-byte Myriad X target blob](bundles/magiceightball/ncs2-2020.3.blob) was compiled offline by Intel's 2020.3.2 `myriad_compile` for `VPU_MYRIAD_2480`. Blob format is toolchain-specific. OpenVINO 2022.3.1 rejects the 2020.3 binary version, so use the common IR on the NCS2 lane. The Gather IR passed all 128 combinations on the [2022.3.1 CPU plugin](measurements/gather-2022.3-cpu.json). Physical Myriad X correctness and speed are still pending. [Intel runtime support](https://www.intel.com/content/www/us/en/support/articles/000091265/software.html)
 
 The [128-slot Myriad X blob](bundles/magiceightball-batch/ncs2-2020.3.blob) also compiled offline to 512 bytes. OpenVINO 2022.3.1 accepted all 128 decisions in one vector with the common IR on its CPU plugin. [Batch compatibility record](measurements/batch-head-compatibility.json)
@@ -99,6 +101,22 @@ $ncs2 = 'tools/ncs2/.venv/Scripts/python.exe'
 
 Use `--file` for UTF-8 files. Use `--serve` to keep the model loaded and send one JSON object per line, each containing `text` and optionally `id`. The response includes that `id`. For the example above, `result` is `{"answers":{"may_route":true},"category":"delivery","action":"review_delivery"}`. The `--explain` flag adds literal matches and named rule values.
 
+### Append to a live document
+
+Use `--stream` when new text arrives over time. Each JSONL request appends its string verbatim and returns the updated yes/no answer, category and proposed action. Use `reset: true` to start a document. The worker holds one document per process and uses its selected policy bank for every fragment. Rejected requests leave the last accepted document intact.
+
+```powershell
+@(
+  '{"id":"start","reset":true,"append":"duplicate charge"}'
+  '{"id":"approve","append":" review authorized"}'
+  '{"id":"veto","append":" do not route"}'
+) | & $ncs1 "$b/runtime.py" "$b/bundles/magiceightball.m8b" --release-stick ncs1 --stream
+```
+
+The host reuses the exact token count and literal facts for the prefix ending at a stable ASCII-space boundary. It keeps the last unfinished segment and enough preceding lexemes to match phrases across appends. Very long spans without ASCII spaces can require recounting that span. `--explain` retains the full text to include rules that are used only in explanations.
+
+In the OpenVINO 2022.3.1 CPU control, the first 130,432 tokens took 36.4 ms. Across 24 short appends, median host preparation fell from **28.9 ms** for complete-document requests to **0.056 ms** for incremental requests, with p95 of **35.5 ms** and **0.079 ms**, respectively. The final veto cleared the proposed action at exactly 131,072 tokens. An append that would reach 131,073 tokens was rejected. Stick timings for the append path are pending. [CPU append benchmark](measurements/stream-context-cpu.json)
+
 ## Adaptive batches
 
 [`adaptive.py`](adaptive.py) maintains a latency estimate for each combination of device lane, vertical, policy, document structure and length range. It compares three exact host preparation paths. They use an independent literal substring search with lexical boundary checks, regular expressions with uncached token counting, or regular expressions with a bounded cache of exact token counts. The independent matcher falls back to full lexical projection when a document has many hits for an anchor.
@@ -141,6 +159,8 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/GITenberg/Pride-and-Prejudi
 & $ncs2 "$b/benchmark.py" "$b/bundles/magiceightball" --lane ncs2 --corpus $corpus --output ncs2-gather.json --export ncs2-gather.blob --fast-count --repeats 35
 & $ncs1 "$b/benchmark_adaptive.py" "$b/bundles/magiceightball-batch" --corpus $corpus --output adaptive.json
 & $ncs1 "$b/benchmark_batch_heads.py" "$b/bundles/magiceightball-batch" --corpus $corpus --output gather-vector.json
+& $ncs1 "$b/benchmark_stream.py" "$b/bundles/magiceightball.m8b" --expect-stick ncs1 --corpus $corpus --output stream-ncs1.json
+& $ncs2 "$b/benchmark_stream.py" "$b/bundles/magiceightball-batch" --cpu --corpus $corpus --output stream-cpu.json
 & $ncs1 "$b/benchmark_policy_banks.py" "$b/bundles/magiceightball-banks" --blob "$b/bundles/magiceightball-banks/ncs1-native.blob" --expect-stick ncs1 --corpus $corpus --output gather-banks.json
 ```
 
