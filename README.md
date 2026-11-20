@@ -111,7 +111,7 @@ never blend silently.
 - [docs/NCS1_ROADMAP.md](docs/NCS1_ROADMAP.md) — the Myriad 2 revival: hardware reality,
   bring-up gotchas, measured envelope, throughput shim, what fits/doesn't.
 - [docs/NCS2_ROADMAP.md](docs/NCS2_ROADMAP.md) — the Myriad X lane (workstreams WS0–WS6).
-- [docs/index.html](docs/index.html) — the project site (also served via GitHub Pages).
+- [Project site](https://chadstthomas-svg.github.io/myriadforge/) — the dynamic GitHub Pages site.
 
 ## Development
 
