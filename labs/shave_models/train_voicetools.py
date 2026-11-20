@@ -146,9 +146,11 @@ def build_examples(fixtures: Path):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--fixtures", type=Path, required=True)
-    ap.add_argument("--epochs", type=int, default=10)
+    ap.add_argument("--epochs", type=int, default=15)
     ap.add_argument("--batch", type=int, default=64)
-    ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--lr", type=float, default=3e-3)
+    ap.add_argument("--neg-weight", type=float, default=0.25,
+                    help="loss weight of all-none (negative/silence) windows")
     ap.add_argument("--out", type=Path, default=Path(__file__).resolve().parent / "bundles" / "voicetools")
     args = ap.parse_args()
 
@@ -162,6 +164,16 @@ def main():
     valid_idx, train_idx = idx[:n_valid], idx[n_valid:]
     print(f"windows: {n} (train {len(train_idx)}, valid {n_valid})", flush=True)
 
+    # Per-head class weights (inverse-sqrt frequency): fights the none-dominated
+    # collapse the first recipe fell into (flat 0.7255 valid acc = predict none).
+    weights = {}
+    for h in HEADS:
+        counts = np.bincount([Y[i][h] for i in train_idx], minlength=HEADS[h]).astype(np.float32)
+        w = 1.0 / np.sqrt(np.maximum(counts, 1.0))
+        weights[h] = torch.from_numpy(w / w.mean())
+    win_w = torch.tensor([1.0 if Y[i]["tool"] != NONE_IDX["tool"] else args.neg_weight
+                          for i in train_idx])
+
     xt = torch.from_numpy(X[train_idx])
     yv = {h: torch.tensor([row[h] for row in [Y[i] for i in valid_idx]]) for h in HEADS}
     xva = torch.from_numpy(X[valid_idx])
@@ -174,21 +186,30 @@ def main():
         perm = torch.randperm(len(xt))
         total = 0.0
         for b in range(0, len(xt), args.batch):
-            batch = xt[perm[b:b + args.batch]]
-            idxs = [train_idx[i] for i in perm[b:b + args.batch].tolist()]
+            sel = perm[b:b + args.batch]
+            batch = xt[sel]
+            idxs = [train_idx[i] for i in sel.tolist()]
             targets = {h: torch.tensor([Y[i][h] for i in idxs]) for h in HEADS}
+            wsel = win_w[sel]
             opt.zero_grad()
             out = net(batch)
-            loss = sum(F.cross_entropy(out[h], targets[h]) for h in HEADS)
+            loss = sum((F.cross_entropy(out[h], targets[h], weight=weights[h], reduction="none")
+                        * wsel).mean() for h in HEADS)
             loss.backward()
             opt.step()
-            total += float(loss) * len(batch)
+            total += float(loss.detach()) * len(batch)
         net.eval()
         with torch.no_grad():
             vout = net(xva)
-            correct = sum(float((vout[h].argmax(1) == yv[h]).float().mean()) for h in HEADS) / len(HEADS)
+            # honest metric: tool accuracy on positive windows; slot accuracy where present
+            pos = yv["tool"] != NONE_IDX["tool"]
+            tool_acc = float((vout["tool"].argmax(1)[pos] == yv["tool"][pos]).float().mean()) if pos.any() else 0.0
+            slot_accs = {}
+            for h in ("room", "device", "scene", "level", "seconds"):
+                m = yv[h] != NONE_IDX[h]
+                slot_accs[h] = round(float((vout[h].argmax(1)[m] == yv[h][m]).float().mean()), 3) if m.any() else None
         history.append({"epoch": epoch, "train_loss": round(total / len(xt), 4),
-                        "valid_head_acc": round(correct, 4)})
+                        "valid_tool_acc_pos_windows": round(tool_acc, 4), "valid_slot_acc": slot_accs})
         print(history[-1], flush=True)
 
     args.out.mkdir(parents=True, exist_ok=True)
@@ -200,6 +221,7 @@ def main():
         "model": "voicetools", "spec_version": TASK_SPEC_VERSION,
         "labels": {"tools": TOOLS_SORTED, "enums": SLOT_ENUMS, "none_idx": NONE_IDX},
         "input_shape": [1, 1, 40, 200], "seed": SEED, "epochs": args.epochs,
+        "recipe": {"lr": args.lr, "neg_weight": args.neg_weight, "class_weights": "inverse-sqrt"},
         "history": history, "windows": n,
         "acceptance": ACCEPTANCE,
         "onnx_sha256": hashlib.sha256((args.out / "model.onnx").read_bytes()).hexdigest(),

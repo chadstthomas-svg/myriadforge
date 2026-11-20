@@ -1,0 +1,273 @@
+{
+  "model": "voicetools",
+  "spec_version": "voicetools/1",
+  "labels": {
+    "tools": [
+      "lights.off",
+      "lights.on",
+      "lights.scene",
+      "lights.set",
+      "media.pause",
+      "media.play",
+      "media.stop",
+      "media.volume",
+      "timer.cancel",
+      "timer.pause",
+      "timer.resume",
+      "timer.start"
+    ],
+    "enums": {
+      "room": [
+        "bedroom",
+        "hall",
+        "kitchen",
+        "living",
+        "office"
+      ],
+      "device": [
+        "bedroom",
+        "kitchen",
+        "office",
+        "speaker",
+        "tv"
+      ],
+      "scene": [
+        "focus",
+        "movie",
+        "night",
+        "relax"
+      ],
+      "level": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100
+      ],
+      "seconds": [
+        60,
+        120,
+        300,
+        600,
+        900
+      ]
+    },
+    "none_idx": {
+      "tool": 12,
+      "room": 5,
+      "device": 5,
+      "scene": 4,
+      "level": 11,
+      "seconds": 5
+    }
+  },
+  "input_shape": [
+    1,
+    1,
+    40,
+    200
+  ],
+  "seed": 132,
+  "epochs": 15,
+  "recipe": {
+    "lr": 0.003,
+    "neg_weight": 0.25,
+    "class_weights": "inverse-sqrt"
+  },
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": 4.7636,
+      "valid_tool_acc_pos_windows": 0.0955,
+      "valid_slot_acc": {
+        "room": 0.0,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.0,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 1,
+      "train_loss": 4.6603,
+      "valid_tool_acc_pos_windows": 0.121,
+      "valid_slot_acc": {
+        "room": 0.0,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.0,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": 4.5885,
+      "valid_tool_acc_pos_windows": 0.1401,
+      "valid_slot_acc": {
+        "room": 0.0,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.0,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 3,
+      "train_loss": 4.5166,
+      "valid_tool_acc_pos_windows": 0.1847,
+      "valid_slot_acc": {
+        "room": 0.0,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.0,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 4,
+      "train_loss": 4.4581,
+      "valid_tool_acc_pos_windows": 0.1752,
+      "valid_slot_acc": {
+        "room": 0.037,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.0,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 5,
+      "train_loss": 4.4391,
+      "valid_tool_acc_pos_windows": 0.2325,
+      "valid_slot_acc": {
+        "room": 0.028,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.0,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 6,
+      "train_loss": 4.3765,
+      "valid_tool_acc_pos_windows": 0.2834,
+      "valid_slot_acc": {
+        "room": 0.0,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.0,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 7,
+      "train_loss": 4.2923,
+      "valid_tool_acc_pos_windows": 0.293,
+      "valid_slot_acc": {
+        "room": 0.018,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.0,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 8,
+      "train_loss": 4.1128,
+      "valid_tool_acc_pos_windows": 0.3758,
+      "valid_slot_acc": {
+        "room": 0.055,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.059,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 9,
+      "train_loss": 3.9126,
+      "valid_tool_acc_pos_windows": 0.3567,
+      "valid_slot_acc": {
+        "room": 0.009,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.029,
+        "seconds": 0.0
+      }
+    },
+    {
+      "epoch": 10,
+      "train_loss": 3.7926,
+      "valid_tool_acc_pos_windows": 0.3885,
+      "valid_slot_acc": {
+        "room": 0.239,
+        "device": 0.0,
+        "scene": 0.0,
+        "level": 0.147,
+        "seconds": 0.033
+      }
+    },
+    {
+      "epoch": 11,
+      "train_loss": 3.6338,
+      "valid_tool_acc_pos_windows": 0.4427,
+      "valid_slot_acc": {
+        "room": 0.174,
+        "device": 0.074,
+        "scene": 0.067,
+        "level": 0.118,
+        "seconds": 0.033
+      }
+    },
+    {
+      "epoch": 12,
+      "train_loss": 3.5454,
+      "valid_tool_acc_pos_windows": 0.4904,
+      "valid_slot_acc": {
+        "room": 0.22,
+        "device": 0.222,
+        "scene": 0.1,
+        "level": 0.118,
+        "seconds": 0.1
+      }
+    },
+    {
+      "epoch": 13,
+      "train_loss": 3.444,
+      "valid_tool_acc_pos_windows": 0.5096,
+      "valid_slot_acc": {
+        "room": 0.239,
+        "device": 0.148,
+        "scene": 0.1,
+        "level": 0.103,
+        "seconds": 0.033
+      }
+    },
+    {
+      "epoch": 14,
+      "train_loss": 3.348,
+      "valid_tool_acc_pos_windows": 0.4586,
+      "valid_slot_acc": {
+        "room": 0.147,
+        "device": 0.481,
+        "scene": 0.2,
+        "level": 0.118,
+        "seconds": 0.1
+      }
+    }
+  ],
+  "windows": 4397,
+  "acceptance": {
+    "exact_match_min": 0.9,
+    "false_action_max": 0.01,
+    "p95_ms_max": 300,
+    "min_negatives": 300
+  },
+  "onnx_sha256": "6f6101b17de20f22ad41e5b617cb8fadf33fb7b6edaa9ebd0a7117f60a257850"
+}
