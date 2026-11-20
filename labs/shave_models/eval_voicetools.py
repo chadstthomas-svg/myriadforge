@@ -107,6 +107,11 @@ def main():
     ap.add_argument("--fixtures", type=Path, default=Path("D:/models/ncs-shave-research/voicetools"))
     ap.add_argument("--toolchain", type=Path, default=Path("D:/NTVStudy/tools/ncs1"))
     ap.add_argument("--split", default="test")
+    ap.add_argument("--device", choices=["myriad", "cpu"], default="myriad",
+                    help="cpu = matched same-student control on the OpenVINO 2020.3 CPU plugin")
+    ap.add_argument("--run-dir", type=Path, default="",
+                    help="isolated report directory (default: the bundle dir; reports are "
+                         "named device-evaluation-<device>.json so prior reports survive)")
     args = ap.parse_args()
 
     sys.path.insert(0, str(args.toolchain.resolve()))
@@ -131,17 +136,20 @@ def main():
     net = core.read_network(model=str(xml), weights=str(binary))
     input_name = list(net.input_info if hasattr(net, "input_info") else net.inputs)[0]
     start = time.perf_counter()
-    executable = core.load_network(network=net, device_name="MYRIAD", num_requests=1)
+    executable = core.load_network(network=net, device_name=args.device.upper()
+                                   if args.device == "myriad" else "CPU", num_requests=1)
     load_ms = (time.perf_counter() - start) * 1000
     out_names = [str(o) for o in net.outputs]
 
     rows = [json.loads(line) for line
             in (args.fixtures / "manifest.jsonl").read_text(encoding="utf-8").splitlines()]
     rows = [row for row in rows if row["split"] == args.split]
-    print(f"{len(rows)} fixtures (split {args.split}), outputs {out_names}", flush=True)
+    print(f"{len(rows)} fixtures (split {args.split}), device {args.device}, "
+          f"outputs {out_names}", flush=True)
 
     elapsed, results = [], []
     false_on_neg = hits = positives = 0
+    finiteness_checked = False
     for row in rows:
         samples = read_wav(args.fixtures / row["wav"])
         got_calls, fired_seen = [], set()
@@ -150,7 +158,8 @@ def main():
             seg = samples[int(w_start * RATE): int(w_start * RATE) + (WIN_FRAMES - 1) * HOP + 400]
             if len(seg) < 400:
                 continue
-            outs = executable.infer({input_name: logmel(seg)})
+            feats = logmel(seg)
+            outs = executable.infer({input_name: feats})
             # MO renames blobs to /<head>/Gemm - canonicalize by head substring
             heads = ("tool", "room", "device", "scene", "level", "seconds")
             window_out = {}
@@ -159,6 +168,10 @@ def main():
                 if match is None:
                     raise KeyError(f"cannot map output blob {name!r} to a head")
                 window_out[match] = np.asarray(tensor).reshape(-1)
+            if not finiteness_checked:
+                finiteness_checked = True
+                if not all(np.isfinite(v).all() for v in window_out.values()):
+                    raise ValueError("non-finite head output on the first inference")
             tool, call, _conf = decide(window_out, info)
             if tool is not None and tool not in fired_seen:
                 fired_seen.add(tool)
@@ -177,17 +190,24 @@ def main():
                         "want": want, "exact": exact})
 
     elapsed = np.asarray(elapsed)
+    negatives = len(rows) - positives
     metrics = {
         "exact_match": round(hits / max(1, positives), 4),
         "exact_hits": hits, "positives": positives,
-        "false_action_rate": round(false_on_neg / max(1, len(rows) - positives), 4),
-        "negatives": len(rows) - positives, "false_actions": false_on_neg,
+        "false_action_rate": round(false_on_neg / max(1, negatives), 4),
+        "negatives": negatives, "false_actions": false_on_neg,
         "p50_end_to_end_ms": round(float(np.percentile(elapsed, 50)), 1),
         "p95_end_to_end_ms": round(float(np.percentile(elapsed, 95)), 1),
         "load_ms": round(load_ms, 1),
-        "device": "MYRIAD", "ncs1_runtime": "OpenVINO 2020.3.2",
+        "device": "MYRIAD" if args.device == "myriad" else "CPU",
+        "ncs1_runtime": "OpenVINO 2020.3.2",
         "spec_version": TASK_SPEC_VERSION,
-        "onnx_sha256": info["onnx_sha256"],
+        "model_digests": {"onnx_sha256": info["onnx_sha256"],
+                          "ir_xml_sha256": hashlib.sha256(xml.read_bytes()).hexdigest(),
+                          "ir_bin_sha256": hashlib.sha256(binary.read_bytes()).hexdigest()},
+        "timing_boundary": ("end-to-end per fixture = host logmel framing over every window + "
+                            "USB/device inference + decision; model load and WAV decode excluded"),
+        "fixture_ids": "manifest-order replay (identical IDs across device/CPU runs)",
     }
     metrics["acceptance"] = {
         gate: {"required": required, "measured": metrics[measured_key],
@@ -199,10 +219,19 @@ def main():
             "p95_ms_max": (ACCEPTANCE["p95_ms_max"], "p95_ms_max", "p95_end_to_end_ms"),
         }.items()
     }
-    (args.bundle / "device-evaluation.json").write_text(
+    metrics["acceptance"]["min_negatives"] = {
+        "required": ACCEPTANCE["min_negatives"], "measured": negatives,
+        "pass": bool(negatives >= ACCEPTANCE["min_negatives"]),
+        "note": "the sealed acceptance set needs >=300 held-out negatives; "
+                "the current test split is a diagnostic set",
+    }
+    run_dir = args.run_dir if args.run_dir else args.bundle
+    report = run_dir / f"device-evaluation-{args.device}.json"
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(
         json.dumps({"metrics": metrics, "results": results}, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(metrics, indent=2))
-    print(f"written -> {args.bundle / 'device-evaluation.json'}")
+    print(f"written -> {report}")
 
 
 if __name__ == "__main__":

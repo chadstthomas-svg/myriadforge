@@ -79,7 +79,8 @@ def main():
     ap.add_argument("--split", default="test", choices=["test", "valid", "train"])
     ap.add_argument("--limit", type=int, default=0, help="cap fixtures (smoke runs)")
     ap.add_argument("--no-asr", action="store_true", help="oracle: Needle on manifest text")
-    ap.add_argument("--out", default="", help="report path (default fixtures/host-reference.json)")
+    ap.add_argument("--out", default="",
+                    help="report path (default fixtures/host-reference-resident.json)")
     args = ap.parse_args()
 
     manifest_path = args.fixtures / "manifest.jsonl"
@@ -92,11 +93,16 @@ def main():
 
     tools = tool_schema()
     report = {"fixtures": str(args.fixtures), "split": args.split, "asr": not args.no_asr,
-              "n": len(rows), "rows": []}
+              "n": len(rows), "rows": [],
+              "timing_boundary": ("resident Whistle: asr_ms covers transcribe() only, "
+                                  "extract_ms covers complete() only; model loads are "
+                                  "outside both (prior per-fixture Whistle() construction "
+                                  "inflated ASR latency and is superseded by this run)")}
     asr_ms, extract_ms = [], []
     false_on_neg = 0
     negatives = 0
 
+    asr = None if args.no_asr else cactus.Whistle()  # resident - load once, time transcribe only
     with cactus.Cactus(tools=tools) as agent:
         for i, row in enumerate(rows):
             agent.reset()  # independent query per fixture (evaluate_needle pattern)
@@ -104,7 +110,7 @@ def main():
                 text, t_asr = row["text"], 0.0
             else:
                 t0 = time.perf_counter()
-                heard = cactus.Whistle().transcribe(str(args.fixtures / row["wav"]))
+                heard = asr.transcribe(str(args.fixtures / row["wav"]))
                 t_asr = (time.perf_counter() - t0) * 1000
                 text = heard.get("text", "") if isinstance(heard, dict) else str(heard)
                 asr_ms.append(t_asr)
@@ -140,7 +146,7 @@ def main():
         "median_total_ms": round(statistics.median([r["asr_ms"] + r["extract_ms"]
                                                     for r in report["rows"]]), 1),
     }
-    out = Path(args.out) if args.out else args.fixtures / "host-reference.json"
+    out = Path(args.out) if args.out else args.fixtures / "host-reference-resident.json"
     out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report["metrics"], indent=2))
     print(f"written -> {out}")
