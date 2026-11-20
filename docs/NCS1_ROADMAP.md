@@ -163,9 +163,9 @@ Myriad X-only. Async pipelining is the real lever.
 - `apps/common/ov.py compile_model(..., num_requests=N)` + `compiled.requests`
   (raw IECore InferRequests: `async_infer`/`wait`/`outputs[name]`/`latency`).
 - `apps/gate/runner.py infer_batch()` + `apps/footage/triage.py --pipeline N`:
-  wave-batched gating. Measured app gain **+13%** (footage gated_fps 16.4 → 18.6);
-  the wave barrier between batches limits it vs the bridge's continuous +48% —
-  continuous app scheduling is the noted improvement.
+  **continuous** async scheduling (next frame submitted the instant any request
+  completes, no wave barrier). Measured app gain **+44%** (footage gated_fps
+  15.4 → 22.1 at fps 6), matching the bridge's +48% hardware ceiling.
 - Profiling hooks available: `PERF_COUNT` config + `InferRequest.get_perf_counts`
   (per-layer USB-vs-compute breakdown) for future transport tuning.
 
@@ -179,9 +179,6 @@ always-on gate on the stick → expensive host brain on flagged ranges.
 
 ## Open items
 
-- **Continuous app-level pipelining** — the footage wave-batched path captures
-  +13%; a continuous round-robin scheduler (as in the bridge) would approach the
-  full +48% ceiling.
 - **Capability shim** — modern API surface + HETERO Myriad/CPU partitioning so
   models with unsupported ops still partially accelerate; `VPU_CUSTOM_LAYERS`
   for extending op support (SHAVE kernels = the firmware-toolchain deep end).

@@ -36,9 +36,10 @@ def triage(
 ) -> dict:
     """One triage pass; returns the summary dict (also saved as a demo record).
 
-    Each sampled frame is gated once; with gate.pipeline>1 the gating runs in
-    async waves (overlaps USB transfer with on-stick compute) for higher pass
-    throughput. ``gated_fps`` is the wall-clock pass rate (the speedup metric).
+    Each sampled frame is gated once; with gate.pipeline>1 the gating runs with
+    continuous async scheduling (the next frame is submitted the instant any
+    request completes, overlapping USB transfer with on-stick compute) for higher
+    pass throughput. ``gated_fps`` is the wall-clock pass rate (the speedup metric).
     """
     import time
 

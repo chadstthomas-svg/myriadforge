@@ -89,28 +89,43 @@ class GateRunner:
     def infer_batch(self, frames_bgr: list) -> list:
         """Gate a batch of frames -> list[(probs, latency_ms)].
 
-        With pipeline>1 on the IECore/ncs1 path, frames are gated in async waves
-        of N in-flight requests (overlaps USB transfer with on-stick compute,
-        ~+48% throughput on ma2450 at N=2). Falls back to sequential infer on the
-        2022.3 runtime path or when pipeline=1.
+        With pipeline>1 on the IECore/ncs1 path, frames are gated with continuous
+        async scheduling: N requests stay in flight and the next frame is submitted
+        the instant any request completes (no wave barrier), overlapping USB
+        transfer with on-stick compute (~+48% throughput on ma2450 at N=2). Falls
+        back to sequential infer on the 2022.3 runtime path or when pipeline=1.
         """
         inputs = [frame_to_nchw(f, channels=self.channels, size=self.h) for f in frames_bgr]
         n = len(inputs)
         reqs = getattr(self.compiled, "requests", None)
-        if self.pipeline > 1 and reqs:
+        if self.pipeline > 1 and reqs and n:
             in_key = self._sig.name if hasattr(self._sig, "name") else self._sig
             out_key = self._out.name if hasattr(self._out, "name") else self._out
             nr = len(reqs)
             results: list = [None] * n
-            for base in range(0, n, nr):
-                idxs = list(range(base, min(base + nr, n)))
-                for j, idx in enumerate(idxs):
-                    reqs[j].async_infer({in_key: inputs[idx]})
-                for j, idx in enumerate(idxs):
-                    reqs[j].wait()
-                    logits = np.asarray(reqs[j].outputs[out_key]).reshape(-1)
-                    lat = float(reqs[j].latency or 0.0)
-                    results[idx] = (softmax(logits), lat)
+            slot_frame: dict = {}
+            nxt = 0
+            for slot in range(min(nr, n)):  # prime the pipeline
+                reqs[slot].async_infer({in_key: inputs[nxt]})
+                slot_frame[slot] = nxt
+                nxt += 1
+            completed = 0
+            k = 0
+            while completed < n:
+                slot = k % nr
+                k += 1
+                if slot not in slot_frame:
+                    continue
+                reqs[slot].wait()
+                fi = slot_frame.pop(slot)
+                logits = np.asarray(reqs[slot].outputs[out_key]).reshape(-1)
+                lat = float(reqs[slot].latency or 0.0)
+                results[fi] = (softmax(logits), lat)
+                completed += 1
+                if nxt < n:  # immediately refill this slot with the next frame
+                    reqs[slot].async_infer({in_key: inputs[nxt]})
+                    slot_frame[slot] = nxt
+                    nxt += 1
             return results
         return [self.infer(f) for f in frames_bgr]
 
