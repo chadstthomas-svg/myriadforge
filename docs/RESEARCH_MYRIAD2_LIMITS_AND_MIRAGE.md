@@ -408,10 +408,11 @@ Cactus host stack as reference-to-beat) is underway. Results so far:
   multi-head graph is trainable, no head-splitting needed. Warm p50 **5.14 ms** per 2 s window:
   the ≤300 ms end-to-end budget has ~58× headroom for framing.
 - **Host reference FAILS all three acceptance gates** (`labs/shave_models/host_reference.py`,
-  Whistle ASR → Needle 3 over the same test split): exact match **35.9%** (gate ≥90%), false-action
-  rate **13.5%** (gate ≤1%), p95 **664 ms** (gate ≤300 ms). The two-stage host stack is both slow and
-  inaccurate on a narrow frozen task schema — the on-device baseline to beat is loose, which
-  strengthens the case for the single trained acoustic graph.
+  Whistle ASR → Needle 3 over the same test split). Corrected resident-Whistle run (per-fixture
+  construction had inflated ASR latency ~2.4×; superseded report preserved): exact match **44.4%**
+  (gate ≥90%), false-action rate **13.5%** (gate ≤1%), p95 **430 ms** (gate ≤300 ms). The two-stage
+  host stack is both slower and less accurate than the trained student on a narrow frozen task
+  schema.
 - **Trainer** (`labs/shave_models/train_voicetools.py`): multi-head (tool[13] + room/device/scene/
   level/seconds none-indexed heads), per-window training over the eval-contract window set. First
   recipe collapsed to the all-none prior; inverse-sqrt class weights recover learning (tool acc on
@@ -419,12 +420,18 @@ Cactus host stack as reference-to-beat) is underway. Results so far:
   the slot heads need — architecture v2 keeps time resolution before the acceptance run.
 - **First device acceptance run** (`labs/shave_models/eval_voicetools.py`, MO renames output blobs to
   `/<head>/Gemm` — canonicalize by head): exact match **22.4%** (gate ≥90% — fail), false-action rate
-  **8.1%** (gate ≤1% — fail), **p95 end-to-end 27.4 ms (gate ≤300 ms — PASS, 11× headroom)**. The full
-  per-window path (host logmel framing + USB + 6-head device inference + JSON) runs p50 9.6 ms —
-  **24× faster than the host Whistle→Needle 3 stack**, so the landmark latency criterion is already
-  met while accuracy gates await architecture v2. Error decomposition (223 positives): call-count
-  wrong **65%** (per-window rule fires spuriously / misses — utterance-level aggregation is the fix),
-  slots-wrong-but-tools-right 30%, tool confusion only **6%** (tool identity is nearly there).
+  **8.1%** (gate ≤1% — fail), **p95 end-to-end 27.4 ms (gate ≤300 ms — PASS, 11× headroom)**. Error
+  decomposition (223 positives): call-count wrong **65%** (per-window rule fires spuriously / misses
+  — utterance-level aggregation is the fix), slots-wrong-but-tools-right 30%, tool confusion only
+  **6%**.
+- **Architecture v2 (time-preserving heads) rewrites the accuracy picture.** Validation: tool acc on
+  firing windows 0.51 → **0.73**, device 0.82, room 0.57. **Same-student CPU control** (v2 FP16 IR on
+  the OpenVINO 2020.3 CPU plugin, identical fixture IDs): exact match **74.9%**, false actions 6.8%,
+  p95 end-to-end **13.7 ms** — the student now beats the corrected host reference on every axis
+  (accuracy +31 pts, false actions −6.7 pts, latency 31× faster) even before the stick run. Device
+  eval of digest `ebc7ba2ce98e…` is the next physical-slot item, replaying the same IDs for a
+  device/CPU agreement check; the ≥300-negative sealed acceptance set is separate from the current
+  74-negative diagnostic split.
 
 Honest scope notes: fixtures are TTS (condition-matched for every comparison; real-speaker expansion
 is future work with mini_speech_commands as the real-audio anchor); ordered calls come from the
