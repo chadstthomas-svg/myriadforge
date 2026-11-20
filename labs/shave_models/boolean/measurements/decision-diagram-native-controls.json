@@ -1,0 +1,57 @@
+{
+  "policy_sha256": "9b9c5c754c41e0dd8b8c5e2f2d7415e30c709d1915f333fabb7c83261ff35a22",
+  "diagram_bytes": 46,
+  "diagram_nodes": 15,
+  "onnxruntime": "1.24.1",
+  "variants": {
+    "where": {
+      "onnx_bytes": 1524,
+      "onnx_nodes": 23,
+      "exact_assignments": 128,
+      "legacy_model_optimizer_exit": 1,
+      "legacy_failure": "No registered infer function for ONNX Where"
+    },
+    "arithmetic": {
+      "onnx_bytes": 2611,
+      "onnx_nodes": 46,
+      "exact_assignments": 128,
+      "legacy_model_optimizer_exit": 0,
+      "myriad_compile_exit": 0,
+      "fp16_legacy_ir_cpu_assignments": {
+        "openvino_2020_3_2": 128,
+        "openvino_2022_3_1": 115
+      },
+      "native": {
+        "bytes": 9600,
+        "sha256": "58b245626fe6c509f4ffa888c82a078ba7e8d93ac1dde3c57128dbdeab4be26c",
+        "version": [
+          5,
+          0
+        ],
+        "inputs": 1,
+        "outputs": 1,
+        "stage_count": 44,
+        "input_bytes": 1792,
+        "output_bytes": 256,
+        "sections": {
+          "headers": 192,
+          "input_descriptor": 128,
+          "output_descriptor": 128,
+          "stages": 9152,
+          "constants": 0
+        },
+        "sole_stage": null
+      }
+    }
+  },
+  "controls": {
+    "resident_gather_native_bytes": 512,
+    "myriad_target": "VPU_MYRIAD_2450",
+    "legacy_model_optimizer_and_compiler": "2020.3.2-3506-c35b42b1d89-releases/2020/3",
+    "offline_configuration": [
+      "VPU_MYRIAD_PROTOCOL VPU_MYRIAD_PCIE",
+      "VPU_MYRIAD_FORCE_RESET NO"
+    ],
+    "hardware_replay_performed": false
+  }
+}

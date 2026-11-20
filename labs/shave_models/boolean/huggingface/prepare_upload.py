@@ -15,7 +15,7 @@ ARTIFACTS = (
     "measurements/release-vector-ncs1.json", "measurements/release-stream-ncs1.json",
     "measurements/ncs1-cpu-comparison.json", "measurements/two-banks-ncs1.json",
     "measurements/constant-free-pooling.json", "measurements/native-release-and-stock-controls.json",
-    "measurements/streamed-parameters-compatibility.json",
+    "measurements/streamed-parameters-compatibility.json", "measurements/decision-diagram-native-controls.json",
 )
 CARD_FILES = ("README.md", "assets/workbench.webp", "assets/relay-decisions.webp", "assets/relay-decisions-still.webp")
 NOTICE = """MagicEightBall
