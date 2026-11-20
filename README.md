@@ -115,6 +115,10 @@ fall back to the host CPU automatically — a graph pure MYRIAD rejects runs on
 
 ## Documentation
 
+- [docs/RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md](docs/RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md) — the deep
+  research: the measured cost decomposition (**72 % compute / 26 % transfer / 2.6 % dispatch**, compute at
+  ~14 GFLOPS ≈ 10–18 % of peak), what public benchmarks actually show, and what Cactus Compute's **Mirage**
+  is missing that an always-on gate fills.
 - [docs/NCS1_ROADMAP.md](docs/NCS1_ROADMAP.md) — the Myriad 2 revival: hardware reality,
   bring-up gotchas, measured envelope, throughput shim, what fits/doesn't.
 - [docs/NCS2_ROADMAP.md](docs/NCS2_ROADMAP.md) — the Myriad X lane (workstreams WS0–WS6).

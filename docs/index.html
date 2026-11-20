@@ -284,6 +284,23 @@
         to the host CPU automatically. A graph pure MYRIAD rejects runs on the heterogeneous pipeline,
         widening the set of models the stick can accelerate.</p>
     </div>
+
+    <div class="callout reveal" style="margin-top:20px">
+      <b>Where the 58&nbsp;ms actually goes.</b>
+      <p>Measured black-box (the plugin's own profiler crashes): <b>1.5&nbsp;ms</b> fixed dispatch,
+        <b>14.8&nbsp;ms</b> input transfer (~40&nbsp;MB/s), and <b>41.7&nbsp;ms</b> compute — running at just
+        <b>~14&nbsp;GFLOPS</b>, about <b>10–18&nbsp;% of the 80–150&nbsp;GFLOPS peak</b>. The device is
+        compute-execution-bound, not USB-bound; the transfer share is precisely what pipelining hides
+        (58.0&nbsp;−&nbsp;14.8&nbsp;=&nbsp;43.2&nbsp;ms, the measured pipelined p50 to 0.01&nbsp;ms).</p>
+      <div style="display:flex;gap:6px;margin-top:16px;height:14px;border-radius:99px;overflow:hidden">
+        <span title="fixed dispatch 2.6%" style="flex:2.6;background:linear-gradient(90deg,#c4b5fd,#a78bfa)"></span>
+        <span title="input transfer 25.5%" style="flex:25.5;background:linear-gradient(90deg,#a7f3d0,#2bbd8e)"></span>
+        <span title="compute 71.9%" style="flex:71.9;background:linear-gradient(90deg,#fbcfe8,#f472b6)"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-top:6px">
+        <span>dispatch 2.6&nbsp;%</span><span>transfer 25.5&nbsp;%</span><span>compute 71.9&nbsp;%</span>
+      </div>
+    </div>
   </div>
 </section>
 

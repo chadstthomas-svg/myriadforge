@@ -90,6 +90,23 @@ WinUSB interface this device registers.
   tables stay ≤ ~10k–20k; larger tables need host-side tiling of the GEMM. The
   100k headline in the NCS2 roadmap was a Myriad X target.
 
+### Per-inference cost decomposition (2026-11-20)
+
+`tools/ncs1/profile_split.py` isolates the 58 ms with three probe graphs (the plugin's
+own `get_perf_counts()` **access-violates**, so this is black-box):
+
+| Component | Time | Share | Implied rate |
+|---|---|---|---|
+| Fixed dispatch (USB round trip + firmware) | 1.52 ms | 2.6 % | — |
+| Input transfer, 602 KB @ 224² | 14.79 ms | 25.5 % | 40.7 MB/s |
+| Compute + residual (600 MFLOP) | 41.69 ms | 71.9 % | **14.4 GFLOPS** |
+
+The model reproduces the other measurements: pipelined (transfer hidden) predicts
+**43.2 ms** vs 43.20 measured; batch-4 predicts 232 ms vs 239 measured. So the device is
+**compute-execution-bound at ~14 GFLOPS (10–18 % of the 80–150 GFLOPS peak)**, not
+USB-bound — the remaining ~5–10× is kernel/firmware efficiency, past the Python boundary.
+Full research write-up: [RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md](RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md).
+
 ## Architecture (how it plugs into myriadforge)
 
 - **Dual-backend compat layer** `apps/common/ov.py`: detects whichever OpenVINO
