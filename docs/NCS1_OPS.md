@@ -63,8 +63,8 @@ OpenVINO 2020.3.2, ONNX opset 11, one minimal graph per op, subprocess-per-op wi
 | `DepthToSpace` | conv/pool | MO_FAIL | mo_onnx conversion failed for DepthToSpace.onnx: ptimizer with --log_level=DEBUG |
 | `SpaceToDepth` | conv/pool | MO_FAIL | mo_onnx conversion failed for SpaceToDepth.onnx: ptimizer with --log_level=DEBUG |
 | `LpNormalization` | conv/pool | OK |  |
-| `LRN` | conv/pool | DEVICE_WEDGE | unmeasurable this session (host USB transient) |
-| `BatchNormalization` | conv/pool | DEVICE_WEDGE | unmeasurable this session (host USB transient) |
+| `LRN` | conv/pool | DEVICE_WEDGE | deterministic: re-probed 2026-11-20 after recovery, wedged again (outer kill at  |
+| `BatchNormalization` | conv/pool | DEVICE_WEDGE | deterministic: re-probed 2026-11-20 after recovery, wedged again (outer kill at  |
 | `Resize11` | conv/pool | MO_FAIL | mo_onnx conversion failed for Resize11.onnx: ptimizer with --log_level=DEBUG for |
 | `ReduceMean` | reduction | OK |  |
 | `ReduceSum` | reduction | OK |  |
@@ -78,7 +78,7 @@ OpenVINO 2020.3.2, ONNX opset 11, one minimal graph per op, subprocess-per-op wi
 | `ScatterND` | data-dependent | MO_FAIL | mo_onnx conversion failed for ScatterND.onnx: ptimizer with --log_level=DEBUG fo |
 | `Clip_afterConv` | data-dependent | REJECT | Clamp layer output has incorrect number of inputs (MO-generated Clamp broken in  |
 | `Expand_afterConv` | tensor | MO_FAIL | MO 2020.3 cannot convert Expand after a Conv |
-| `Shape_afterConv` | tensor | DEVICE_WEDGE | unmeasurable this session (host USB transient) |
+| `Shape_afterConv` | tensor | DEVICE_WEDGE | deterministic: re-probed 2026-11-20 after recovery, wedged again (outer kill at  |
 | `Clip11` | data-dependent | REJECT | Clamp layer output with id: 3 has incorrect number of inputs! |
 
 Unknown ops in a graph should be assumed HETERO-fallback until probed.
