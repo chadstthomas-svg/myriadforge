@@ -104,7 +104,9 @@ def _timed_pipelined(reqs, inputs: dict, warmup_runs: int, measured_runs: int) -
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
-    ap.add_argument("--device", choices=["myriad", "cpu"], default="myriad")
+    ap.add_argument("--device", choices=["myriad", "cpu", "hetero"], default="myriad",
+                    help="myriad=stick, cpu=OpenVINO CPU, hetero=HETERO:MYRIAD,CPU "
+                         "(unsupported ops fall back to CPU)")
     ap.add_argument("--warmup", type=int, default=5)
     ap.add_argument("--runs", type=int, default=50)
     ap.add_argument("--requests", type=int, default=2,
@@ -121,8 +123,8 @@ def main() -> int:
     model_path = Path(args.model)
     ie = IECore()
     available = list(ie.available_devices)
-    ov_device = "MYRIAD" if args.device == "myriad" else "CPU"
-    if args.device == "myriad" and not any(d.startswith("MYRIAD") for d in available):
+    ov_device = {"myriad": "MYRIAD", "cpu": "CPU", "hetero": "HETERO:MYRIAD,CPU"}[args.device]
+    if args.device in ("myriad", "hetero") and not any(d.startswith("MYRIAD") for d in available):
         print(json.dumps({"error": f"no MYRIAD device; available: {available}"}))
         return 2
 
@@ -131,7 +133,7 @@ def main() -> int:
     convert_ms = (time.perf_counter_ns() - t0) / 1e6
 
     net = ie.read_network(model=str(ir), weights=str(ir.with_suffix(".bin")))
-    n_reqs = max(1, args.requests)
+    n_reqs = 1 if args.device == "hetero" else max(1, args.requests)
     t0 = time.perf_counter_ns()
     exec_net = ie.load_network(network=net, device_name=ov_device, config={},
                                num_requests=n_reqs)
@@ -164,20 +166,21 @@ def main() -> int:
             "size_mb": round(model_path.stat().st_size / 1024**2, 2),
         },
         device={
-            "id": "ncs1-myriad" if args.device == "myriad" else "ncs1-ovcpu",
+            "id": {"myriad": "ncs1-myriad", "cpu": "ncs1-ovcpu", "hetero": "ncs1-hetero"}[args.device],
             "lane": "ncs1",
-            "kind": "usb-accel" if args.device == "myriad" else "host",
+            "kind": "host" if args.device == "cpu" else "usb-accel",
             "label": f"Intel NCS1 ({ov_device}, Myriad 2 ma2450)",
             "openvino_devices": available,
             "myriad_platform": "ma2450",
         },
         backend={
-            "name": "openvino-myriad" if args.device == "myriad" else "openvino-cpu",
+            "name": {"myriad": "openvino-myriad", "cpu": "openvino-cpu",
+                     "hetero": "openvino-hetero"}[args.device],
             "runtime": "OpenVINO 2020.3.2 LTS",
-            "accelerator": "myriad" if args.device == "myriad" else "cpu",
-            "shave_count": 12 if args.device == "myriad" else None,  # Myriad 2: fixed
+            "accelerator": args.device,
+            "shave_count": 12 if args.device in ("myriad", "hetero") else None,  # Myriad 2: fixed
             "shave_configurable": False,
-            "usb_transport": args.device == "myriad",
+            "usb_transport": args.device in ("myriad", "hetero"),
             "simulated": False,
             "pipelined": n_reqs > 1,
             "pipeline_requests": n_reqs,

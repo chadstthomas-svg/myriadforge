@@ -96,13 +96,20 @@ def available_devices() -> list[str]:
 
 
 def ov_device(device: str) -> str:
-    """Map app-level device names to OpenVINO plugin names."""
+    """Map app-level device names to OpenVINO plugin names.
+
+    ``hetero`` -> HETERO:MYRIAD,CPU — the capability shim: ops the Myriad 2
+    can't compile (e.g. HardSigmoid) fall back to the host CPU automatically,
+    widening the runnable model set while keeping supported ops on the stick.
+    """
     d = device.lower().strip()
     if d == "myriad":
         return "MYRIAD"
     if d == "cpu":
         return "CPU"
-    raise ValueError(f"unknown device {device!r}; expected 'myriad' or 'cpu'")
+    if d == "hetero":
+        return "HETERO:MYRIAD,CPU"
+    raise ValueError(f"unknown device {device!r}; expected 'myriad', 'cpu', or 'hetero'")
 
 
 # --- IECore compat wrapper: mimic the 2022.3 surface the apps use ---------
@@ -238,6 +245,8 @@ def compile_model(model_path: str | Path, device: str = "myriad", *, shaves: int
     # IECore: config values must be strings; Myriad 2 has no SHAVE-count key.
     net = core().read_network(model=str(ir), weights=str(ir.with_suffix(".bin")))
     config: dict[str, str] = {}
+    # HETERO partitioning uses a single request (async pipelining is a MYRIAD path).
+    nr = 1 if target.startswith("HETERO") else max(1, num_requests)
     exec_net = core().load_network(network=net, device_name=target, config=config,
-                                   num_requests=max(1, num_requests))
+                                   num_requests=nr)
     return _Compiled(exec_net, net)

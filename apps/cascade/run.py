@@ -47,7 +47,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="WS5 cascade: NCS2 gate -> host Mirage")
     ap.add_argument("image")
     ap.add_argument("--model", default=str(DEFAULT_MODEL))
-    ap.add_argument("--device", choices=["myriad", "cpu"], default="myriad")
+    ap.add_argument("--device", choices=["myriad", "cpu", "hetero"], default="myriad")
     ap.add_argument("--shaves", type=int, default=16)
     ap.add_argument("--watch", default="", help="comma-separated label substrings or class indices")
     ap.add_argument("--threshold", type=float, default=0.3)
@@ -109,7 +109,7 @@ def main() -> int:
                 "lane": lane_prefix() if args.device == "myriad" else "host",
                 "kind": "usb-accel" if args.device == "myriad" else "host",
                 "label": f"Intel {lane_prefix().upper()} ({gate.ov_name})"},
-        backend={"name": "openvino-myriad" if args.device == "myriad" else "openvino-cpu",
+        backend={"name": {"myriad": "openvino-myriad", "cpu": "openvino-cpu", "hetero": "openvino-hetero"}[args.device],
                  "runtime": "OpenVINO 2022.3.1 LTS",
                  "accelerator": "myriad" if args.device == "myriad" else "cpu",
                  "simulated": False},

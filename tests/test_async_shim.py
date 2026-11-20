@@ -66,3 +66,13 @@ def test_compile_model_exposes_num_requests() -> None:
     params = inspect.signature(compile_model).parameters
     assert "num_requests" in params
     assert params["num_requests"].default == 1
+
+
+def test_hetero_device_mapping() -> None:
+    if str(REPO) not in sys.path:
+        sys.path.insert(0, str(REPO))
+    from apps.common.ov import ov_device
+
+    assert ov_device("myriad") == "MYRIAD"
+    assert ov_device("cpu") == "CPU"
+    assert ov_device("hetero") == "HETERO:MYRIAD,CPU"  # capability shim: CPU fallback

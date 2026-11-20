@@ -101,7 +101,7 @@ def main() -> int:
     ap.add_argument("--dim", type=int, default=256)
     ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--queries", type=int, default=100)
-    ap.add_argument("--device", choices=["myriad", "cpu"], default="myriad")
+    ap.add_argument("--device", choices=["myriad", "cpu", "hetero"], default="myriad")
     ap.add_argument("--shaves", type=int, default=16)
     ap.add_argument("--out-dir", default="results")
     args = ap.parse_args()
@@ -129,7 +129,7 @@ def main() -> int:
                 "lane": lane_prefix() if args.device == "myriad" else "host",
                 "kind": "usb-accel" if args.device == "myriad" else "host",
                 "label": f"kNN GEMM on {result['device']}"},
-        backend={"name": "openvino-myriad" if args.device == "myriad" else "openvino-cpu",
+        backend={"name": {"myriad": "openvino-myriad", "cpu": "openvino-cpu", "hetero": "openvino-hetero"}[args.device],
                  "runtime": "OpenVINO 2022.3.1 LTS",
                  "accelerator": "myriad" if args.device == "myriad" else "cpu",
                  "shave_count": args.shaves if args.device == "myriad" else None,

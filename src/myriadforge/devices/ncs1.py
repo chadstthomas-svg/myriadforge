@@ -82,17 +82,25 @@ class Ncs1Provider:
         except json.JSONDecodeError:
             devices = []
         has_myriad = any(d.startswith("MYRIAD") for d in devices)
-        label = "Intel NCS1 (MYRIAD, Myriad 2)" if has_myriad else "NCS1 venv ready - no dongle (OpenVINO CPU)"
-        return [DeviceHandle(
-            lane=self.name,
-            id="ncs1-myriad" if has_myriad else "ncs1-ovcpu",
-            label=label,
-            kind="usb-accel" if has_myriad else "host",
-            fingerprint={"openvino_devices": devices, "myriad_platform": "ma2450",
-                         "runtime": "OpenVINO 2020.3.2 LTS (isolated venv, Py3.7)"},
-            available=True,
-            bench_mode="subprocess",
-        )]
+        fp = {"openvino_devices": devices, "myriad_platform": "ma2450",
+              "runtime": "OpenVINO 2020.3.2 LTS (isolated venv, Py3.7)"}
+        if not has_myriad:
+            return [DeviceHandle(
+                lane=self.name, id="ncs1-ovcpu",
+                label="NCS1 venv ready - no dongle (OpenVINO CPU)", kind="host",
+                fingerprint=fp, available=True, bench_mode="subprocess",
+            )]
+        return [
+            DeviceHandle(
+                lane=self.name, id="ncs1-myriad", label="Intel NCS1 (MYRIAD, Myriad 2)",
+                kind="usb-accel", fingerprint=fp, available=True, bench_mode="subprocess",
+            ),
+            DeviceHandle(
+                lane=self.name, id="ncs1-hetero", label="Intel NCS1 (HETERO:MYRIAD,CPU)",
+                kind="usb-accel", fingerprint={**fp, "fallback": "CPU for unsupported ops"},
+                available=True, bench_mode="subprocess",
+            ),
+        ]
 
     def bench(
         self,
@@ -103,7 +111,7 @@ class Ncs1Provider:
         measured_runs: int,
         out_dir: Path,
     ) -> Path:
-        device = "myriad" if handle.id == "ncs1-myriad" else "cpu"
+        device = {"ncs1-myriad": "myriad", "ncs1-hetero": "hetero"}.get(handle.id, "cpu")
         cmd = [
             str(self.python), str(_BRIDGE),
             "--model", str(model_path),

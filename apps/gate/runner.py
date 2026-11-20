@@ -165,7 +165,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="WS5 decision-model gate (single image)")
     ap.add_argument("image", help="image to gate")
     ap.add_argument("--model", default=str(DEFAULT_MODEL))
-    ap.add_argument("--device", choices=["myriad", "cpu"], default="myriad")
+    ap.add_argument("--device", choices=["myriad", "cpu", "hetero"], default="myriad")
     ap.add_argument("--shaves", type=int, default=16)
     ap.add_argument("--watch", default="", help="comma-separated label substrings or class indices")
     ap.add_argument("--threshold", type=float, default=0.3)

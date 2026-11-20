@@ -99,12 +99,19 @@ tools\ncs1\.venv\Scripts\python.exe -m apps.knn_engine.engine --n 10000 --device
 | id | device | runtime | status |
 |---|---|---|---|
 | `ncs1-myriad` | Intel NCS1 / Myriad 2 (MA2450) | OpenVINO 2020.3.2 (IECore, Py3.7) | the acquired unit |
+| `ncs1-hetero` | NCS1 + CPU fallback | `HETERO:MYRIAD,CPU` | capability shim — unsupported ops run on CPU |
 | `ncs2-myriad` | Intel NCS2 / Myriad X (MA2485) | OpenVINO 2022.3.1 (runtime, Py3.10) | ready for a unit |
 | `myriad2-sim` | Myriad 2 behavioral sim | calibrated on real ma2450 data | always available |
 | `myriad-sim` | Myriad X behavioral sim | synthetic constants | always available |
 
 Simulated records are stamped `backend.simulated: true` — real and modeled data
 never blend silently.
+
+**Two shims, two gains.** The *throughput* shim (async pipelining) makes supported
+models faster (+48%). The *capability* shim (`--device hetero`) makes more models
+runnable: ops the Myriad 2 can't compile (e.g. the MobileNetV3-style `HardSigmoid`)
+fall back to the host CPU automatically — a graph pure MYRIAD rejects runs on
+`HETERO:MYRIAD,CPU`. See `tools/ncs1/capability_demo.py`.
 
 ## Documentation
 

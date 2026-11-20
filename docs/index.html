@@ -277,6 +277,13 @@
         multiple in-flight async requests. Model batching does <i>not</i> help on Myriad 2; pipelining does.
         Every number is measured on real silicon, with the limits documented.</p>
     </div>
+    <div class="callout reveal">
+      <b>And a capability shim.</b>
+      <p>Speed isn't the only gain. With <code>--device hetero</code> (<code>HETERO:MYRIAD,CPU</code>),
+        ops the Myriad 2 can't compile — like the MobileNetV3-style <code>HardSigmoid</code> — fall back
+        to the host CPU automatically. A graph pure MYRIAD rejects runs on the heterogeneous pipeline,
+        widening the set of models the stick can accelerate.</p>
+    </div>
   </div>
 </section>
 

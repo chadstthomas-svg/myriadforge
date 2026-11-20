@@ -169,6 +169,37 @@ Myriad X-only. Async pipelining is the real lever.
 - Profiling hooks available: `PERF_COUNT` config + `InferRequest.get_perf_counts`
   (per-layer USB-vs-compute breakdown) for future transport tuning.
 
+## Capability shim — HETERO Myriad/CPU partitioning
+
+The throughput shim makes supported models *faster*; the capability shim makes
+*more models runnable*. OpenVINO's HETERO plugin (`HETERO:MYRIAD,CPU`) partitions a
+graph: ops the Myriad 2 can compile run on the stick, ops it can't fall back to the
+host CPU automatically.
+
+Measured on real ma2450:
+- A **Conv → HardSigmoid** graph (HardSigmoid is a MobileNetV3-style activation the
+  Myriad 2 lacks): **pure MYRIAD rejects it** (`unsupported layer type "HardSigmoid"`),
+  **HETERO:MYRIAD,CPU runs it** (Conv on the stick, HardSigmoid on CPU).
+- Fully-supported MobileNetV2: HETERO ≈ MYRIAD (62 vs 61 ms/infer; partitioning adds
+  load-time overhead, ~5.5 s vs ~2 s). Use pure MYRIAD when everything is supported;
+  HETERO when the graph has unsupported ops.
+- Op-support probe findings: Myriad 2 **supports** Erf, ArgMax, Elu; **rejects**
+  HardSigmoid. (Softplus/Selu/NonZero/CumSum fail MO 2020.3 conversion itself.)
+
+Wired everywhere via `--device hetero`:
+- `apps/common/ov.py ov_device("hetero") -> "HETERO:MYRIAD,CPU"`; `compile_model`
+  forces a single request for HETERO (async pipelining is a MYRIAD-only path).
+- `tools/ncs1/bridge_runner.py --device hetero` → `ncs1-hetero` record
+  (`backend.name = openvino-hetero`).
+- `Ncs1Provider` advertises an `ncs1-hetero` handle; `myriadforge bench --device
+  ncs1-hetero` works.
+- All four apps (`gate`, `footage`, `cascade`, `knn_engine`) accept `--device hetero`.
+- Reproducible demo: `tools/ncs1/capability_demo.py` (builds Conv→HardSigmoid, shows
+  MYRIAD rejection vs HETERO success).
+
+Caveat: `get_metric("EXECUTION_DEVICES")` natively aborts on this plugin build —
+don't query it; per-layer affinity isn't exposed here.
+
 ## What fits / what doesn't (Myriad 2)
 
 Fits: static-shape FP16 CNNs (2D/1D), MLPs, decision-model gates, kNN-as-GEMM
