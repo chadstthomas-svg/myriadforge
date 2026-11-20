@@ -41,6 +41,29 @@ def test_tokenizer_split_preconditions(tokenizer):
             assert " " not in piece.piece
 
 
+def test_compact_tokenizer_restores_the_pinned_model(tokenizer, tmp_path):
+    from compact_tokenizer import TOKENIZER_HASH, read_tokenizer
+    import hashlib
+
+    compact = HERE / "needle3-tokenizer.m8t.xz"
+    original = read_tokenizer(compact)
+    assert compact.stat().st_size == 26276
+    assert len(original) == 126520
+    assert hashlib.sha256(original).hexdigest() == TOKENIZER_HASH
+    assert tokenizer.serialized_model_proto() == original
+    corrupted = tmp_path / "modified.model"
+    corrupted.write_bytes(original[:-1])
+    with pytest.raises(ValueError, match="hash"):
+        read_tokenizer(corrupted)
+
+
+def test_all_preseeded_token_counts_match_sentencepiece(tokenizer):
+    prior = tokenizer_prior(tokenizer)
+    assert len(prior) == 4200
+    encoded = tokenizer.encode([" " + segment for segment in prior], out_type=int, num_threads=4)
+    assert [len(ids) for ids in encoded] == list(prior.values())
+
+
 def test_count_matches_original_encoder(tokenizer):
     rng = random.Random(1102)
     alphabet = ["", " ", "  ", "\t", "\r\n", "\x00", "\u200d", "\u2028", "\u00a0", "\u2581",
@@ -111,6 +134,18 @@ def test_published_batch_blobs_still_use_one_stage_and_512_bytes():
         assert layout["input_bytes"] == 128 * 4 and layout["output_bytes"] == 128 * 2
         with pytest.raises(ValueError, match="layout"):
             inspect_blob(data[:-1])
+
+
+def test_usb_identity_distinguishes_both_cold_sticks():
+    from benchmark_batch_heads import check_usb_identity
+
+    old = r"USB\VID_03E7&PID_2150\ORIGINAL"
+    newer = r"USB\VID_03E7&PID_2485\SECOND"
+    assert check_usb_identity("ncs1", [old])["boot_usb_id"] == "03E7:2150"
+    assert check_usb_identity("ncs2", [newer])["boot_usb_id"] == "03E7:2485"
+    for devices in ([old], [old, newer], [r"USB\VID_03E7&PID_F63B\FIRMWARE"]):
+        with pytest.raises(RuntimeError, match="Expected one cold NCS2"):
+            check_usb_identity("ncs2", devices)
 
 
 def test_json_protocol_keeps_native_stdout_off_the_wire():

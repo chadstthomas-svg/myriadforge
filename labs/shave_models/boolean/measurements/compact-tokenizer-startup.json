@@ -1,0 +1,22 @@
+{
+  "python": "3.7.9",
+  "sentencepiece": "0.1.99",
+  "trials_each": 40,
+  "measurement": "Alternating tokenizer load and adaptive seed initialization in one resident Python process",
+  "result": {
+    "previous": {
+      "bytes": 45492,
+      "sha256": "5e2ea51729dc921028a8a3f9ab75614001853593f69c123d3d5f94373d5c23f4",
+      "tokenizer_load_p50_ms": 4.7794500000000735,
+      "seed_p50_ms": 10.781299999999995,
+      "combined_p50_ms": 15.720600000000085
+    },
+    "compact": {
+      "bytes": 26276,
+      "sha256": "4d57d370cef92ae8b4952854cf3faeab899303b452795401c683fb09bdcaf297",
+      "tokenizer_load_p50_ms": 7.300299999999954,
+      "seed_p50_ms": 6.3942000000000165,
+      "combined_p50_ms": 13.628900000000055
+    }
+  }
+}

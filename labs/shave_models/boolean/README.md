@@ -35,7 +35,11 @@ Each Gather row covers one NCS1 session. Ranges for the earlier variants cover t
 
 For the packed model, the VPU request and output decoding took 2.2–2.3 ms at p50. Counting the 397,562-byte input took 27.3–27.6 ms at p50. Model load took 1.62–1.82 s. The CPU-only implementation of the same policy took 30.5–31.7 ms at p50. The VPU scan variant also performs phrase matching on the stick. Its host counts Needle tokens, maps lexemes and passes the accumulated evidence bits between tiles.
 
-The [512-byte NCS1 blob](bundles/magiceightball/ncs1-native.blob), 1,755-byte Windows manifest and 45,492-byte losslessly compressed tokenizer total **47,759 bytes**. Host code, Python, OpenVINO and firmware are additional. The tokenizer is decompressed and checked once per resident process.
+The 128-slot direct-import data files total **28,545 bytes** on Windows. That includes the [512-byte NCS1 blob](bundles/magiceightball-batch/ncs1-native.blob), its 1,757-byte manifest and the 26,276-byte [compact tokenizer](needle3-tokenizer.m8t.xz). Host code, Python, OpenVINO and firmware are additional.
+
+The tokenizer archive stores vocabulary strings in their original order and reconstructs the redundant SentencePiece scores from their ranks. It restores all 126,520 original bytes and verifies their SHA-256 before passing the model to SentencePiece. The earlier archive occupied 45,492 bytes. The [rebuild tool](compact_tokenizer.py) accepts the pinned raw `.model` or the earlier `.model.xz` file.
+
+On the NCS1 host's Python 3.7 runtime, tokenizer load plus adaptive vocabulary initialization took **13.6 ms median** across 40 trials, compared with 15.7 ms before compaction and precomputed seeding. The physical NCS1 replay with the compact archive passed the full truth table and mixed-length inputs, with one 128-decision request taking 5.4 ms median. [Startup measurements](measurements/compact-tokenizer-startup.json) · [Compact archive device replay](measurements/compact-batch-ncs1.json)
 
 The [128-slot NCS1 blob](bundles/magiceightball-batch/ncs1-native.blob) also occupies 512 bytes. Both builds use a single rank-one Gather over the same 64-byte table. The 2020.3.2 serializer aligns each section to 64 bytes. These blobs contain 192 bytes of headers, 64 each for input and output descriptors, 128 for the Gather stage and 64 for the table. The compiler emits the same byte count for a two-entry bank. This establishes the size floor for this resident rank-one Gather layout under that compiler. [Intel serializer source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/backend/serialize.cpp#L150-L175) · [Intel Gather stage source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/stages/gather.cpp#L67-L82) · [Parsed artifact layouts](measurements/batch-head-compatibility.json)
 
@@ -102,6 +106,12 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/GITenberg/Pride-and-Prejudi
 & $ncs2 "$b/benchmark.py" "$b/bundles/magiceightball" --lane ncs2 --corpus $corpus --output ncs2-gather.json --export ncs2-gather.blob --fast-count --repeats 35
 & $ncs1 "$b/benchmark_adaptive.py" "$b/bundles/magiceightball-batch" --corpus $corpus --output adaptive.json
 & $ncs1 "$b/benchmark_batch_heads.py" "$b/bundles/magiceightball-batch" --corpus $corpus --output gather-vector.json
+```
+
+On a Windows host with one freshly connected NCS2, this acceptance run identifies the stick from its cold USB product ID before loading the real MYRIAD plugin. It runs the 128-case truth table, measures warmed batches, verifies mixed inputs at the 131,072-token boundary and exports the graph from 2022.3.1.
+
+```powershell
+& $ncs2 "$b/benchmark_batch_heads.py" "$b/bundles/magiceightball-batch" --lane ncs2 --expect-stick ncs2 --corpus $corpus --output ncs2-verified.json --export ncs2-verified.blob
 ```
 
 The benchmark verifies the SHA-256 of its pinned copy of Jane Austen’s public-domain *Pride and Prejudice*. Token lengths use the Apache 2.0 [Cactus Compute Needle 3 SentencePiece model](https://huggingface.co/Cactus-Compute/needle3/blob/d6c7d6a2e9655505e0f8e23339356dd1705900eb/tokenizer/tokenizer.model), SHA-256 `97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25`. The [license text](../bundles/needle-ui/LICENSE) also applies to this unmodified tokenizer. Tests compare optimized and original counts on Unicode, special tokens, newlines, repeated spaces and the full token limit.

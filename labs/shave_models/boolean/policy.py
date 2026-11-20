@@ -1,16 +1,15 @@
 """Boolean expressions, evidence extraction and a reference independent of OpenVINO."""
-import hashlib
 import json
-import lzma
 from pathlib import Path
 import re
 from collections import Counter, OrderedDict
 
 import numpy as np
 
+from compact_tokenizer import read_tokenizer
+
 
 LIMIT = 131072
-TOKENIZER_HASH = "97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25"
 PARTS = re.compile(r'"(?:[^"\\]|\\.)*"|@[a-zA-Z_][a-zA-Z_0-9]*|AND\b|OR\b|NOT\b|[()]')
 LEXEME = re.compile(r"\w+|[^\w\s]", re.UNICODE)
 GROUPS = ("answers", "categories", "actions")
@@ -242,13 +241,8 @@ class Policy:
 
 def load_tokenizer(path=None):
     import sentencepiece as spm
-    path = Path(path) if path else Path(__file__).with_name("needle3-tokenizer.model.xz")
-    contents = path.read_bytes()
-    if path.suffix == ".xz":
-        contents = lzma.decompress(contents)
-    if hashlib.sha256(contents).hexdigest() != TOKENIZER_HASH:
-        raise ValueError("Unexpected Needle 3 tokenizer hash")
-    return spm.SentencePieceProcessor(model_proto=contents)
+    path = Path(path) if path else Path(__file__).with_name("needle3-tokenizer.m8t.xz")
+    return spm.SentencePieceProcessor(model_proto=read_tokenizer(path))
 
 
 def needle_count(tokenizer, text, fast=True, memo=None):
@@ -299,9 +293,9 @@ def tokenizer_prior(tokenizer):
     """Seed reusable counts from the pinned vocabulary itself."""
     metaspace = "\u2581"
     words = (tokenizer.id_to_piece(i) for i in range(tokenizer.get_piece_size()))
-    segments = [word[1:] for word in words if word.startswith(metaspace)]
-    pieces = tokenizer.encode([" " + word for word in segments], out_type=int, num_threads=4)
-    return {word: len(ids) for word, ids in zip(segments, pieces)}
+    # The pinned model encodes each of these 4,200 segments as one token.
+    # The differential test checks the entire set against SentencePiece.
+    return {word[1:]: 1 for word in words if word.startswith(metaspace)}
 
 
 def validate_count(count):

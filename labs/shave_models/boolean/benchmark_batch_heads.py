@@ -3,8 +3,11 @@ import argparse
 import hashlib
 import itertools
 import json
+import os
 from pathlib import Path
 import random
+import re
+import subprocess
 import time
 
 from adaptive import AdaptiveRuntime, Profiles
@@ -12,6 +15,32 @@ from benchmark import CORPUS_SHA, PHRASES, exact_document, expected, quantiles
 from blob_layout import inspect_blob
 from policy import LIMIT
 from runtime import Runtime
+
+
+STICK_PRODUCT_IDS = {"ncs1": "2150", "ncs2": "2485"}
+
+
+def check_usb_identity(expected_stick, lines):
+    products = []
+    for line in lines:
+        match = re.match(r"USB\\VID_03E7&PID_([0-9A-F]{4})\\", line.strip(), re.IGNORECASE)
+        if match:
+            products.append(match.group(1).upper())
+    want = STICK_PRODUCT_IDS[expected_stick]
+    if products != [want]:
+        raise RuntimeError("Expected one cold %s (USB 03E7:%s); Windows reported %s"
+                           % (expected_stick.upper(), want, products))
+    return {"stick": expected_stick, "boot_usb_id": "03E7:" + want}
+
+
+def windows_usb_identity(expected_stick):
+    if os.name != "nt":
+        raise RuntimeError("--expect-stick uses Windows USB enumeration")
+    command = ("Get-PnpDevice -PresentOnly | Where-Object "
+               "{ $_.InstanceId -like 'USB*VID_03E7*' } | Select-Object -ExpandProperty InstanceId")
+    process = subprocess.run(["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", command],
+                             check=True, stdout=subprocess.PIPE, text=True, timeout=15)
+    return check_usb_identity(expected_stick, process.stdout.splitlines())
 
 
 def evaluate(engine, repeats, corpus):
@@ -89,16 +118,25 @@ if __name__ == "__main__":
     parser.add_argument("--toolchain", type=Path)
     parser.add_argument("--lane", choices=("ncs1", "ncs2"), default="ncs1")
     parser.add_argument("--target")
+    parser.add_argument("--expect-stick", choices=tuple(STICK_PRODUCT_IDS),
+                        help="Require the specified cold stick as the only visible Movidius USB device")
     parser.add_argument("--corpus", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--export", type=Path, help="Export the graph compiled on the selected runtime")
     parser.add_argument("--repeats", type=int, default=13)
     args = parser.parse_args()
     if args.repeats < 1:
         parser.error("--repeats must be positive")
+    identity = windows_usb_identity(args.expect_stick) if args.expect_stick else None
     runtime = Runtime(args.bundle, args.toolchain, lane=args.lane, target=args.target, blob=args.blob)
     report = evaluate(runtime, args.repeats, args.corpus)
-    if args.blob:
-        compiled = args.blob.read_bytes()
+    if identity:
+        report["physical_usb_preflight"] = identity
+    if args.export:
+        runtime.export_blob(args.export)
+    compiled_path = args.export or args.blob
+    if compiled_path:
+        compiled = compiled_path.read_bytes()
         report["compiled_blob_bytes"] = len(compiled)
         report["compiled_blob_sha256"] = hashlib.sha256(compiled).hexdigest()
         if args.lane == "ncs1":
