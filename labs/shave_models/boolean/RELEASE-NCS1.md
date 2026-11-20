@@ -44,6 +44,16 @@ Published compact systems give useful size context. fastText.zip evaluated learn
 
 MyriadForge also has physical NCS1 results for learned voice-command classification, text intent, form localization and a browser-control ranker. Those models use different graphs, fixtures, and scoring. In the measured MobileNet pipeline, asynchronous requests raised stick throughput from 15.7 to 23.2 inferences/s. The current MagicEightBall runs document the exact decision offload and its batching benefit. They contain no system energy measurement. [Other physical model results](../README.md) · [MobileNet throughput](../../../docs/NCS1_ROADMAP.md)
 
+The [competitor comparison](COMPETITORS.md) records which published workloads fit the original stick, the scope of the size claim, and the exact alternatives tested with the stock compiler.
+
+## Sustained run
+
+Use `soak_ncs1.py` with the same pinned corpus from a cold NCS1. It keeps one model resident, validates a short 128-decision batch, a fresh full-context decision, and an exact-limit stream with a late veto on every cycle. It rejects the next token before inference and writes periodic latency summaries and decision counts.
+
+```powershell
+& $python "$b/soak_ncs1.py" --toolchain $toolchain --corpus $corpus --duration 1800 --interval 30 --output soak-ncs1.json
+```
+
 ## Provenance
 
 The project code is MIT-licensed. The tokenizer is Cactus Compute's Apache-2.0 Needle 3 tokenizer, losslessly repackaged and verified against source SHA-256 `97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25`. The upstream model weights are outside this distribution. [Project license](../../../LICENSE) · [Pinned tokenizer](https://huggingface.co/Cactus-Compute/needle3/blob/d6c7d6a2e9655505e0f8e23339356dd1705900eb/tokenizer/tokenizer.model) · [Tokenizer license](../bundles/needle-ui/LICENSE)

@@ -1,0 +1,184 @@
+{
+  "hypothesis": "Single rank-one input contains packed policy words followed by Gather addresses",
+  "graph_input_type": "I32",
+  "cpu_verifier": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+  "native_compiler": "OpenVINO 2020.3.2",
+  "compiler_target": "VPU_MYRIAD_2450",
+  "physical_device_verified": false,
+  "tests": {
+    "slice-1": {
+      "verified_assignments": 128,
+      "compiled_layout": {
+        "bytes": 512,
+        "sha256": "6b7e8a9753e4b9866cb91bbd80ff6b82f668de4f8827964145145540139fbe9d",
+        "version": [
+          5,
+          0
+        ],
+        "inputs": 1,
+        "outputs": 1,
+        "stage_count": 1,
+        "input_bytes": 68,
+        "output_bytes": 4,
+        "sections": {
+          "headers": 192,
+          "input_descriptor": 64,
+          "output_descriptor": 64,
+          "stages": 192,
+          "constants": 0
+        },
+        "sole_stage": {
+          "length": 136,
+          "type": 100,
+          "shaves_field": 12
+        }
+      },
+      "required_radix_data_bytes": 32
+    },
+    "slice-128": {
+      "verified_assignments": 128,
+      "compiled_layout": {
+        "bytes": 512,
+        "sha256": "0716636237425fde6a9b94f99898150a5bd05a6c353273bcf6ad1b4e46aa7775",
+        "version": [
+          5,
+          0
+        ],
+        "inputs": 1,
+        "outputs": 1,
+        "stage_count": 1,
+        "input_bytes": 576,
+        "output_bytes": 512,
+        "sections": {
+          "headers": 192,
+          "input_descriptor": 64,
+          "output_descriptor": 64,
+          "stages": 192,
+          "constants": 0
+        },
+        "sole_stage": {
+          "length": 136,
+          "type": 100,
+          "shaves_field": 12
+        }
+      },
+      "required_radix_data_bytes": 32
+    },
+    "split-1": {
+      "verified_assignments": 128,
+      "compiled_layout": {
+        "bytes": 512,
+        "sha256": "fca7aaaff0348addbc5f38fc3cb20c136fde55654def91f0176f1c00f0c2c2db",
+        "version": [
+          5,
+          0
+        ],
+        "inputs": 1,
+        "outputs": 1,
+        "stage_count": 1,
+        "input_bytes": 68,
+        "output_bytes": 4,
+        "sections": {
+          "headers": 192,
+          "input_descriptor": 64,
+          "output_descriptor": 64,
+          "stages": 192,
+          "constants": 0
+        },
+        "sole_stage": {
+          "length": 136,
+          "type": 100,
+          "shaves_field": 12
+        }
+      },
+      "required_radix_data_bytes": 32
+    },
+    "split-128": {
+      "verified_assignments": 128,
+      "compiled_layout": {
+        "bytes": 512,
+        "sha256": "be93270270d0553fbb8d8e7df06cae29eddcfeb30cc650a28fa14a770a37bc8e",
+        "version": [
+          5,
+          0
+        ],
+        "inputs": 1,
+        "outputs": 1,
+        "stage_count": 1,
+        "input_bytes": 576,
+        "output_bytes": 512,
+        "sections": {
+          "headers": 192,
+          "input_descriptor": 64,
+          "output_descriptor": 64,
+          "stages": 192,
+          "constants": 0
+        },
+        "sole_stage": {
+          "length": 136,
+          "type": 100,
+          "shaves_field": 12
+        }
+      },
+      "required_radix_data_bytes": 32
+    },
+    "two_inputs-1": {
+      "verified_assignments": 128,
+      "compiled_layout": {
+        "bytes": 576,
+        "sha256": "8ff1f0aa63462e679adf5d7cb8b915e3e0c2ec37f7eea3140ed1c1f4b4b92245",
+        "version": [
+          5,
+          0
+        ],
+        "inputs": 2,
+        "outputs": 1,
+        "stage_count": 1,
+        "input_bytes": 128,
+        "output_bytes": 4,
+        "sections": {
+          "headers": 192,
+          "input_descriptor": 128,
+          "output_descriptor": 64,
+          "stages": 192,
+          "constants": 0
+        },
+        "sole_stage": {
+          "length": 136,
+          "type": 100,
+          "shaves_field": 12
+        }
+      },
+      "required_radix_data_bytes": 32
+    },
+    "two_inputs-128": {
+      "verified_assignments": 128,
+      "compiled_layout": {
+        "bytes": 576,
+        "sha256": "dc58b1f39c7244d5d68384e49a50982fdc654f9af08e1377936329c85dbfb180",
+        "version": [
+          5,
+          0
+        ],
+        "inputs": 2,
+        "outputs": 1,
+        "stage_count": 1,
+        "input_bytes": 576,
+        "output_bytes": 512,
+        "sections": {
+          "headers": 192,
+          "input_descriptor": 128,
+          "output_descriptor": 64,
+          "stages": 192,
+          "constants": 0
+        },
+        "sole_stage": {
+          "length": 136,
+          "type": 100,
+          "shaves_field": 12
+        }
+      },
+      "required_radix_data_bytes": 32
+    }
+  }
+}
