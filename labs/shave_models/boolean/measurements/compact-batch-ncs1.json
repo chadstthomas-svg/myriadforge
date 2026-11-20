@@ -1,0 +1,156 @@
+{
+  "model": "magiceightball",
+  "backend": "MYRIAD",
+  "lane": "ncs1",
+  "toolchain": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "capacity": 128,
+  "onnx_sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7",
+  "truth_table_cases": 128,
+  "repeats": 13,
+  "timing": {
+    "1": {
+      "ms_per_128_documents": {
+        "p50": 228.14170000000013,
+        "p95": 243.4754999999999,
+        "max": 246.5394000000005
+      },
+      "device_requests": 128
+    },
+    "2": {
+      "ms_per_128_documents": {
+        "p50": 115.46600000000052,
+        "p95": 121.34796000000065,
+        "max": 122.80259999999998
+      },
+      "device_requests": 64
+    },
+    "8": {
+      "ms_per_128_documents": {
+        "p50": 31.950900000000004,
+        "p95": 33.5819800000003,
+        "max": 34.286800000000284
+      },
+      "device_requests": 16
+    },
+    "16": {
+      "ms_per_128_documents": {
+        "p50": 17.52169999999964,
+        "p95": 20.707879999999964,
+        "max": 21.950299999999423
+      },
+      "device_requests": 8
+    },
+    "32": {
+      "ms_per_128_documents": {
+        "p50": 10.444699999999862,
+        "p95": 11.206240000000278,
+        "max": 11.2186000000003
+      },
+      "device_requests": 4
+    },
+    "64": {
+      "ms_per_128_documents": {
+        "p50": 7.186900000000662,
+        "p95": 8.474580000000564,
+        "max": 8.646900000000457
+      },
+      "device_requests": 2
+    },
+    "128": {
+      "ms_per_128_documents": {
+        "p50": 5.413699999999189,
+        "p95": 5.935179999999817,
+        "max": 6.385899999999722
+      },
+      "device_requests": 1
+    }
+  },
+  "mixed_length_device_requests": 1,
+  "mixed_length_results": [
+    {
+      "id": "early",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "billing",
+        "action": "review_billing"
+      },
+      "error": null
+    },
+    {
+      "id": "overflow",
+      "tokens": null,
+      "result": null,
+      "error": "Input has 131073 Needle tokens; maximum is 131072"
+    },
+    {
+      "id": "late",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "delivery",
+        "action": "review_delivery"
+      },
+      "error": null
+    },
+    {
+      "id": "veto",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "delivery",
+        "action": null
+      },
+      "error": null
+    },
+    {
+      "id": "empty",
+      "tokens": 0,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "error": null
+    }
+  ],
+  "physical_usb_preflight": {
+    "stick": "ncs1",
+    "boot_usb_id": "03E7:2150"
+  },
+  "compiled_blob_bytes": 512,
+  "compiled_blob_sha256": "6c3b0d0cd33174e45cff98b474e7b86f698daee46c02a10c9a17b48ce69b629f",
+  "legacy_layout": {
+    "bytes": 512,
+    "sha256": "6c3b0d0cd33174e45cff98b474e7b86f698daee46c02a10c9a17b48ce69b629f",
+    "version": [
+      5,
+      0
+    ],
+    "inputs": 1,
+    "outputs": 1,
+    "stage_count": 1,
+    "input_bytes": 512,
+    "output_bytes": 256,
+    "sections": {
+      "headers": 192,
+      "input_descriptor": 64,
+      "output_descriptor": 64,
+      "stages": 128,
+      "constants": 64
+    },
+    "sole_stage": {
+      "length": 128,
+      "type": 100,
+      "shaves_field": 12
+    }
+  }
+}

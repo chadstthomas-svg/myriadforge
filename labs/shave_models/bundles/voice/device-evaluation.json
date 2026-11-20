@@ -1,0 +1,56 @@
+{
+  "model": "voice",
+  "device": "MYRIAD",
+  "available_devices": [
+    "CPU",
+    "GNA",
+    "GPU",
+    "MYRIAD"
+  ],
+  "ncs1_runtime": "OpenVINO 2020.3.2",
+  "onnx_sha256": "37e0a448a69c2f8b9c7f14fa78bfb05720ce7d8b3bd14bc9e2f2c04918ab6631",
+  "ir_xml_sha256": "f566f8152fb53b4d6d4e9218236f967b331eea02551c88063acea79e202ff53d",
+  "ir_bin_sha256": "3f43286e47cdf9110567e4c3728d94d6e3495c63a19dd0cfedcd07a2e763e919",
+  "fixtures_sha256": "f8663d6650ee42b8117918fb3ea74d7b274b2ac304bf2be44a763c200490c1d4",
+  "examples": 901,
+  "correct": 817,
+  "reference_agreement": 1.0,
+  "max_logit_error": 0.028354644775390625,
+  "load_ms": 1837.5723000000005,
+  "inference_p50_ms": 3.4040000000006287,
+  "inference_p95_ms": 3.892099999999843,
+  "per_class": {
+    "down": {
+      "count": 104,
+      "correct": 89
+    },
+    "go": {
+      "count": 126,
+      "correct": 111
+    },
+    "left": {
+      "count": 99,
+      "correct": 90
+    },
+    "no": {
+      "count": 115,
+      "correct": 105
+    },
+    "right": {
+      "count": 121,
+      "correct": 116
+    },
+    "stop": {
+      "count": 109,
+      "correct": 97
+    },
+    "up": {
+      "count": 123,
+      "correct": 107
+    },
+    "yes": {
+      "count": 104,
+      "correct": 102
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "openvino": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+  "available_devices": [
+    "CPU",
+    "GPU"
+  ],
+  "backend": "CPU",
+  "variants": {
+    "packed": {
+      "exhaustive_combinations": 128,
+      "onnx_sha256": "34340cc37a75f7aeb46eb294894f00490415dc2eb7d4c129149c19c6d55e2b11"
+    },
+    "lookup": {
+      "exhaustive_combinations": 128,
+      "onnx_sha256": "fd82fa9db74c0f5a1efb815fc23759a5a6156f4726929f4e0971975707bff1a5"
+    },
+    "gates": {
+      "exhaustive_combinations": 128,
+      "onnx_sha256": "b7ae3c91ba89f6a8380f9ab767c16ef13a81ecaad87224758dac3dc47bffeebf"
+    },
+    "dense": {
+      "exhaustive_combinations": 128,
+      "onnx_sha256": "ba7b4e51722fcde120eef2ee691f24831442c1faf038c56bd6ccc6b4d56a9892"
+    },
+    "scan": {
+      "exhaustive_combinations": 128,
+      "onnx_sha256": "2d6e52ab2cf5d725e123622ddab8de35fbccd8590b7da97a2199ff42be2d259d"
+    }
+  }
+}

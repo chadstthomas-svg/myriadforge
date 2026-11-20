@@ -1,0 +1,203 @@
+{
+  "session": 3,
+  "variant": "packed",
+  "fast_count": true,
+  "onnx_sha256": "34340cc37a75f7aeb46eb294894f00490415dc2eb7d4c129149c19c6d55e2b11",
+  "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+  "load_ms": 1822.0435,
+  "devices": [
+    "CPU",
+    "GNA",
+    "GPU",
+    "MYRIAD"
+  ],
+  "backend": "MYRIAD",
+  "lane": "ncs1",
+  "openvino_version": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "exhaustive_combinations": 128,
+  "adversarial_cases": 13,
+  "context_cases": {
+    "early": {
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "billing",
+        "action": "review_billing"
+      },
+      "input_sha256": "3f60c64bbcb6c816df973f3a103b800798568a160a83d06cc6961f9f2111c6d0"
+    },
+    "middle": {
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "billing",
+        "action": "review_billing"
+      },
+      "input_sha256": "2fa359075b5f7220c88f546d8da4eb0688cee66994b692381d53f45a8b043fb9"
+    },
+    "last": {
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "billing",
+        "action": "review_billing"
+      },
+      "input_sha256": "3af4cedf19704d4a4e02f4d1f201a1ecef761f6b7ee972469d1c936e90ec640e"
+    },
+    "far_apart": {
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "delivery",
+        "action": "review_delivery"
+      },
+      "input_sha256": "53c77b72ea859e9d68efc45a46566761aea3a58f4bb777a378af1c0480afa0d5"
+    },
+    "late_veto": {
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "billing",
+        "action": null
+      },
+      "input_sha256": "8472fa9b8a48701237449c53e242cbf58f1975484652a75222023a3c2f611b17"
+    },
+    "late_category": {
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "mixed",
+        "action": "triage_mixed"
+      },
+      "input_sha256": "a9d99cdf06c91fb603865d708df51dfa90246597520ab911f9d58e8c1bd475e3"
+    },
+    "absent": {
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "input_sha256": "826e867448a3eb145120833539cb0f322a6646261d7603dfad3c636ec507bb26"
+    }
+  },
+  "rejected_131073": true,
+  "bytes": {
+    "onnx": 314,
+    "ir_xml": 3740,
+    "ir_weights": 66,
+    "compiled_blob": 1536
+  },
+  "timing": {
+    "1024": {
+      "total_ms": {
+        "p50": 2.7898999999997898,
+        "p95": 3.2657199999998276,
+        "max": 3.988699999999845
+      },
+      "tokenization_ms": {
+        "p50": 0.7739000000004381,
+        "p95": 0.9882700000003906,
+        "max": 1.1451999999998463
+      },
+      "host_projection_ms": {
+        "p50": 0.028399999999706438,
+        "p95": 0.046999999999997016,
+        "max": 0.05560000000048859
+      },
+      "inference_path_ms": {
+        "p50": 1.9683999999999813,
+        "p95": 2.324040000000238,
+        "max": 3.072899999999379
+      },
+      "cpu_reference_ms": {
+        "p50": 0.8863000000003396,
+        "p95": 1.245940000000445,
+        "max": 1.2818000000001106
+      },
+      "requests": 1,
+      "lexemes": null,
+      "utf8_bytes": 2545,
+      "documents": 35,
+      "tokens_per_second_p50": 367038.24509841827
+    },
+    "32768": {
+      "total_ms": {
+        "p50": 11.059799999999953,
+        "p95": 12.446979999999641,
+        "max": 13.104099999999619
+      },
+      "tokenization_ms": {
+        "p50": 8.267199999999697,
+        "p95": 9.615760000000682,
+        "max": 9.932899999999023
+      },
+      "host_projection_ms": {
+        "p50": 0.741899999999518,
+        "p95": 0.8412099999995702,
+        "max": 0.8669000000001148
+      },
+      "inference_path_ms": {
+        "p50": 2.0457999999994314,
+        "p95": 2.4390899999994886,
+        "max": 2.5551999999997577
+      },
+      "cpu_reference_ms": {
+        "p50": 9.424900000000846,
+        "p95": 11.96689000000024,
+        "max": 14.753300000000635
+      },
+      "requests": 1,
+      "lexemes": null,
+      "utf8_bytes": 95569,
+      "documents": 35,
+      "tokens_per_second_p50": 2962802.2206549975
+    },
+    "131072": {
+      "total_ms": {
+        "p50": 32.999999999999474,
+        "p95": 38.45086999999978,
+        "max": 39.76399999999991
+      },
+      "tokenization_ms": {
+        "p50": 27.608999999999995,
+        "p95": 33.23891999999944,
+        "max": 34.37169999999945
+      },
+      "host_projection_ms": {
+        "p50": 2.9804999999996085,
+        "p95": 3.4184000000001546,
+        "max": 3.5772999999998945
+      },
+      "inference_path_ms": {
+        "p50": 2.193399999999457,
+        "p95": 2.8494700000001307,
+        "max": 4.307400000000072
+      },
+      "cpu_reference_ms": {
+        "p50": 30.54960000000051,
+        "p95": 35.40040999999938,
+        "max": 38.40259999999951
+      },
+      "requests": 1,
+      "lexemes": null,
+      "utf8_bytes": 397562,
+      "documents": 35,
+      "tokens_per_second_p50": 3971878.787878851
+    }
+  }
+}

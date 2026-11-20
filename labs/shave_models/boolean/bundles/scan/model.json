@@ -1,0 +1,46 @@
+{
+  "policy": {
+    "rules": {
+      "billing": "\"charged twice\" OR \"duplicate charge\"",
+      "delivery": "\"package missing\" OR \"parcel missing\"",
+      "permission": "\"review authorized\"",
+      "hold": "\"do not route\" OR \"review cancelled\"",
+      "case_found": "@billing OR @delivery",
+      "ready": "@case_found AND @permission AND NOT @hold"
+    },
+    "answers": {
+      "may_route": "@ready"
+    },
+    "categories": {
+      "mixed": "@billing AND @delivery",
+      "billing": "@billing",
+      "delivery": "@delivery"
+    },
+    "actions": {
+      "triage_mixed": "@ready AND @billing AND @delivery",
+      "review_billing": "@ready AND @billing",
+      "review_delivery": "@ready AND @delivery"
+    }
+  },
+  "variant": "scan",
+  "decisions": "v22",
+  "state_channels": 7,
+  "tile_side": 64,
+  "input_shapes": {
+    "lexemes": [
+      1,
+      1,
+      64,
+      66
+    ],
+    "prior": [
+      1,
+      7,
+      1,
+      1
+    ]
+  },
+  "onnx_sha256": "2d6e52ab2cf5d725e123622ddab8de35fbccd8590b7da97a2199ff42be2d259d",
+  "fp16_coefficient_bytes": 1548,
+  "learned_parameters": 0
+}

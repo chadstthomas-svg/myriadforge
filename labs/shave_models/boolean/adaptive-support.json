@@ -1,0 +1,4 @@
+{
+  "support_notes": {"bundle": "bundles/magiceightball-batch"},
+  "case_records": {"bundle": "bundles/magiceightball-batch", "evidence_field": "evidence"}
+}

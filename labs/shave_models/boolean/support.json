@@ -1,0 +1,22 @@
+{
+  "name": "magiceightball",
+  "rules": {
+    "billing": "\"charged twice\" OR \"duplicate charge\"",
+    "delivery": "\"package missing\" OR \"parcel missing\"",
+    "permission": "\"review authorized\"",
+    "hold": "\"do not route\" OR \"review cancelled\"",
+    "case_found": "@billing OR @delivery",
+    "ready": "@case_found AND @permission AND NOT @hold"
+  },
+  "answers": {"may_route": "@ready"},
+  "categories": {
+    "mixed": "@billing AND @delivery",
+    "billing": "@billing",
+    "delivery": "@delivery"
+  },
+  "actions": {
+    "triage_mixed": "@ready AND @billing AND @delivery",
+    "review_billing": "@ready AND @billing",
+    "review_delivery": "@ready AND @delivery"
+  }
+}

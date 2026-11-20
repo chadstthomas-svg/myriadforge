@@ -1,0 +1,64 @@
+{
+  "onnx_sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7",
+  "cpu_control": {
+    "openvino_version": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+    "assignments": 128,
+    "layout": [
+      128
+    ],
+    "backend": "CPU",
+    "physical_ncs2": false
+  },
+  "offline_2020_3": {
+    "ncs1-native.blob": {
+      "bytes": 512,
+      "sha256": "6c3b0d0cd33174e45cff98b474e7b86f698daee46c02a10c9a17b48ce69b629f",
+      "version": [
+        5,
+        0
+      ],
+      "inputs": 1,
+      "outputs": 1,
+      "stage_count": 1,
+      "input_bytes": 512,
+      "output_bytes": 256,
+      "sections": {
+        "headers": 192,
+        "input_descriptor": 64,
+        "output_descriptor": 64,
+        "stages": 128,
+        "constants": 64
+      },
+      "sole_stage": {
+        "length": 128,
+        "type": 100,
+        "shaves_field": 12
+      }
+    },
+    "ncs2-2020.3.blob": {
+      "bytes": 512,
+      "sha256": "ce65466cd18f6490ace177b3386afac485300d479de4659b3f9b3b2d9791d8fb",
+      "version": [
+        5,
+        0
+      ],
+      "inputs": 1,
+      "outputs": 1,
+      "stage_count": 1,
+      "input_bytes": 512,
+      "output_bytes": 256,
+      "sections": {
+        "headers": 192,
+        "input_descriptor": 64,
+        "output_descriptor": 64,
+        "stages": 128,
+        "constants": 64
+      },
+      "sole_stage": {
+        "length": 128,
+        "type": 100,
+        "shaves_field": 1
+      }
+    }
+  }
+}

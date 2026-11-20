@@ -1,0 +1,67 @@
+{
+  "trials": [
+    {
+      "max_leaves": 8,
+      "evidence_literals": 7,
+      "selection": {
+        "examples": 989,
+        "category_accuracy": 0.3518705763397371,
+        "proposals": 38,
+        "correct_proposals": 38,
+        "coverage": 0.03842264914054601,
+        "precision": 1.0
+      }
+    },
+    {
+      "max_leaves": 16,
+      "evidence_literals": 15,
+      "selection": {
+        "examples": 989,
+        "category_accuracy": 0.4590495449949444,
+        "proposals": 38,
+        "correct_proposals": 38,
+        "coverage": 0.03842264914054601,
+        "precision": 1.0
+      }
+    },
+    {
+      "max_leaves": 32,
+      "evidence_literals": 26,
+      "selection": {
+        "examples": 989,
+        "category_accuracy": 0.4590495449949444,
+        "proposals": 38,
+        "correct_proposals": 38,
+        "coverage": 0.03842264914054601,
+        "precision": 1.0
+      }
+    },
+    {
+      "max_leaves": 64,
+      "evidence_literals": 52,
+      "selection": {
+        "examples": 989,
+        "category_accuracy": 0.4590495449949444,
+        "proposals": 60,
+        "correct_proposals": 59,
+        "coverage": 0.06066734074823053,
+        "precision": 0.9833333333333333
+      }
+    }
+  ],
+  "selected": 64,
+  "split_counts": {
+    "train": 11502,
+    "calibrate": 1039,
+    "select": 989,
+    "test": 2967
+  },
+  "test": {
+    "examples": 2967,
+    "category_accuracy": 0.45365689248399055,
+    "proposals": 216,
+    "correct_proposals": 203,
+    "coverage": 0.07280080889787664,
+    "precision": 0.9398148148148148
+  }
+}

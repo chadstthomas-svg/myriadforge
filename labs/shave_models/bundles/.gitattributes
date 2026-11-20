@@ -1,0 +1,6 @@
+# Device-evaluation records fingerprint the exact exported IR bytes.
+*.xml -text
+*.bin binary
+*.onnx binary
+*.safetensors binary
+*.cact binary

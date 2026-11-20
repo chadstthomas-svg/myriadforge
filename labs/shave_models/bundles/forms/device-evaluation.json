@@ -1,0 +1,29 @@
+{
+  "model": "forms",
+  "device": "MYRIAD",
+  "available_devices": [
+    "CPU",
+    "GNA",
+    "GPU",
+    "MYRIAD"
+  ],
+  "ncs1_runtime": "OpenVINO 2020.3.2",
+  "onnx_sha256": "08503c257fb9ea5255536f95e5f9fdbd517c5842fb7bb755218b7040c5cf6fd9",
+  "ir_xml_sha256": "7de997e0e0a91fa593d186cc2ae3f47ef1798c0f58aa8245f6e8d485397dbf12",
+  "ir_bin_sha256": "2bca9b9b08f924a9e481b21aba380b3738057782bbbea91382c4e2c9fe03d25e",
+  "fixtures_sha256": "f32f3e8aca7d6e3c4e5bc6d183e17c0c428a6526d27c07b647bc68fbcfaa5478",
+  "examples": 360,
+  "requests": 90,
+  "correct": 321,
+  "reference_agreement": 0.9833333333333333,
+  "max_logit_error": 0.1425790786743164,
+  "load_ms": 1893.1217,
+  "inference_p50_ms": 43.90979999999978,
+  "inference_p95_ms": 45.49272500000016,
+  "per_role_correct": {
+    "button": 90,
+    "textbox": 90,
+    "checkbox": 65,
+    "radio": 76
+  }
+}

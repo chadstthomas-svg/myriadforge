@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<mapping>
+	<map>
+		<framework name="/1/Relu_output_0" out_port_id="/1/Relu_output_0"/>
+		<IR id="5" name="/1/Relu" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="features" out_port_id="features"/>
+		<IR id="0" name="features" out_port_id="0"/>
+	</map>
+	<map>
+		<framework name="/3/Gemm" out_port_id="0"/>
+		<IR id="9" name="/3/Gemm" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="/0/Gemm_output_0" out_port_id="/0/Gemm_output_0"/>
+		<IR id="4" name="/0/Gemm" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="3.weight" out_port_id="3.weight"/>
+		<IR id="6" name="onnx_initializer_node_3.weight/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="0.weight" out_port_id="0.weight"/>
+		<IR id="1" name="onnx_initializer_node_0.weight/Output_0/Data__const" out_port_id="1"/>
+	</map>
+</mapping>

@@ -1,0 +1,71 @@
+{
+  "backend": "host",
+  "python": "3.7.9",
+  "sentencepiece": "0.1.99",
+  "host": "Windows-10-10.0.26100-SP0",
+  "samples_per_format": 60,
+  "method": "Eight warmups per format followed by alternating read, decompression, exact protobuf reconstruction, SentencePiece construction and adaptive vocabulary initialization in one process. The committed M8T1 loader at 3738ec7 was the control.",
+  "archive_sha256": {
+    "v1": "36747e603fcafa0726d38a25d7f71861da227b6d074746e06e9a77c6b1bec8e6",
+    "v2": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+  },
+  "probes_under_the_same_xz_filter_bytes": {
+    "v1_control": 26136,
+    "strip_metaspace_into_bitset": 24460,
+    "strip_metaspace_into_bitset_and_group_by_length": 23720,
+    "also_reconstruct_byte_fallback": 23440,
+    "chosen_layout_with_marker_in_length_byte": 23412,
+    "separate_and_reverse_marker_groups": 23376
+  },
+  "initial_candidate_with_per_piece_generator_p50_ms": {
+    "control_sentencepiece_ready": 6.479149999999989,
+    "candidate_sentencepiece_ready": 7.935100000000195,
+    "control_with_adaptive_prior": 13.216799999999918,
+    "candidate_with_adaptive_prior": 14.60260000000002
+  },
+  "release_archive_bytes": 735,
+  "shipped_model_and_tokenizer_bytes": 24147,
+  "tokenizer_sha256": "97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25",
+  "bytes_restored": 126520,
+  "adaptive_prior_entries": [
+    4200
+  ],
+  "timings": {
+    "v1": {
+      "file_and_restore_ms": {
+        "p50": 5.2117500000000705,
+        "p95": 7.959755000000107,
+        "max": 11.316399999999893
+      },
+      "sentencepiece_ready_ms": {
+        "p50": 6.871200000000021,
+        "p95": 9.756635000000003,
+        "max": 13.66909999999999
+      },
+      "with_adaptive_prior_ms": {
+        "p50": 13.905749999999827,
+        "p95": 21.521445000000078,
+        "max": 24.065599999999687
+      },
+      "bytes": 26136
+    },
+    "v2": {
+      "file_and_restore_ms": {
+        "p50": 5.528399999999989,
+        "p95": 7.251710000000082,
+        "max": 8.99419999999962
+      },
+      "sentencepiece_ready_ms": {
+        "p50": 7.147400000000026,
+        "p95": 9.637740000000083,
+        "max": 11.449599999999727
+      },
+      "with_adaptive_prior_ms": {
+        "p50": 13.961250000000035,
+        "p95": 19.351105000000025,
+        "max": 22.5884999999999
+      },
+      "bytes": 23412
+    }
+  }
+}

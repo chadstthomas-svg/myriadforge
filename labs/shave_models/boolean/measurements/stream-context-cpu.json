@@ -1,0 +1,45 @@
+{
+  "model": "magiceightball",
+  "backend": "CPU",
+  "openvino_version": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+  "onnx_sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7",
+  "samples": 24,
+  "initial_tokens": 130432,
+  "initial_ms": 36.430499982088804,
+  "final_tokens": 131072,
+  "final_veto": {
+    "answers": {
+      "may_route": false
+    },
+    "category": "billing",
+    "action": null
+  },
+  "overflow_rejected": true,
+  "timing": {
+    "full_text": {
+      "host_preparation_ms": {
+        "p50": 28.889950015582144,
+        "p95": 35.498435061890625,
+        "max": 36.91110003273934
+      },
+      "total_ms": {
+        "p50": 29.145099979359657,
+        "p95": 35.765325033571564,
+        "max": 37.17639995738864
+      }
+    },
+    "stream": {
+      "host_preparation_ms": {
+        "p50": 0.0555499573238194,
+        "p95": 0.07887501851655543,
+        "max": 0.09280000813305378
+      },
+      "total_ms": {
+        "p50": 0.1621000119484961,
+        "p95": 0.19984502578154204,
+        "max": 0.2858999650925398
+      }
+    }
+  },
+  "physical_device_verified": false
+}

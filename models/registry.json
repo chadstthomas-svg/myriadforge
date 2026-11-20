@@ -1,5 +1,45 @@
 {
   "entries": {
+    "myriadforge/voice": {
+      "candidates": [
+        "model.xml"
+      ],
+      "file": "model.xml",
+      "format": "xml",
+      "local_path": "labs/shave_models/bundles/voice/ir/37e0a448a69c2f8b9c7f14fa78bfb05720ce7d8b3bd14bc9e2f2c04918ab6631/model.xml",
+      "status": "ok",
+      "source": "Custom MA2450 FP16 model. See labs/shave_models/README.md for the training source and test results."
+    },
+    "myriadforge/intent": {
+      "candidates": [
+        "model.xml"
+      ],
+      "file": "model.xml",
+      "format": "xml",
+      "local_path": "labs/shave_models/bundles/intent/ir/492a2a7bf8d6bc2b2d733272b6a67e1fde596656cb03fe3342163cbd63496501/model.xml",
+      "status": "ok",
+      "source": "Custom MA2450 FP16 model. See labs/shave_models/README.md for the training source and test results."
+    },
+    "myriadforge/forms": {
+      "candidates": [
+        "model.xml"
+      ],
+      "file": "model.xml",
+      "format": "xml",
+      "local_path": "labs/shave_models/bundles/forms/ir/08503c257fb9ea5255536f95e5f9fdbd517c5842fb7bb755218b7040c5cf6fd9/model.xml",
+      "status": "ok",
+      "source": "Custom MA2450 FP16 model. See labs/shave_models/README.md for the training source and test results."
+    },
+    "myriadforge/grounding": {
+      "candidates": [
+        "model.xml"
+      ],
+      "file": "model.xml",
+      "format": "xml",
+      "local_path": "labs/shave_models/bundles/grounding/ir/fee965b8464275c990158f0ac55b29e7f338cb751a1adba239fc84a41ce9ff7f/model.xml",
+      "status": "ok",
+      "source": "Custom MA2450 FP16 model. See labs/shave_models/README.md for the training source and test results."
+    },
     "onnx-models/mobilenetv2-7": {
       "candidates": ["mobilenetv2-7.onnx"],
       "file": "mobilenetv2-7.onnx",

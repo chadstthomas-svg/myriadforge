@@ -1,0 +1,297 @@
+{
+  "backend": "native Cactus Windows host",
+  "trained_sha256": "047b6eb004d2df06c01efdae405fc1b5226f8f6ef6c8e108f6b8c635b43fe538",
+  "results": {
+    "base": {
+      "correct": 3,
+      "cases": [
+        {
+          "query": "Highlight the control for Bookmarks",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Bookmarks"
+              }
+            }
+          ],
+          "actual": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "up"
+              }
+            }
+          ],
+          "correct": false
+        },
+        {
+          "query": "Highlight the control for Keyboard shortcuts",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Keyboard shortcuts"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Highlight the control for Reader mode",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Reader mode"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Where is the Bookmarks control?",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Bookmarks"
+              }
+            }
+          ],
+          "actual": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Bookmarks control"
+              }
+            }
+          ],
+          "correct": false
+        },
+        {
+          "query": "Where is the Keyboard shortcuts control?",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Keyboard shortcuts"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Where is the Reader mode control?",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Reader mode"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Scroll this panel up please",
+          "expected": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "up"
+              }
+            }
+          ],
+          "actual": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "up"
+              }
+            }
+          ],
+          "correct": true
+        },
+        {
+          "query": "Scroll this panel down please",
+          "expected": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "down"
+              }
+            }
+          ],
+          "actual": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "down"
+              }
+            }
+          ],
+          "correct": true
+        },
+        {
+          "query": "Count these leaves",
+          "expected": [],
+          "actual": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "up"
+              }
+            }
+          ],
+          "correct": false
+        },
+        {
+          "query": "What time is it in Tokyo?",
+          "expected": [],
+          "actual": [],
+          "correct": true
+        }
+      ]
+    },
+    "tuned": {
+      "correct": 4,
+      "cases": [
+        {
+          "query": "Highlight the control for Bookmarks",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Bookmarks"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Highlight the control for Keyboard shortcuts",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Keyboard shortcuts"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Highlight the control for Reader mode",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Reader mode"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Where is the Bookmarks control?",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Bookmarks"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Where is the Keyboard shortcuts control?",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Keyboard shortcuts"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Where is the Reader mode control?",
+          "expected": [
+            {
+              "name": "find_control",
+              "arguments": {
+                "label": "Reader mode"
+              }
+            }
+          ],
+          "actual": [],
+          "correct": false
+        },
+        {
+          "query": "Scroll this panel up please",
+          "expected": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "up"
+              }
+            }
+          ],
+          "actual": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "up"
+              }
+            }
+          ],
+          "correct": true
+        },
+        {
+          "query": "Scroll this panel down please",
+          "expected": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "down"
+              }
+            }
+          ],
+          "actual": [
+            {
+              "name": "scroll_view",
+              "arguments": {
+                "direction": "down"
+              }
+            }
+          ],
+          "correct": true
+        },
+        {
+          "query": "Count these leaves",
+          "expected": [],
+          "actual": [],
+          "correct": true
+        },
+        {
+          "query": "What time is it in Tokyo?",
+          "expected": [],
+          "actual": [],
+          "correct": true
+        }
+      ]
+    }
+  }
+}

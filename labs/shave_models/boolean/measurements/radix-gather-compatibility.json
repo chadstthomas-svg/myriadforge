@@ -1,0 +1,328 @@
+{
+  "model": "magiceightball",
+  "backend": "CPU",
+  "lane": "ncs2",
+  "toolchain": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+  "capacity": 128,
+  "onnx_sha256": "9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5",
+  "truth_table_cases": 128,
+  "repeats": 3,
+  "timing": {
+    "1": {
+      "ms_per_128_documents": {
+        "p50": 18.70209991466254,
+        "p95": 19.75887999869883,
+        "max": 19.876300008036196
+      },
+      "device_requests": 128
+    },
+    "2": {
+      "ms_per_128_documents": {
+        "p50": 12.186700012534857,
+        "p95": 12.290019961073995,
+        "max": 12.301499955356121
+      },
+      "device_requests": 64
+    },
+    "8": {
+      "ms_per_128_documents": {
+        "p50": 6.2698000110685825,
+        "p95": 6.424330035224557,
+        "max": 6.441500037908554
+      },
+      "device_requests": 16
+    },
+    "16": {
+      "ms_per_128_documents": {
+        "p50": 4.855999955907464,
+        "p95": 5.517320067156106,
+        "max": 5.5908000795170665
+      },
+      "device_requests": 8
+    },
+    "32": {
+      "ms_per_128_documents": {
+        "p50": 4.003799986094236,
+        "p95": 4.157250002026558,
+        "max": 4.174300003796816
+      },
+      "device_requests": 4
+    },
+    "64": {
+      "ms_per_128_documents": {
+        "p50": 3.544099978171289,
+        "p95": 3.810860018711537,
+        "max": 3.840500023216009
+      },
+      "device_requests": 2
+    },
+    "128": {
+      "ms_per_128_documents": {
+        "p50": 3.9886999875307083,
+        "p95": 4.159969929605722,
+        "max": 4.178999923169613
+      },
+      "device_requests": 1
+    }
+  },
+  "mixed_length_device_requests": 1,
+  "mixed_length_results": [
+    {
+      "id": "early",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "billing",
+        "action": "review_billing"
+      },
+      "error": null
+    },
+    {
+      "id": "overflow",
+      "tokens": null,
+      "result": null,
+      "error": "Input has 131073 Needle tokens; maximum is 131072"
+    },
+    {
+      "id": "late",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "delivery",
+        "action": "review_delivery"
+      },
+      "error": null
+    },
+    {
+      "id": "veto",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "delivery",
+        "action": null
+      },
+      "error": null
+    },
+    {
+      "id": "empty",
+      "tokens": 0,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "error": null
+    }
+  ],
+  "physical_device_verified": false,
+  "constant_payload_bytes": 32,
+  "distinct_predicates": 7,
+  "paired_lane_facts": [
+    "review authorized",
+    "do not route",
+    "review cancelled"
+  ],
+  "offline_targets": {
+    "2450": {
+      "bytes": 512,
+      "sha256": "812c8f393db056c68cbca7f42fe7ac72ec9570d18f4e15f8e6eac2460ca04e46",
+      "version": [
+        5,
+        0
+      ],
+      "inputs": 1,
+      "outputs": 1,
+      "stage_count": 1,
+      "input_bytes": 512,
+      "output_bytes": 256,
+      "sections": {
+        "headers": 192,
+        "input_descriptor": 64,
+        "output_descriptor": 64,
+        "stages": 128,
+        "constants": 64
+      },
+      "sole_stage": {
+        "length": 128,
+        "type": 100,
+        "shaves_field": 12
+      }
+    },
+    "2480": {
+      "bytes": 512,
+      "sha256": "6ca8785bd10a0c2f7f8cb97d1a922cffdc238a5669dfae7fb4a520d75f709d8b",
+      "version": [
+        5,
+        0
+      ],
+      "inputs": 1,
+      "outputs": 1,
+      "stage_count": 1,
+      "input_bytes": 512,
+      "output_bytes": 256,
+      "sections": {
+        "headers": 192,
+        "input_descriptor": 64,
+        "output_descriptor": 64,
+        "stages": 128,
+        "constants": 64
+      },
+      "sole_stage": {
+        "length": 128,
+        "type": 100,
+        "shaves_field": 1
+      }
+    }
+  },
+  "eight_fact_control": {
+    "backend": "CPU",
+    "openvino_version": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+    "physical_device_verified": false,
+    "policy": {
+      "name": "eight-fact-control",
+      "rules": {
+        "some": "\"fact0\" OR \"fact1\" OR \"fact2\" OR \"fact3\" OR \"fact4\" OR \"fact5\" OR \"fact6\" OR \"fact7\"",
+        "every": "\"fact0\" AND \"fact1\" AND \"fact2\" AND \"fact3\" AND \"fact4\" AND \"fact5\" AND \"fact6\" AND \"fact7\""
+      },
+      "answers": {
+        "approved": "@every"
+      },
+      "categories": {
+        "has_evidence": "@some"
+      },
+      "actions": {
+        "approve": "@every"
+      }
+    },
+    "comparison": {
+      "binary": {
+        "constant_payload_bytes": 128,
+        "exact_assignments": 256,
+        "targets": {
+          "2450": {
+            "bytes": 576,
+            "sha256": "0ed6334a19cd3c35396dd688b2d2ffeda9b67043afe78c9a5a67786dc8468351",
+            "version": [
+              5,
+              0
+            ],
+            "inputs": 1,
+            "outputs": 1,
+            "stage_count": 1,
+            "input_bytes": 512,
+            "output_bytes": 256,
+            "sections": {
+              "headers": 192,
+              "input_descriptor": 64,
+              "output_descriptor": 64,
+              "stages": 128,
+              "constants": 128
+            },
+            "sole_stage": {
+              "length": 128,
+              "type": 100,
+              "shaves_field": 12
+            }
+          },
+          "2480": {
+            "bytes": 576,
+            "sha256": "cf6fcdbdffa5a7d1bf19542f89eb40f4e444aa2637a6670f4ea99030b52740c7",
+            "version": [
+              5,
+              0
+            ],
+            "inputs": 1,
+            "outputs": 1,
+            "stage_count": 1,
+            "input_bytes": 512,
+            "output_bytes": 256,
+            "sections": {
+              "headers": 192,
+              "input_descriptor": 64,
+              "output_descriptor": 64,
+              "stages": 128,
+              "constants": 128
+            },
+            "sole_stage": {
+              "length": 128,
+              "type": 100,
+              "shaves_field": 1
+            }
+          }
+        }
+      },
+      "radix": {
+        "constant_payload_bytes": 52,
+        "exact_assignments": 256,
+        "targets": {
+          "2450": {
+            "bytes": 512,
+            "sha256": "16df779b68dc45b1e8796b4eb4cee70e57a383b305d7c30173c991c5210e4d30",
+            "version": [
+              5,
+              0
+            ],
+            "inputs": 1,
+            "outputs": 1,
+            "stage_count": 1,
+            "input_bytes": 512,
+            "output_bytes": 256,
+            "sections": {
+              "headers": 192,
+              "input_descriptor": 64,
+              "output_descriptor": 64,
+              "stages": 128,
+              "constants": 64
+            },
+            "sole_stage": {
+              "length": 128,
+              "type": 100,
+              "shaves_field": 12
+            }
+          },
+          "2480": {
+            "bytes": 512,
+            "sha256": "ba821f1a5dae2269148c70c12eb42461305025b5ffa95d56ed5659a43aaf30b6",
+            "version": [
+              5,
+              0
+            ],
+            "inputs": 1,
+            "outputs": 1,
+            "stage_count": 1,
+            "input_bytes": 512,
+            "output_bytes": 256,
+            "sections": {
+              "headers": 192,
+              "input_descriptor": 64,
+              "output_descriptor": 64,
+              "stages": 128,
+              "constants": 64
+            },
+            "sole_stage": {
+              "length": 128,
+              "type": 100,
+              "shaves_field": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "offline_build_control": {
+    "transport_filter": "PCIe, to leave the USB stick available to the operator test",
+    "binary_control_matched_existing_sha256": [
+      2450,
+      2480
+    ],
+    "legacy_host_exact_fp16_patterns": 61440
+  }
+}
