@@ -105,12 +105,21 @@ def window_labels(row):
 
 
 class HeadedNet(nn.Module):
-    def __init__(self):
+    """arch v1: validated handoff graph, global GAP -> 32-d (collapses time).
+    arch v2: third block without time pooling, GAP over the MEL axis only,
+    flatten [C*T] -> heads - keeps the temporal structure slot heads need."""
+
+    def __init__(self, arch="v1"):
         super().__init__()
+        self.arch = arch
         self.stem = nn.Conv2d(1, 16, (1, 9), padding=(0, 4))
         self.block1 = nn.Conv2d(16, 24, (1, 9), padding=(0, 4))
-        self.block2 = nn.Conv2d(24, 32, (1, 9), padding=(0, 4))
-        self.heads = nn.ModuleDict({name: nn.Linear(32, count) for name, count in HEADS.items()})
+        if arch == "v1":
+            self.block2 = nn.Conv2d(24, 32, (1, 9), padding=(0, 4))
+            self.heads = nn.ModuleDict({n: nn.Linear(32, c) for n, c in HEADS.items()})
+        else:
+            self.block2 = nn.Conv2d(24, 48, (1, 9), padding=(0, 4))
+            self.heads = nn.ModuleDict({n: nn.Linear(48 * 50, c) for n, c in HEADS.items()})
         for m in self.modules():
             if isinstance(m, (nn.Conv2d, nn.Linear)):
                 nn.init.xavier_uniform_(m.weight)
@@ -119,8 +128,11 @@ class HeadedNet(nn.Module):
     def forward(self, x):
         h = F.max_pool2d(F.relu(self.stem(x)), (1, 2))
         h = F.max_pool2d(F.relu(self.block1(h)), (1, 2))
-        h = F.max_pool2d(F.relu(self.block2(h)), (1, 2))
-        flat = h.mean(dim=(2, 3))  # GAP -> [B, 32]
+        h = F.relu(self.block2(h))
+        if self.arch == "v1":
+            flat = h.mean(dim=(2, 3))                      # global GAP -> [B, 32]
+        else:
+            flat = h.mean(dim=2).flatten(1)                # GAP over mel only -> [B, 48*50]
         return {name: head(flat) for name, head in self.heads.items()}
 
 
@@ -151,6 +163,7 @@ def main():
     ap.add_argument("--lr", type=float, default=3e-3)
     ap.add_argument("--neg-weight", type=float, default=0.25,
                     help="loss weight of all-none (negative/silence) windows")
+    ap.add_argument("--arch", choices=["v1", "v2"], default="v2")
     ap.add_argument("--out", type=Path, default=Path(__file__).resolve().parent / "bundles" / "voicetools")
     args = ap.parse_args()
 
@@ -178,7 +191,7 @@ def main():
     yv = {h: torch.tensor([row[h] for row in [Y[i] for i in valid_idx]]) for h in HEADS}
     xva = torch.from_numpy(X[valid_idx])
 
-    net = HeadedNet()
+    net = HeadedNet(arch=args.arch)
     opt = torch.optim.Adam(net.parameters(), lr=args.lr)
     history = []
     for epoch in range(args.epochs):
@@ -220,7 +233,7 @@ def main():
     info = {
         "model": "voicetools", "spec_version": TASK_SPEC_VERSION,
         "labels": {"tools": TOOLS_SORTED, "enums": SLOT_ENUMS, "none_idx": NONE_IDX},
-        "input_shape": [1, 1, 40, 200], "seed": SEED, "epochs": args.epochs,
+        "input_shape": [1, 1, 40, 200], "seed": SEED, "epochs": args.epochs, "arch": args.arch,
         "recipe": {"lr": args.lr, "neg_weight": args.neg_weight, "class_weights": "inverse-sqrt"},
         "history": history, "windows": n,
         "acceptance": ACCEPTANCE,
