@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+
+# uv
+uv.lock
+
+# Downloaded model artifacts (registry.json IS committed)
+models/**
+!models/registry.json
+
+# Benchmark results are local data
+results/**
+!results/.gitkeep
+
+# Sample media (see data/samples/PROVENANCE.md for sources)
+data/
+
+# Embedded toolchains (reproducible via tools/ncs*/setup_env.ps1); scripts + calibration.json ARE committed
+tools/ncs1/python37/
+tools/ncs1/ov2020/
+tools/ncs1/redist/
+tools/ncs1/.archive/
+tools/ncs1/*.log
+tools/ncs2/.archive/
+tools/ncs2/mvp_summary.json
+
+# Environment / per-machine config
+.env
+devices.toml
+report.html

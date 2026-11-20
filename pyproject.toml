@@ -1,0 +1,30 @@
+[project]
+name = "myriadforge"
+version = "0.1.0"
+description = "Reviving the Intel Neural Compute Stick (Myriad 2): a dual-backend OpenVINO shim, async-pipelined throughput, and 2026 edge-AI apps on discontinued silicon."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Chad St. Thomas" }]
+keywords = ["myriad", "movidius", "ncs1", "neural-compute-stick", "openvino", "edge-ai", "vpu", "myriad2"]
+dependencies = [
+    "numpy>=1.26",
+    "huggingface-hub>=0.34",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+myriadforge = "myriadforge.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/myriadforge"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = ["tools", "models", "data", "vendor", "results", ".venv", "*.egg-info", "docs"]

@@ -1,0 +1,21 @@
+{
+  "entries": {
+    "onnx-models/mobilenetv2-7": {
+      "candidates": ["mobilenetv2-7.onnx"],
+      "file": "mobilenetv2-7.onnx",
+      "format": "onnx",
+      "local_path": "models/ncs1/mobilenetv2-7.onnx",
+      "status": "ok",
+      "source": "ONNX model zoo (github.com/onnx/models), opset 7 FP32, static 1x3x224x224, ImageNet-1000. NCS1/Myriad 2 gate model (opset 12 fails MO 2020.3 shape inference; opset 7 converts cleanly)."
+    },
+    "onnx-models/mobilenetv2-12": {
+      "candidates": ["mobilenetv2-12.onnx"],
+      "file": "mobilenetv2-12.onnx",
+      "format": "onnx",
+      "local_path": "models/ncs2/mobilenetv2-12.onnx",
+      "status": "ok",
+      "source": "ONNX model zoo (github.com/onnx/models), opset 12 FP32, static 1x3x224x224, ImageNet-1000. NCS2/Myriad X gate model."
+    }
+  },
+  "schema": "myriadforge.registry/1"
+}

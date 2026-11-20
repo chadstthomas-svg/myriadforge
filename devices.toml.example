@@ -1,0 +1,19 @@
+# ntvbench device-lane configuration.
+# Copy to devices.toml (repo root, git-ignored) and edit per machine.
+
+# [remote.nodes.stick]
+# host = "192.168.1.50"
+# user = "ntv"
+# port = 22
+# python = "python3"              # python with ntvbench installed on the node
+# identity = "~/.ssh/id_ed25519"  # optional
+
+# [ncs2]
+# python = "tools/ncs2/.venv/Scripts/python.exe"  # isolated OpenVINO 2022.3.1 venv
+# shaves = 16
+
+# [sim.myriad]
+# shave_count = 16
+
+# [sim.remote]
+# slowdown = 4.0   # m3-6Y30-vs-host timing factor (REMOTE.SIM)

@@ -1,0 +1,31 @@
+{
+  "schema": "ncs1.calibration/1",
+  "chip": "ma2450",
+  "shave_count": 12,
+  "shave_configurable": false,
+  "runtime": "OpenVINO 2020.3.2 LTS",
+  "measured": {
+    "gate": {
+      "model": "mobilenetv2-7",
+      "weights_mb": 6.65,
+      "load_ms": 1917.7,
+      "p50_ms": 63.48,
+      "p90_ms": 64.62,
+      "p99_ms": 65.88,
+      "throughput_fps": 15.75
+    }
+  },
+  "sim_constants": {
+    "usb_overhead_ms": 0.8,
+    "ddr_read_gb_s": 3.4,
+    "ms_per_mb_full_shaves": 7.466,
+    "shave_scaling_exponent": 0.7,
+    "usb3_load_mb_s": 15.9,
+    "load_fixed_ms": 1500.0
+  },
+  "notes": [
+    "Single-point calibration from MobileNetV2-7; rough for other model sizes.",
+    "Myriad 2 MatMul hangs on very wide GEMM outputs (>=100k); kNN tables stay <=~10k-20k.",
+    "Memory metric NOT_IMPLEMENTED in 2020.3 plugin; usable budget is an estimate."
+  ]
+}
