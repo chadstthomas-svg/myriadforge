@@ -1,0 +1,16 @@
+{
+  "base": "Cactus-Compute/needle3",
+  "base_revision": "d6c7d6a2e9655505e0f8e23339356dd1705900eb",
+  "modification": "Fine-tuned with rank-4 LoRA for local UI tool proposals, then merged and exported at 20 layers.",
+  "license": "Apache-2.0",
+  "runtime": "cactus-compute 4.2.6",
+  "validated_device": "Windows host CPU",
+  "training_examples_total": 32,
+  "internal_validation_examples": 3,
+  "epochs": 1,
+  "seed": 91,
+  "files": {
+    "needle-ui.cact": "047b6eb004d2df06c01efdae405fc1b5226f8f6ef6c8e108f6b8c635b43fe538",
+    "ui-lora.safetensors": "408044bad0565ec5d41c209447324946033b83b7564029fb2cf8a0348ca76faf"
+  }
+}

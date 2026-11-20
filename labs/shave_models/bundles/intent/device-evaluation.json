@@ -1,0 +1,388 @@
+{
+  "model": "intent",
+  "device": "MYRIAD",
+  "available_devices": [
+    "CPU",
+    "GNA",
+    "GPU",
+    "MYRIAD"
+  ],
+  "ncs1_runtime": "OpenVINO 2020.3.2",
+  "onnx_sha256": "492a2a7bf8d6bc2b2d733272b6a67e1fde596656cb03fe3342163cbd63496501",
+  "ir_xml_sha256": "9e4afa06c678a9d5bcb9a1b3a1b2574dfdee9f516d9e70aefb8447c17f2c35e6",
+  "ir_bin_sha256": "68b7d1757e560826d1f133d84b74f387d9e285613a96eefecc0a426432838a3d",
+  "fixtures_sha256": "b161411e97ae76548b97dc4369206d4211b0f0e2fd5f53e5f1f24c90c9db48f1",
+  "examples": 2967,
+  "correct": 2376,
+  "reference_agreement": 1.0,
+  "max_logit_error": 0.009378433227539062,
+  "load_ms": 1649.6916,
+  "inference_p50_ms": 2.5968000000000657,
+  "inference_p95_ms": 3.0756199999998124,
+  "per_class": {
+    "addcontact": {
+      "count": 0,
+      "correct": 0
+    },
+    "alarm_query": {
+      "count": 34,
+      "correct": 29
+    },
+    "alarm_remove": {
+      "count": 21,
+      "correct": 18
+    },
+    "alarm_set": {
+      "count": 41,
+      "correct": 38
+    },
+    "audio_volume_down": {
+      "count": 11,
+      "correct": 9
+    },
+    "audio_volume_mute": {
+      "count": 31,
+      "correct": 26
+    },
+    "audio_volume_other": {
+      "count": 6,
+      "correct": 1
+    },
+    "audio_volume_up": {
+      "count": 13,
+      "correct": 11
+    },
+    "calendar_query": {
+      "count": 126,
+      "correct": 99
+    },
+    "calendar_remove": {
+      "count": 64,
+      "correct": 58
+    },
+    "calendar_set": {
+      "count": 208,
+      "correct": 188
+    },
+    "cleaning": {
+      "count": 1,
+      "correct": 0
+    },
+    "coffee": {
+      "count": 0,
+      "correct": 0
+    },
+    "convert": {
+      "count": 0,
+      "correct": 0
+    },
+    "cooking_query": {
+      "count": 0,
+      "correct": 0
+    },
+    "cooking_recipe": {
+      "count": 72,
+      "correct": 47
+    },
+    "createoradd": {
+      "count": 2,
+      "correct": 0
+    },
+    "currency": {
+      "count": 0,
+      "correct": 0
+    },
+    "datetime_convert": {
+      "count": 15,
+      "correct": 8
+    },
+    "datetime_query": {
+      "count": 85,
+      "correct": 75
+    },
+    "definition": {
+      "count": 0,
+      "correct": 0
+    },
+    "email_addcontact": {
+      "count": 12,
+      "correct": 5
+    },
+    "email_query": {
+      "count": 115,
+      "correct": 107
+    },
+    "email_querycontact": {
+      "count": 26,
+      "correct": 16
+    },
+    "email_sendemail": {
+      "count": 113,
+      "correct": 102
+    },
+    "events": {
+      "count": 0,
+      "correct": 0
+    },
+    "factoid": {
+      "count": 0,
+      "correct": 0
+    },
+    "game": {
+      "count": 1,
+      "correct": 0
+    },
+    "general_greet": {
+      "count": 1,
+      "correct": 1
+    },
+    "general_joke": {
+      "count": 15,
+      "correct": 12
+    },
+    "general_quirky": {
+      "count": 168,
+      "correct": 98
+    },
+    "greet": {
+      "count": 0,
+      "correct": 0
+    },
+    "hue_lightdim": {
+      "count": 1,
+      "correct": 0
+    },
+    "hue_lightoff": {
+      "count": 1,
+      "correct": 0
+    },
+    "hue_lightup": {
+      "count": 1,
+      "correct": 0
+    },
+    "iot_cleaning": {
+      "count": 25,
+      "correct": 21
+    },
+    "iot_coffee": {
+      "count": 36,
+      "correct": 34
+    },
+    "iot_hue_lightchange": {
+      "count": 36,
+      "correct": 32
+    },
+    "iot_hue_lightdim": {
+      "count": 20,
+      "correct": 15
+    },
+    "iot_hue_lightoff": {
+      "count": 41,
+      "correct": 36
+    },
+    "iot_hue_lighton": {
+      "count": 3,
+      "correct": 1
+    },
+    "iot_hue_lightup": {
+      "count": 26,
+      "correct": 24
+    },
+    "iot_wemo_off": {
+      "count": 17,
+      "correct": 12
+    },
+    "iot_wemo_on": {
+      "count": 10,
+      "correct": 8
+    },
+    "joke": {
+      "count": 3,
+      "correct": 0
+    },
+    "lists_createoradd": {
+      "count": 37,
+      "correct": 30
+    },
+    "lists_query": {
+      "count": 51,
+      "correct": 40
+    },
+    "lists_remove": {
+      "count": 52,
+      "correct": 40
+    },
+    "music": {
+      "count": 1,
+      "correct": 0
+    },
+    "music_dislikeness": {
+      "count": 4,
+      "correct": 0
+    },
+    "music_likeness": {
+      "count": 36,
+      "correct": 27
+    },
+    "music_query": {
+      "count": 35,
+      "correct": 28
+    },
+    "music_settings": {
+      "count": 6,
+      "correct": 1
+    },
+    "news_query": {
+      "count": 122,
+      "correct": 97
+    },
+    "play_audiobook": {
+      "count": 41,
+      "correct": 27
+    },
+    "play_game": {
+      "count": 33,
+      "correct": 20
+    },
+    "play_music": {
+      "count": 175,
+      "correct": 159
+    },
+    "play_podcasts": {
+      "count": 61,
+      "correct": 51
+    },
+    "play_radio": {
+      "count": 71,
+      "correct": 62
+    },
+    "podcasts": {
+      "count": 2,
+      "correct": 0
+    },
+    "post": {
+      "count": 1,
+      "correct": 0
+    },
+    "qa_currency": {
+      "count": 39,
+      "correct": 34
+    },
+    "qa_definition": {
+      "count": 57,
+      "correct": 49
+    },
+    "qa_factoid": {
+      "count": 141,
+      "correct": 108
+    },
+    "qa_maths": {
+      "count": 25,
+      "correct": 20
+    },
+    "qa_stock": {
+      "count": 26,
+      "correct": 23
+    },
+    "query": {
+      "count": 13,
+      "correct": 0
+    },
+    "querycontact": {
+      "count": 0,
+      "correct": 0
+    },
+    "quirky": {
+      "count": 1,
+      "correct": 0
+    },
+    "radio": {
+      "count": 1,
+      "correct": 0
+    },
+    "recommendation_events": {
+      "count": 43,
+      "correct": 28
+    },
+    "recommendation_locations": {
+      "count": 30,
+      "correct": 25
+    },
+    "recommendation_movies": {
+      "count": 20,
+      "correct": 11
+    },
+    "remove": {
+      "count": 2,
+      "correct": 0
+    },
+    "sendemail": {
+      "count": 2,
+      "correct": 0
+    },
+    "set": {
+      "count": 1,
+      "correct": 0
+    },
+    "settings": {
+      "count": 0,
+      "correct": 0
+    },
+    "social_post": {
+      "count": 80,
+      "correct": 70
+    },
+    "social_query": {
+      "count": 25,
+      "correct": 17
+    },
+    "takeaway_order": {
+      "count": 22,
+      "correct": 19
+    },
+    "takeaway_query": {
+      "count": 32,
+      "correct": 19
+    },
+    "ticket": {
+      "count": 0,
+      "correct": 0
+    },
+    "traffic": {
+      "count": 0,
+      "correct": 0
+    },
+    "transport_query": {
+      "count": 51,
+      "correct": 33
+    },
+    "transport_taxi": {
+      "count": 23,
+      "correct": 22
+    },
+    "transport_ticket": {
+      "count": 35,
+      "correct": 33
+    },
+    "transport_traffic": {
+      "count": 15,
+      "correct": 15
+    },
+    "volume_other": {
+      "count": 0,
+      "correct": 0
+    },
+    "weather_query": {
+      "count": 152,
+      "correct": 137
+    },
+    "wemo_off": {
+      "count": 1,
+      "correct": 0
+    },
+    "wemo_on": {
+      "count": 0,
+      "correct": 0
+    }
+  }
+}

@@ -61,6 +61,8 @@ on either the NCS1 (Myriad 2) or an NCS2 (Myriad X).
 
 ## Quickstart
 
+Four custom FP16 models now have physical NCS1 evaluation records covering speech commands, text intent routing, desktop control localization and browser target ranking. The model lab also includes a locally fine-tuned Cactus Needle UI adapter. [Model bundles, measurements and reproduction instructions](labs/shave_models/README.md)
+
 Native Windows only (the MYRIAD driver story is Windows-native — not WSL2).
 
 ```powershell

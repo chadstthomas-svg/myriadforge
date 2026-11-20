@@ -1,0 +1,31 @@
+{
+  "model": "voice",
+  "labels": [
+    "down",
+    "go",
+    "left",
+    "no",
+    "right",
+    "stop",
+    "up",
+    "yes"
+  ],
+  "input_shape": [
+    1,
+    1,
+    40,
+    98
+  ],
+  "seed": 132,
+  "validation_accuracy": 0.9171053171157837,
+  "selected_epoch": 17,
+  "test_accuracy": 0.9067702552719201,
+  "split_counts": {
+    "train": 6339,
+    "valid": 760,
+    "test": 901
+  },
+  "test_labels_missing_from_train": 0,
+  "parameters": 296120,
+  "onnx_sha256": "37e0a448a69c2f8b9c7f14fa78bfb05720ce7d8b3bd14bc9e2f2c04918ab6631"
+}

@@ -1,0 +1,190 @@
+<?xml version="1.0" ?>
+<net name="model" version="10">
+	<layers>
+		<layer id="0" name="features" type="Parameter" version="opset1">
+			<data element_type="f16" shape="1,4096"/>
+			<output>
+				<port id="0" precision="FP16">
+					<dim>1</dim>
+					<dim>4096</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="1" name="onnx_initializer_node_0.weight/Output_0/Data__const" type="Const" version="opset1">
+			<data element_type="f16" offset="0" shape="192,4096" size="1572864"/>
+			<output>
+				<port id="1" precision="FP16">
+					<dim>192</dim>
+					<dim>4096</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="2" name="/0/Gemm/WithoutBiases" type="MatMul" version="opset1">
+			<data transpose_a="0" transpose_b="1"/>
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>4096</dim>
+				</port>
+				<port id="1">
+					<dim>192</dim>
+					<dim>4096</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2" precision="FP16">
+					<dim>1</dim>
+					<dim>192</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="3" name="onnx_initializer_node_0.bias/Output_0/Data_/copy_const" type="Const" version="opset1">
+			<data element_type="f16" offset="1572864" shape="1,192" size="384"/>
+			<output>
+				<port id="1" precision="FP16">
+					<dim>1</dim>
+					<dim>192</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="4" name="/0/Gemm" type="Add" version="opset1">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>192</dim>
+				</port>
+				<port id="1">
+					<dim>1</dim>
+					<dim>192</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2" precision="FP16">
+					<dim>1</dim>
+					<dim>192</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="5" name="/1/Relu" type="ReLU" version="opset1">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>192</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1" precision="FP16">
+					<dim>1</dim>
+					<dim>192</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="6" name="onnx_initializer_node_3.weight/Output_0/Data__const" type="Const" version="opset1">
+			<data element_type="f16" offset="1573248" shape="91,192" size="34944"/>
+			<output>
+				<port id="1" precision="FP16">
+					<dim>91</dim>
+					<dim>192</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="7" name="/3/Gemm/WithoutBiases" type="MatMul" version="opset1">
+			<data transpose_a="0" transpose_b="1"/>
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>192</dim>
+				</port>
+				<port id="1">
+					<dim>91</dim>
+					<dim>192</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2" precision="FP16">
+					<dim>1</dim>
+					<dim>91</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="8" name="onnx_initializer_node_3.bias/Output_0/Data_/copy_const" type="Const" version="opset1">
+			<data element_type="f16" offset="1608192" shape="1,91" size="182"/>
+			<output>
+				<port id="1" precision="FP16">
+					<dim>1</dim>
+					<dim>91</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="9" name="/3/Gemm" type="Add" version="opset1">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>91</dim>
+				</port>
+				<port id="1">
+					<dim>1</dim>
+					<dim>91</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2" precision="FP16">
+					<dim>1</dim>
+					<dim>91</dim>
+				</port>
+			</output>
+		</layer>
+		<layer id="10" name="/3/Gemm/sink_port_0" type="Result" version="opset1">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>91</dim>
+				</port>
+			</input>
+		</layer>
+	</layers>
+	<edges>
+		<edge from-layer="0" from-port="0" to-layer="2" to-port="0"/>
+		<edge from-layer="1" from-port="1" to-layer="2" to-port="1"/>
+		<edge from-layer="2" from-port="2" to-layer="4" to-port="0"/>
+		<edge from-layer="3" from-port="1" to-layer="4" to-port="1"/>
+		<edge from-layer="4" from-port="2" to-layer="5" to-port="0"/>
+		<edge from-layer="5" from-port="1" to-layer="7" to-port="0"/>
+		<edge from-layer="6" from-port="1" to-layer="7" to-port="1"/>
+		<edge from-layer="7" from-port="2" to-layer="9" to-port="0"/>
+		<edge from-layer="8" from-port="1" to-layer="9" to-port="1"/>
+		<edge from-layer="9" from-port="2" to-layer="10" to-port="0"/>
+	</edges>
+	<meta_data>
+		<MO_version value=""/>
+		<cli_parameters>
+			<blobs_as_inputs value="True"/>
+			<data_type value="FP16"/>
+			<disable_resnet_optimization value="False"/>
+			<disable_weights_compression value="False"/>
+			<enable_concat_optimization value="False"/>
+			<extensions value="DIR"/>
+			<framework value="onnx"/>
+			<freeze_placeholder_with_value value="{}"/>
+			<generate_deprecated_IR_V2 value="False"/>
+			<generate_deprecated_IR_V7 value="False"/>
+			<generate_experimental_IR_V10 value="True"/>
+			<input_model value="DIR\model.onnx"/>
+			<keep_quantize_ops_in_IR value="True"/>
+			<keep_shape_ops value="False"/>
+			<log_level value="ERROR"/>
+			<mean_scale_values value="{}"/>
+			<mean_values value="()"/>
+			<model_name value="model"/>
+			<move_to_preprocess value="False"/>
+			<output_dir value="DIR"/>
+			<placeholder_data_types value="{}"/>
+			<progress value="False"/>
+			<reverse_input_channels value="False"/>
+			<scale_values value="()"/>
+			<silent value="False"/>
+			<stream_output value="False"/>
+			<unset unset_cli_parameters="batch, disable_fusing, disable_gfusing, finegrain_fusing, input, input_shape, output, placeholder_shapes, scale, transformations_config"/>
+		</cli_parameters>
+	</meta_data>
+</net>

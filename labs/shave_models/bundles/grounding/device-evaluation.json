@@ -1,0 +1,24 @@
+{
+  "model": "grounding",
+  "device": "MYRIAD",
+  "available_devices": [
+    "CPU",
+    "GNA",
+    "GPU",
+    "MYRIAD"
+  ],
+  "ncs1_runtime": "OpenVINO 2020.3.2",
+  "onnx_sha256": "fee965b8464275c990158f0ac55b29e7f338cb751a1adba239fc84a41ce9ff7f",
+  "ir_xml_sha256": "cc881f3efe56a1397e9cdad8a360ba7528d32a70439b24b172aab1bed03c2621",
+  "ir_bin_sha256": "c1bff1fb8593b941815f53bfb055c2326e32ae227806a2c97c025404257977bb",
+  "fixtures_sha256": "d09e8301e645e9c3e68818fbec3489b88af9e940041abf50c4814f46dc4bf395",
+  "examples": 310,
+  "correct": 23,
+  "reference_agreement": 1.0,
+  "max_logit_error": 0.0145416259765625,
+  "load_ms": 1638.5492999999997,
+  "inference_p50_ms": 2.463550000000314,
+  "inference_p95_ms": 2.8168800000000886,
+  "shortlist_contains_target": 68,
+  "lexical_top1_correct": 6
+}

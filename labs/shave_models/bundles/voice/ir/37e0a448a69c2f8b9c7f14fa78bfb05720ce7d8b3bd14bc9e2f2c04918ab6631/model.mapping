@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<mapping>
+	<map>
+		<framework name="/2/Relu_output_0" out_port_id="/2/Relu_output_0"/>
+		<IR id="5" name="/2/Relu" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/10/Relu_output_0" out_port_id="/10/Relu_output_0"/>
+		<IR id="17" name="/10/Relu" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/0/Conv_output_0" out_port_id="/0/Conv_output_0"/>
+		<IR id="4" name="/0/Conv" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="/3/MaxPool_output_0" out_port_id="/3/MaxPool_output_0"/>
+		<IR id="6" name="/3/MaxPool" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/14/Relu_output_0" out_port_id="/14/Relu_output_0"/>
+		<IR id="25" name="/14/Relu" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/12/Flatten_output_0" out_port_id="/12/Flatten_output_0"/>
+		<IR id="20" name="/12/Flatten/Reshape" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="/6/Relu_output_0" out_port_id="/6/Relu_output_0"/>
+		<IR id="11" name="/6/Relu" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/8/Conv_output_0" out_port_id="/8/Conv_output_0"/>
+		<IR id="16" name="/8/Conv" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="onnx::Conv_43" out_port_id="onnx::Conv_43"/>
+		<IR id="7" name="onnx_initializer_node_onnx::Conv_43/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="16.weight" out_port_id="16.weight"/>
+		<IR id="26" name="onnx_initializer_node_16.weight/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="onnx::Conv_40" out_port_id="onnx::Conv_40"/>
+		<IR id="1" name="onnx_initializer_node_onnx::Conv_40/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/4/Conv_output_0" out_port_id="/4/Conv_output_0"/>
+		<IR id="10" name="/4/Conv" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="/13/Gemm_output_0" out_port_id="/13/Gemm_output_0"/>
+		<IR id="24" name="/13/Gemm" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="/7/MaxPool_output_0" out_port_id="/7/MaxPool_output_0"/>
+		<IR id="12" name="/7/MaxPool" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="13.weight" out_port_id="13.weight"/>
+		<IR id="21" name="onnx_initializer_node_13.weight/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/16/Gemm" out_port_id="0"/>
+		<IR id="29" name="/16/Gemm" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="onnx::Conv_46" out_port_id="onnx::Conv_46"/>
+		<IR id="13" name="onnx_initializer_node_onnx::Conv_46/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="features" out_port_id="features"/>
+		<IR id="0" name="features" out_port_id="0"/>
+	</map>
+</mapping>

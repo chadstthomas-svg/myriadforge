@@ -1,0 +1,38 @@
+{
+  "model": "forms",
+  "labels": [
+    "button",
+    "textbox",
+    "checkbox",
+    "radio"
+  ],
+  "input_shape": [
+    1,
+    1,
+    128,
+    192
+  ],
+  "output_shape": [
+    1,
+    4,
+    32,
+    48
+  ],
+  "parameters": 19252,
+  "seed": 37,
+  "selected_epoch": 27,
+  "validation_point_accuracy": 0.9111111111111111,
+  "test_point_accuracy": 0.8944444444444445,
+  "per_role_point_accuracy": {
+    "button": 1.0,
+    "textbox": 1.0,
+    "checkbox": 0.7333333333333333,
+    "radio": 0.8444444444444444
+  },
+  "split_counts": {
+    "train": 540,
+    "valid": 90,
+    "test": 90
+  },
+  "onnx_sha256": "08503c257fb9ea5255536f95e5f9fdbd517c5842fb7bb755218b7040c5cf6fd9"
+}
