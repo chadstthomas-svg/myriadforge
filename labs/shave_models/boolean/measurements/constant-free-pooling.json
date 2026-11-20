@@ -1,0 +1,62 @@
+{
+  "model": "magiceightball",
+  "policy": "support.json",
+  "purpose": "Measure a constant-free one-operation clause evaluator against the resident Gather head",
+  "design": "Enumerate the 128 fact vectors and derive a deterministic cover of true rows from each output's prime implicants. Assign each distinct conjunction one row per document. Feed 1 minus the fact for a positive literal, the fact for a negative literal and zero for pad cells. A row maximum of zero satisfies the conjunction. Decode each rule by checking whether any of its conjunction rows is zero.",
+  "slots": 128,
+  "raw_facts": 7,
+  "distinct_conjunctions": 16,
+  "max_literals_per_conjunction": 5,
+  "model_optimizer_and_compiler": "2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "offline_config": {
+    "VPU_MYRIAD_PROTOCOL": "VPU_MYRIAD_PCIE",
+    "VPU_MYRIAD_FORCE_RESET": "NO"
+  },
+  "cpu_verifier": "OpenVINO 2022.3.1 CPU plugin",
+  "gather_control": {
+    "bytes_per_native_graph": 512,
+    "batch_tensor_bytes": 768,
+    "verified_assignments": 128
+  },
+  "candidates": {
+    "MaxPool": {
+      "onnx_opset": 9,
+      "input_shape": [1, 1, 2048, 5],
+      "kernel_shape": [1, 5],
+      "verified_assignments": 128,
+      "batch_tensor_bytes": 24576,
+      "resident_constants_bytes": 0,
+      "2450": {
+        "bytes": 960,
+        "stage_count": 3,
+        "sha256": "1cfe8d87a4b2af96e69b40a98ba18c533bc4ee16657f0f5f8621edb69b57d224"
+      },
+      "2480": {
+        "bytes": 960,
+        "stage_count": 3,
+        "sha256": "5e36384447333843aca0f5d10255eb116d7c7f16576d152b6894bcd41857ab01"
+      }
+    },
+    "ReduceMax": {
+      "onnx_opset": 9,
+      "input_shape": [2048, 5],
+      "axes": [1],
+      "keep_dims": true,
+      "verified_assignments": 128,
+      "batch_tensor_bytes": 24576,
+      "resident_constants_bytes": 0,
+      "2450": {
+        "bytes": 512,
+        "stage_count": 1,
+        "stage_bytes_before_alignment": 172,
+        "sha256": "a5d7549e9ca23bef96dcad31c68992cccd10e2ce15f9fd0600d7f568b4d2fc11"
+      },
+      "2480": {
+        "bytes": 832,
+        "stage_count": 3,
+        "sha256": "29eece97a130574bee3e6991f99657f96d20438608d91813c04066671c9628a7"
+      }
+    }
+  },
+  "physical_device_verified": false
+}

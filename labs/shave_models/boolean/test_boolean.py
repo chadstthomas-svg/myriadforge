@@ -42,15 +42,18 @@ def test_tokenizer_split_preconditions(tokenizer):
 
 
 def test_compact_tokenizer_restores_the_pinned_model(tokenizer, tmp_path):
-    from compact_tokenizer import TOKENIZER_HASH, read_tokenizer
+    from compact_tokenizer import TOKENIZER_HASH, pack_tokenizer, read_tokenizer
     import hashlib
 
     compact = HERE / "needle3-tokenizer.m8t.xz"
     original = read_tokenizer(compact)
-    assert compact.stat().st_size == 26136
+    assert compact.stat().st_size == 23412
     assert len(original) == 126520
     assert hashlib.sha256(original).hexdigest() == TOKENIZER_HASH
     assert tokenizer.serialized_model_proto() == original
+    rebuilt = tmp_path / "rebuilt.xz"
+    rebuilt.write_bytes(pack_tokenizer(original))
+    assert read_tokenizer(rebuilt) == original
     corrupted = tmp_path / "modified.model"
     corrupted.write_bytes(original[:-1])
     with pytest.raises(ValueError, match="hash"):
