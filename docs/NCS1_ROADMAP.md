@@ -239,14 +239,22 @@ always-on gate on the stick → expensive host brain on flagged ranges.
 
 ## Open items
 
-- **Capability shim** — modern API surface + HETERO Myriad/CPU partitioning so
-  models with unsupported ops still partially accelerate; `VPU_CUSTOM_LAYERS`
-  for extending op support (SHAVE kernels = the firmware-toolchain deep end).
-- **Transport profiling** — `PERF_COUNT`/`get_perf_counts` to split the ~60 ms
-  into USB-transfer vs on-stick compute; informs any user-mode WinUSB tuning.
+Status refresh 2026-11-20: the first two items below are DONE — the capability
+shim shipped as `--device hetero` (`apps/common/ov.py` ov_device +
+`tools/ncs1/capability_demo.py`), and the transport split was measured
+black-box (`tools/ncs1/profile_split.py`: ~72% compute / 26% transfer / 2.6%
+dispatch; `get_perf_counts()` access-violates on 2020.3.2, so plugin-level
+profiling is unavailable). The rest remain genuinely open:
+
+- kNN host-side tiling to lift the wide-output limit (path to larger tables).
 - Memory budget is an estimate (plugin metric `NOT_IMPLEMENTED`); measure via a
   fit/no-fit sweep if a precise gate is needed.
-- kNN host-side tiling to lift the wide-output limit (path to larger tables).
 - Single-point latency calibration; refine across model sizes if the sim is used
   for predictive sizing.
 - Thermal/long-run behavior not yet characterized.
+- `VPU_CUSTOM_LAYERS` for extending op support (SHAVE kernels = the
+  firmware-toolchain deep end) — unstarted; the trained-model lane
+  (`labs/shave_models/`) is the practical alternative so far.
+- Task-specific gates: the ImageNet MobileNetV2 gate confidently mis-fires on
+  cartoon content (cascade saved nothing there); the trained voice/intent gates
+  are the fix — wire one into the cascade as a discriminating gate.
