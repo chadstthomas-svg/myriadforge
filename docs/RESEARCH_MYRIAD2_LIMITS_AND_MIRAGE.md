@@ -237,6 +237,20 @@ Conv-kernel ceiling or a device-wide wall?* — decisively:
 - **The 1×1/FC path is the worst class on the device** — relevant for transformer-style models: an
   all-1×1 workload is memory-bound at ~3 GFLOPS, i.e. ~10× worse than dense conv.
 
+**Additional transport/precision probes:**
+- **FP16 input tensors are accepted** and dramatically faster: `gap_224` p50 drops **16.32 → 4.07 ms (4×)**
+  with FP16 input (halves transfer bytes, skips FP32 handling). A direct optimization for every app: feed
+  the gate FP16 preprocessed input.
+- **Output direction runs at ~93 MB/s** — 2.3× faster than the input direction (40.7). Asymmetric USB path.
+- **Wide-output threshold is tighter than first measured**: Gemm outputs **hang at 40k** (20000 works at
+  2.38 ms). kNN tables stay ≤ 20k; the earlier 100k-GEMM hang sits in the same family.
+- **Conv1d graphs wedge Myriad 2 at load** (deterministic, 2/2 — even at L=2000): a 3D-input Conv never
+  boots. Audio gates must reshape to **2D Conv (kernel [1,9])** — the standard workaround.
+
+So "how much is on the table" now has a three-layer answer: **~5–10× vs the peak figure** (silicon
+marketing), **~2–3.5× vs dense-Conv kernels for MobileNetV2-class models** (restructure the model), and
+**~1.5× banked** (pipelining, done) — plus **free FP16-input wins** the shim exposes to every app.
+
 So "how much is on the table" now has a three-layer answer: **~5–10× vs the peak figure** (silicon
 marketing), **~2–3.5× vs dense-Conv kernels for MobileNetV2-class models** (restructure the model), and
 **~1.5× banked** (pipelining, done).

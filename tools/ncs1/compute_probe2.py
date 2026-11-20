@@ -107,19 +107,10 @@ def main() -> int:
     results = []
     with tempfile.TemporaryDirectory(prefix="ceil3-") as tmp:
         tmp = Path(tmp)
-        print("=== 1D CNN (audio-gate fit-class, paired) ===", flush=True)
-        macs = 64 * 8 * 9 * 16000 + 64 * 64 * 9 * 16000
-        flops = 2 * macs
-        ir_c = to_ir(conv1d_model(tmp / "conv1d.onnx"), cache_dir=tmp)
-        ir_g = to_ir(gap_model(tmp / "gap1d.onnx", [1, 8, 16000]), cache_dir=tmp)
-        rc, rg = p50min(ir_c), p50min(ir_g)
-        compute = rc["min"] - rg["min"]
-        gflops = flops / 1e9 / (compute / 1000) if compute > 0 else 0.0
-        r = {"probe": "conv1d 8->64x64 k9 L=16k", "flops_m": round(flops / 1e6, 1),
-             "conv_p50": round(rc["p50"], 2), "gap_p50": round(rg["p50"], 2),
-             "compute_ms": round(compute, 2), "gflops": round(gflops, 1)}
-        results.append(r)
-        print(f"  conv {rc['p50']:7.2f} - gap {rg['p50']:6.2f} = compute {compute:7.2f} ms | {gflops:6.1f} GFLOPS", flush=True)
+        print("=== 1D CNN: SKIPPED - Conv1d graphs wedge Myriad 2 at load (2/2, deterministic) ===", flush=True)
+        results.append({"probe": "conv1d", "status": "WEDGE",
+                        "note": "3D-input Conv wedges the firmware at boot; reshape to 2D Conv (kernel [1,9]) is the required transform"})
+        print("  recorded as WEDGE finding", flush=True)
 
         print("=== FP16 input acceptance (gap_224) ===", flush=True)
         ir_g224 = to_ir(gap_model(tmp / "gap224.onnx", [1, 3, 224, 224]), cache_dir=tmp)

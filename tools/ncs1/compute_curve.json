@@ -1,0 +1,72 @@
+{
+  "schema": "myriad2.compute-curve/1",
+  "chip": "ma2450",
+  "runtime": "OpenVINO 2020.3.2 LTS",
+  "date": "2026-11-20",
+  "method": "paired-gap: compute = conv_p50.min - gap_p50.min (same input shape)",
+  "probes": [
+    {
+      "probe": "dense-conv 32x28x64",
+      "flops_m": 28.9,
+      "conv_p50": 2.69,
+      "gap_p50": 2.18,
+      "compute_ms": 0.57,
+      "gflops": 50.6
+    },
+    {
+      "probe": "dense-conv 64x56x128",
+      "flops_m": 462.4,
+      "conv_p50": 20.13,
+      "gap_p50": 5.1,
+      "compute_ms": 14.92,
+      "gflops": 31.0
+    },
+    {
+      "probe": "dense-conv 128x112x128",
+      "flops_m": 3699.4,
+      "conv_p50": 134.13,
+      "gap_p50": 29.95,
+      "compute_ms": 103.45,
+      "gflops": 35.8
+    },
+    {
+      "probe": "fc-stack d=1024 x8",
+      "flops_m": 16.9,
+      "conv_p50": 8.41,
+      "gap_p50": 1.63,
+      "compute_ms": 6.71,
+      "gflops": 2.5
+    },
+    {
+      "probe": "fc-stack d=2048 x4",
+      "flops_m": 33.6,
+      "conv_p50": 12.49,
+      "gap_p50": 1.69,
+      "compute_ms": 10.36,
+      "gflops": 3.2
+    },
+    {
+      "probe": "conv1d",
+      "status": "WEDGE",
+      "note": "3D-input Conv wedges Myriad 2 at boot (2/2 deterministic, even L=2000); reshape to 2D Conv (kernel [1,9]) is the required transform"
+    },
+    {
+      "probe": "fp16-input",
+      "status": "ACCEPTED",
+      "p50_ms": 4.07,
+      "note": "FP16 input accepted; gap_224 p50 16.32 -> 4.07 ms (4x) - halves transfer bytes and skips FP32 handling"
+    },
+    {
+      "probe": "out-dir 20000",
+      "out_bytes": 20480,
+      "min_ms": 2.38,
+      "mbps": 93.0,
+      "note": "output-direction ~93 MB/s (faster than the 40.7 MB/s input direction)"
+    },
+    {
+      "probe": "out-dir 40000",
+      "status": "HANG",
+      "note": "wide-output threshold between 20k and 40k for Gemm outputs; kNN tables stay <= 20k"
+    }
+  ]
+}

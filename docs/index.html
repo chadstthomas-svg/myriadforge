@@ -149,6 +149,29 @@
   .callout b{font-family:'Space Grotesk'}
   .callout p{color:var(--muted);margin-top:8px}
 
+  /* ---- measured ceiling bars ---- */
+  .bars{margin-top:34px;display:grid;gap:16px;max-width:720px}
+  .bar-row{display:grid;grid-template-columns:210px 1fr 92px;gap:14px;align-items:center}
+  .bar-row .bl{font-family:'Space Grotesk';font-size:.95rem;font-weight:600;text-align:right}
+  .bar-track{height:26px;border-radius:999px;background:rgba(255,255,255,.55);
+    border:1px solid var(--card-brd);overflow:hidden}
+  .bar-fill{height:100%;width:0;border-radius:999px;transition:width 1.3s cubic-bezier(.2,.7,.2,1);
+    background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .bar-fill.mv2{background:linear-gradient(90deg,var(--accent3),#c084fc)}
+  .bar-fill.fc{background:linear-gradient(90deg,#fbbf24,#fb923c)}
+  .bar-row .bv{font-family:'Space Grotesk';font-weight:700;font-size:1rem;color:var(--ink)}
+  .bar-note{font-size:.78rem;color:var(--faint);margin-top:10px}
+  body.js .bars .bar-fill{width:0}
+  body.js .bars.in .bar-fill{width:var(--w)}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .chip{padding:9px 16px;border-radius:999px;font-size:.85rem;font-weight:600;
+    background:var(--card);border:1px solid var(--card-brd);backdrop-filter:blur(8px)}
+  .chip b{font-family:'Space Grotesk'}
+  .chip.ok{border-color:rgba(43,189,142,.5);color:#1f8f6b}
+  .chip.re{border-color:rgba(244,114,182,.5);color:#c0508f}
+  .chip.mo{border-color:rgba(148,163,184,.6);color:#64748b}
+  .chip.pe{border-color:rgba(251,191,36,.6);color:#b45309}
+
   /* ---- footer ---- */
   footer{padding:50px 0;border-top:1px solid rgba(255,255,255,.7);text-align:center;color:var(--muted);font-size:.9rem}
   footer .logo{justify-content:center;margin-bottom:14px}
@@ -185,7 +208,7 @@
       <a href="#architecture">Shim</a>
       <a href="#apps">Apps</a>
       <a href="#quickstart">Quickstart</a>
-      <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/NCS1_ROADMAP.md" target="_blank" rel="noopener">Docs</a>
+      <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md" target="_blank" rel="noopener">Research</a>
       <a class="btn btn-ghost" href="https://github.com/chadstthomas-svg/myriadforge" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </div>
@@ -210,8 +233,8 @@
         <div class="lbl">inferences / sec</div><div class="sub">MobileNetV2 gate on-stick</div></div>
       <div class="stat reveal"><div class="num"><span data-count="285">0</span></div>
         <div class="lbl">kNN queries / sec</div><div class="sub">10k×256 vector table</div></div>
-      <div class="stat reveal"><div class="num"><span data-count="12">0</span></div>
-        <div class="lbl">SHAVE DSP cores</div><div class="sub">~1 W always-on gate</div></div>
+      <div class="stat reveal"><div class="num"><span data-count="68">0</span></div>
+        <div class="lbl">ops mapped on silicon</div><div class="sub">42 supported · 7 firmware-rejected</div></div>
     </div>
   </div>
 </header>
@@ -258,6 +281,37 @@
   </div>
 </section>
 
+<section id="ceiling">
+  <div class="wrap">
+    <span class="eyebrow reveal">The measured ceiling</span>
+    <h2 class="reveal">The ceiling is the model, not the chip</h2>
+    <p class="sec-lede reveal">Paired-gap probes — each workload benched against a zero-compute twin with
+      the identical input — isolate pure compute time on real silicon. The same chip that gives
+      MobileNetV2 <b>14.4 GFLOPS</b> gives a dense 3×3 Conv stack <b>35.8 GFLOPS</b>: the bottleneck is
+      model structure, not the SHAVEs.</p>
+    <div class="bars reveal">
+      <div class="bar-row"><span class="bl">Dense Conv 3×3</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:60%"></div></div>
+        <span class="bv">35.8 GFLOPS</span></div>
+      <div class="bar-row"><span class="bl">MobileNetV2-7 gate</span>
+        <div class="bar-track"><div class="bar-fill mv2" style="--w:24%"></div></div>
+        <span class="bv">14.4 GFLOPS</span></div>
+      <div class="bar-row"><span class="bl">FC / 1×1 stack</span>
+        <div class="bar-track"><div class="bar-fill fc" style="--w:5%"></div></div>
+        <span class="bv">2.9 GFLOPS</span></div>
+    </div>
+    <p class="bar-note reveal">Silicon peak: 80–150 GFLOPS [secondary] — dense convs reach ~25–45 % of it;
+      depthwise/1×1 paths are memory-bound at ~2–3 GFLOPS. Paired-gap probes, real ma2450, 2026-11-20.</p>
+    <div class="chips reveal">
+      <span class="chip ok"><b>42</b> ops supported</span>
+      <span class="chip re"><b>7</b> rejected by firmware</span>
+      <span class="chip mo"><b>15</b> MO-2020.3 limited</span>
+      <span class="chip pe"><b>3</b> probe pending</span>
+      <span class="chip"><b>1</b> no onnx schema</span>
+    </div>
+  </div>
+</section>
+
 <section id="architecture">
   <div class="wrap">
     <span class="eyebrow reveal">The shim</span>
@@ -291,7 +345,9 @@
         <b>14.8&nbsp;ms</b> input transfer (~40&nbsp;MB/s), and <b>41.7&nbsp;ms</b> compute — running at just
         <b>~14&nbsp;GFLOPS</b>, about <b>10–18&nbsp;% of the 80–150&nbsp;GFLOPS peak</b>. The device is
         compute-execution-bound, not USB-bound; the transfer share is precisely what pipelining hides
-        (58.0&nbsp;−&nbsp;14.8&nbsp;=&nbsp;43.2&nbsp;ms, the measured pipelined p50 to 0.01&nbsp;ms).</p>
+        (58.0&nbsp;−&nbsp;14.8&nbsp;=&nbsp;43.2&nbsp;ms, the measured pipelined p50 to 0.01&nbsp;ms).
+        Bonus: <b>FP16 input tensors are accepted and 4× faster</b> (16.3 → 4.1&nbsp;ms on the same graph) —
+        the shim exposes that to every app.</p>
       <div style="display:flex;gap:6px;margin-top:16px;height:14px;border-radius:99px;overflow:hidden">
         <span title="fixed dispatch 2.6%" style="flex:2.6;background:linear-gradient(90deg,#c4b5fd,#a78bfa)"></span>
         <span title="input transfer 25.5%" style="flex:25.5;background:linear-gradient(90deg,#a7f3d0,#2bbd8e)"></span>
@@ -323,6 +379,16 @@
         <p>Gate fires → host Mirage describes the frame. Full latency chain, end to end.</p></div>
       <div class="app reveal"><div class="emoji">📊</div><h3>Bench &amp; report</h3><code>myriadforge</code>
         <p>Versioned result records, percentile metrics, and a self-contained HTML dashboard.</p></div>
+    </div>
+
+    <div class="callout reveal">
+      <b>The cascade, measured against Mirage.</b>
+      <p>The brain is expensive: <b>Mirage costs 1.59&nbsp;s per frame</b> on the host CPU (720p) — 60 frames
+        unguarded is <b>95&nbsp;s</b>. The stick screens all 60 in <b>~4.5&nbsp;s at ~1&nbsp;W</b>. On our
+        cartoon sample the gate fires on everything (an ImageNet top-1 gate is confidently wrong on abstract
+        content) — the honest lesson: <i>the gate needs task-specific semantics</i>, and the harness now
+        measures exactly that trade. On real footage where 1–5&nbsp;% of frames fire, the same cascade cuts
+        Mirage invocations 20–100×.</p>
     </div>
   </div>
 </section>
