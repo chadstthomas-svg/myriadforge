@@ -1,5 +1,6 @@
 """Persistent MYRIAD runner for document-wide Boolean policies."""
 import argparse
+from copy import copy
 from dataclasses import dataclass
 import hashlib
 import json
@@ -26,11 +27,10 @@ class Prepared:
 
 
 class Runtime:
-    def __init__(self, bundle, toolchain=None, fast_count=True, lane="ncs1", target=None, blob=None):
+    def __init__(self, bundle, toolchain=None, fast_count=True, lane="ncs1", target=None, blob=None, bank=None):
         self.folder = Path(bundle).resolve()
-        self.info = json.loads((self.folder/"model.json").read_text(encoding="utf8"))
-        self.model_name = self.info["policy"].get("name", self.folder.name)
-        self.policy = Policy(self.info["policy"])
+        self.bundle_info = json.loads((self.folder/"model.json").read_text(encoding="utf8"))
+        self._use_bank(bank)
         self.tokenizer = load_tokenizer()
         self.fast_count = fast_count
         self.lane = lane
@@ -78,6 +78,22 @@ class Runtime:
             self.output = self.compiled.output(0 if self.info["variant"] == "gather" else self.output)
             self.request = self.compiled.create_infer_request()
         self.load_ms = 1000*(time.perf_counter()-start)
+
+    def _use_bank(self, bank):
+        banks = self.bundle_info.get("banks", {})
+        self.bank = self.bundle_info.get("default_bank") if bank is None else bank
+        if self.bank is not None and (not isinstance(self.bank, str) or self.bank not in banks):
+            raise ValueError("Unknown policy bank: %r" % (self.bank,))
+        self.info = dict(self.bundle_info, **banks.get(self.bank, {}))
+        self.policy = Policy(self.info["policy"])
+        self.model_name = self.bundle_info.get("name", self.info["policy"].get("name", self.folder.name))
+
+    def policy_view(self, bank):
+        if bank is None or bank == self.bank:
+            return self
+        view = copy(self)
+        view._use_bank(bank)
+        return view
 
     def resolve_ir(self):
         source = self.folder/"model.onnx"
@@ -148,21 +164,26 @@ class Runtime:
             raise RuntimeError("Invalid codeword from exact packed head")
         return np.asarray(codebook[code], dtype=np.float32)
 
-    def gather_heads(self, facts):
-        if not 1 <= len(facts) <= self.batch_capacity:
-            raise ValueError("Gather needs 1–%d decisions per request" % self.batch_capacity)
+    def _gather_indices(self, facts):
         pair_order = self.info.get("pair_fact_order")
         if pair_order is None:
             masks = [sum(int(bit) << j for j, bit in enumerate(row)) for row in facts]
         else:
             masks = [sum(int(row[fact]) << bit for bit, fact in enumerate(pair_order)) for row in facts]
-        addresses = np.zeros(self.batch_capacity, dtype=np.int32)
         radix_digits = self.info.get("radix_digits")
+        offset = self.info.get("bank_offset", 0)
         if radix_digits is None:
-            addresses[:len(masks)] = [mask >> self.info["lane_bits"] for mask in masks]
+            addresses = [offset + (mask >> self.info["lane_bits"]) for mask in masks]
         else:
-            addresses[:len(masks)] = [mask // radix_digits for mask in masks]
-        outputs = self.request.infer({"features": addresses})
+            addresses = [offset + mask // radix_digits for mask in masks]
+        return addresses, masks
+
+    def _gather_words(self, addresses):
+        if not 1 <= len(addresses) <= self.batch_capacity:
+            raise ValueError("Gather needs 1–%d decisions per request" % self.batch_capacity)
+        features = np.zeros(self.batch_capacity, dtype=np.int32)
+        features[:len(addresses)] = addresses
+        outputs = self.request.infer({"features": features})
         # The legacy ONNX converter renames the sole Gather output.
         if len(outputs) != 1:
             raise RuntimeError("Expected exactly one packed Gather result")
@@ -172,12 +193,15 @@ class Runtime:
         if self.lane == "ncs1" and words.dtype == np.int16:
             # IECore 2020.3 exposes native FP16 buffers as signed words.
             words = words.view(np.float16)
-        used = words[:len(masks)]
+        return words[:len(addresses)]
+
+    def _gather_decode(self, used, masks):
+        radix_digits = self.info.get("radix_digits")
         if radix_digits is not None:
             ranks = decode_ranks(used)
             codebook = np.asarray(self.info["codebook"], dtype=np.float32)
             base = len(codebook)
-            if pair_order is not None:
+            if "pair_fact_order" in self.info:
                 if np.any(ranks >= base * base * 256):
                     raise RuntimeError("Radix head returned an invalid policy pair")
                 results = []
@@ -194,6 +218,10 @@ class Runtime:
                     for rank, mask in zip(ranks, masks)]
         self.validate_words(used)
         return [self.unpack(word, mask) for word, mask in zip(used, masks)]
+
+    def gather_heads(self, facts):
+        addresses, masks = self._gather_indices(facts)
+        return self._gather_decode(self._gather_words(addresses), masks)
 
     def scan(self, projected):
         side = self.info["tile_side"]
@@ -252,19 +280,75 @@ class Runtime:
             atoms = documents[0].atoms
             decisions = [(self.head(atoms), atoms)]
             calls = 1
-        results = []
-        for document, (bits, atoms) in zip(documents, decisions):
-            result = self.policy.result(bits > 0.5)
-            end = time.perf_counter()
-            lexemes = len(document.projected) if document.projected is not None else None
-            results.append(dict(
-                model=self.model_name, result=result, bits=bits.tolist(), atoms=atoms.tolist(),
-                needle_tokens=document.tokens, lexemes=lexemes, requests=calls, request_documents=len(documents),
-                tokenization_ms=(document.counted-document.started)*1000,
-                host_projection_ms=(document.ready-document.counted)*1000,
-                inference_path_ms=(end-start)*1000, total_ms=(end-document.started)*1000,
-            ))
-        return results
+        return [self._record(doc, bits, atoms, calls, len(documents), start)
+                for doc, (bits, atoms) in zip(documents, decisions)]
+
+    def _record(self, doc, bits, atoms, calls, group_size, start):
+        result = self.policy.result(bits > 0.5)
+        end = time.perf_counter()
+        record = dict(
+            model=self.model_name, result=result, bits=bits.tolist(), atoms=atoms.tolist(),
+            needle_tokens=doc.tokens, lexemes=len(doc.projected) if doc.projected is not None else None,
+            requests=calls, request_documents=group_size, tokenization_ms=(doc.counted-doc.started)*1000,
+            host_projection_ms=(doc.ready-doc.counted)*1000,
+            inference_path_ms=(end-start)*1000, total_ms=(end-doc.started)*1000,
+        )
+        if getattr(self, "bank", None) is not None:
+            record["bank"] = self.bank
+        return record
+
+    def decide_mixed(self, documents, explain=False):
+        """Submit documents from several policy banks in the same Gather request."""
+        if self.info["variant"] != "gather" or not isinstance(documents, list) or not documents:
+            raise ValueError("A Gather batch needs a nonempty documents array")
+        results, pending, views = [None] * len(documents), [], {}
+        requests = 0
+
+        def flush():
+            nonlocal requests
+            if not pending:
+                return
+            start = time.perf_counter()
+            groups = {}
+            for position, (_, view, _, doc) in enumerate(pending):
+                groups.setdefault(view, []).append((position, doc.atoms))
+            addresses = np.empty(len(pending), dtype=np.int32)
+            indices = {}
+            for view, entries in groups.items():
+                positions, facts = zip(*entries)
+                bank_addresses, masks = view._gather_indices(facts)
+                addresses[list(positions)] = bank_addresses
+                indices[view] = (list(positions), masks)
+            words = self._gather_words(addresses)
+            requests += 1
+            for view, (positions, masks) in indices.items():
+                for position, bits in zip(positions, view._gather_decode(words[positions], masks)):
+                    index, _, text, doc = pending[position]
+                    record = view._record(doc, bits, doc.atoms, 1, len(pending), start)
+                    if explain:
+                        record["explanation"] = view.policy.explain(text, doc.atoms)
+                    results[index] = dict(record, id=documents[index].get("id"))
+            pending.clear()
+
+        for index, row in enumerate(documents):
+            request_id = row.get("id") if isinstance(row, dict) else None
+            try:
+                if not isinstance(row, dict) or not isinstance(row.get("text"), str):
+                    raise ValueError("Each document needs a text string")
+                bank = row.get("bank")
+                if bank is not None and not isinstance(bank, str):
+                    raise ValueError("Policy bank must be a string")
+                if bank not in views:
+                    views[bank] = self.policy_view(bank)
+                view = views[bank]
+                pending.append((index, view, row["text"], view.prepare_decision(row["text"])))
+            except ValueError as exc:
+                results[index] = {"id": request_id, "error": str(exc)}
+                continue
+            if len(pending) == self.batch_capacity:
+                flush()
+        flush()
+        return {"documents": results, "device_requests": requests}
 
     def decide(self, text, explain=False, prepare=None):
         record = self.decide_prepared([self.prepare_decision(text, prepare)])[0]
@@ -301,6 +385,7 @@ def main():
     parser.add_argument("--lane", choices=["ncs1", "ncs2"], default="ncs1")
     parser.add_argument("--target", help="Explicit OpenVINO name when several MYRIAD devices are visible")
     parser.add_argument("--blob", type=Path, help="Load a binary exported by the matching device/toolchain")
+    parser.add_argument("--bank", help="Default policy bank for a banked bundle")
     parser.add_argument("--explain", action="store_true")
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--text")
@@ -308,7 +393,7 @@ def main():
     source.add_argument("--serve", action="store_true", help="Read one JSON request with text and optional id per line")
     args = parser.parse_args()
     with json_output_stream() as output:
-        engine = Runtime(args.bundle, args.toolchain, lane=args.lane, target=args.target, blob=args.blob)
+        engine = Runtime(args.bundle, args.toolchain, lane=args.lane, target=args.target, blob=args.blob, bank=args.bank)
         if args.serve:
             for line in sys.stdin.buffer:
                 request_id = None
@@ -317,9 +402,12 @@ def main():
                     if not isinstance(request, dict):
                         raise ValueError("Expected an object with a text string")
                     request_id = request.get("id")
-                    if not isinstance(request.get("text"), str):
+                    if "documents" in request:
+                        response = engine.decide_mixed(request["documents"], args.explain)
+                    elif not isinstance(request.get("text"), str):
                         raise ValueError("Expected an object with a text string")
-                    response = engine.decide(request["text"], args.explain)
+                    else:
+                        response = engine.policy_view(request.get("bank")).decide(request["text"], args.explain)
                 except ValueError as exc:
                     response = {"error": str(exc)}
                 print(json.dumps(dict(response, id=request_id)), file=output, flush=True)

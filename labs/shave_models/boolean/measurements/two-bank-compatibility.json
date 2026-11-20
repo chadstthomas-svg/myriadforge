@@ -1,0 +1,101 @@
+{
+  "model": "magiceightball",
+  "backend": "CPU",
+  "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+  "onnx_sha256": "72481bf69d70da97d0d0055c02f555ef2bd6b08625fdbf7c5d10b8995db5f6bb",
+  "capacity": 128,
+  "constants_bytes": 64,
+  "distinct_policy_cases": 256,
+  "full_truth_table_requests": 2,
+  "full_context_cases": 3,
+  "overflow_rejected": true,
+  "full_context_requests": 1,
+  "repeated_trials": 13,
+  "timing_128_documents": {
+    "mixed": {
+      "wall_ms": {
+        "p50": 3.599500050768256,
+        "p95": 3.903140011243522,
+        "max": 3.9365000557154417
+      },
+      "calls": 1
+    },
+    "separate": {
+      "wall_ms": {
+        "p50": 3.569199936464429,
+        "p95": 4.135760036297142,
+        "max": 4.625900066457689
+      },
+      "calls": 2
+    }
+  },
+  "physical_device_verified": false,
+  "offline_targets": {
+    "ncs1-native.blob": {
+      "bytes": 512,
+      "sha256": "fdbe4ace9b7d936db8da5a2daa11262e44c4ffad35336f0090683d60c7966c34",
+      "version": [
+        5,
+        0
+      ],
+      "inputs": 1,
+      "outputs": 1,
+      "stage_count": 1,
+      "input_bytes": 512,
+      "output_bytes": 256,
+      "sections": {
+        "headers": 192,
+        "input_descriptor": 64,
+        "output_descriptor": 64,
+        "stages": 128,
+        "constants": 64
+      },
+      "sole_stage": {
+        "length": 128,
+        "type": 100,
+        "shaves_field": 12
+      },
+      "bank_payload_bytes": [
+        32,
+        32
+      ],
+      "bank_payload_sha256": [
+        "8716cb093ef21bf5d03c338b5b2b4d946512805a807d747ae2db3a04996a7eb1",
+        "5b99a6e2124551aed921988b04071d4e1e1e761b8fce5e6b1d719937b0b47753"
+      ]
+    },
+    "ncs2-2020.3.blob": {
+      "bytes": 512,
+      "sha256": "ccd49623a9efb601a57f12322865b9a23183f4f498b00ec35e39592e7437817d",
+      "version": [
+        5,
+        0
+      ],
+      "inputs": 1,
+      "outputs": 1,
+      "stage_count": 1,
+      "input_bytes": 512,
+      "output_bytes": 256,
+      "sections": {
+        "headers": 192,
+        "input_descriptor": 64,
+        "output_descriptor": 64,
+        "stages": 128,
+        "constants": 64
+      },
+      "sole_stage": {
+        "length": 128,
+        "type": 100,
+        "shaves_field": 1
+      },
+      "bank_payload_bytes": [
+        32,
+        32
+      ],
+      "bank_payload_sha256": [
+        "8716cb093ef21bf5d03c338b5b2b4d946512805a807d747ae2db3a04996a7eb1",
+        "5b99a6e2124551aed921988b04071d4e1e1e761b8fce5e6b1d719937b0b47753"
+      ]
+    }
+  }
+}

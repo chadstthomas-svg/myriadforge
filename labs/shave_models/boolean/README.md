@@ -55,6 +55,20 @@ The 512-byte blob size is unchanged because the compiler reserves a whole 64-byt
 
 Rebuild this variant with `--variant gather --codec radix --slots 128`. The default batch bundle has the physical NCS1 benchmark record.
 
+### Two policies in one graph
+
+The [banked bundle](bundles/magiceightball-banks/model.json) holds customer support and on-call triage in a single Gather graph. Each policy contributes a distinct 32-byte table. The combined graph compiled to **512 bytes** for each target. The caller names a bank and the runtime adds that bank's fixed offset to each address. A single request can carry up to 128 documents across both banks. The compiler shares storage for byte-identical tables. [Both compiled layouts and CPU verification](measurements/two-bank-compatibility.json)
+
+The CPU verification passed all 256 decisions, three mixed 131,072-token inputs and overflow rejection. The on-call policy requires both capacity signals before proposing a page for a capacity-only incident. Each policy ignores distractor terms from the other policy. Physical timings for this bundle are pending.
+
+```powershell
+python "$b/build.py" "$b/policy-banks.json" "$b/bundles/magiceightball-banks" --variant banks --slots 128
+'{"id":"mixed","documents":[{"id":"s1","bank":"support","text":"duplicate charge; review authorized"},{"id":"o1","bank":"oncall","text":"queue backed up; paging approved"}]}' |
+  & $ncs1 "$b/runtime.py" "$b/bundles/magiceightball-banks" --blob "$b/bundles/magiceightball-banks/ncs1-native.blob" --serve
+```
+
+The top-level `device_requests` counts native submissions. Each document gets its own result or error in input order. The optional [adaptive configuration](adaptive-banks.json) routes each vertical to a named bank and shares one resident graph across them. The mixed JSONL request above uses the direct runtime.
+
 ## Run on Windows
 
 Set up the chosen stick using `tools/ncs1/setup_env.ps1` or `tools/ncs2/setup_env.ps1`. Install SentencePiece in its isolated environment. The runner selects a visible MYRIAD device. Use `--target` when multiple devices appear on the selected lane.
@@ -114,6 +128,7 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/GITenberg/Pride-and-Prejudi
 & $ncs2 "$b/benchmark.py" "$b/bundles/magiceightball" --lane ncs2 --corpus $corpus --output ncs2-gather.json --export ncs2-gather.blob --fast-count --repeats 35
 & $ncs1 "$b/benchmark_adaptive.py" "$b/bundles/magiceightball-batch" --corpus $corpus --output adaptive.json
 & $ncs1 "$b/benchmark_batch_heads.py" "$b/bundles/magiceightball-batch" --corpus $corpus --output gather-vector.json
+& $ncs1 "$b/benchmark_policy_banks.py" "$b/bundles/magiceightball-banks" --blob "$b/bundles/magiceightball-banks/ncs1-native.blob" --expect-stick ncs1 --corpus $corpus --output gather-banks.json
 ```
 
 On a Windows host with one freshly connected NCS2, this acceptance run identifies the stick from its cold USB product ID before loading the real MYRIAD plugin. It runs the 128-case truth table, measures warmed batches, verifies mixed inputs at the 131,072-token boundary and exports the graph from 2022.3.1.

@@ -156,10 +156,11 @@ class BatchEvidence:
 class AdaptiveRuntime:
     """Use the requested policy on the physical stick and retry a failed device session once."""
 
-    def __init__(self, factories, profiles, scopes=None):
+    def __init__(self, factories, profiles, scopes=None, banks=None):
         self.factories = factories
         self.profiles = profiles
         self.scopes = scopes or {}
+        self.banks = banks or {}
         self.engines = {}
         self.memos = {}
         self.prior = None
@@ -171,7 +172,9 @@ class AdaptiveRuntime:
             if engine.info["variant"] == "scan":
                 raise ValueError("Adaptive mode needs a bundle that accepts fact bits")
             self.engines[factory] = engine
-        return self.engines[factory]
+        engine = self.engines[factory]
+        bank = self.banks.get(vertical)
+        return engine if bank is None else engine.policy_view(bank)
 
     def batch(self, request, explain=False):
         if not isinstance(request, dict):
@@ -320,7 +323,7 @@ def main():
     for name, entry in config.items():
         if not isinstance(entry, dict) or not isinstance(entry.get("bundle"), str):
             parser.error("Vertical %r needs a bundle path" % name)
-        for field in ("blob", "evidence_field"):
+        for field in ("blob", "evidence_field", "bank"):
             if field in entry and not isinstance(entry[field], str):
                 parser.error("Vertical %r requires a string for %s" % (name, field))
 
@@ -337,7 +340,8 @@ def main():
     try:
         with json_output_stream() as output:
             runtime = AdaptiveRuntime(factories, profiles,
-                                      {name: entry.get("evidence_field") for name, entry in config.items()})
+                                      {name: entry.get("evidence_field") for name, entry in config.items()},
+                                      {name: entry.get("bank") for name, entry in config.items()})
             for line in sys.stdin.buffer:
                 request = None
                 try:

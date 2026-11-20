@@ -1,0 +1,5 @@
+{
+  "support_notes": {"bundle": "bundles/magiceightball-banks", "bank": "support"},
+  "case_records": {"bundle": "bundles/magiceightball-banks", "bank": "support", "evidence_field": "evidence"},
+  "oncall_notes": {"bundle": "bundles/magiceightball-banks", "bank": "oncall"}
+}

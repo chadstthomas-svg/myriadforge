@@ -1,0 +1,20 @@
+{
+  "name": "oncall",
+  "rules": {
+    "network": "\"gateway unreachable\" OR \"connection reset\"",
+    "capacity": "\"queue backed up\" OR \"workers saturated\"",
+    "confirmed": "@network OR (\"queue backed up\" AND \"workers saturated\")",
+    "ready": "@confirmed AND \"paging approved\" AND NOT (\"maintenance window\" OR \"page cancelled\")"
+  },
+  "answers": {"may_page": "@ready"},
+  "categories": {
+    "mixed_incident": "@network AND @capacity",
+    "network": "@network",
+    "capacity": "@capacity"
+  },
+  "actions": {
+    "page_incident": "@ready AND @network AND @capacity",
+    "page_network": "@ready AND @network",
+    "page_capacity": "@ready AND @capacity"
+  }
+}

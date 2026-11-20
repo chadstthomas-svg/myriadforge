@@ -182,6 +182,50 @@ def packed_table(policy, codec="binary"):
     return table, dict(codebook=codebook, code_width=code_width, lane_bits=lane_bits, offset=offset)
 
 
+def _write_bundle(g, shapes, outputs, directory, manifest):
+    variant = manifest["variant"]
+
+    def ports(mapping):
+        return [h.make_tensor_value_info(
+            name, TensorProto.INT32 if variant == "gather" and name == "features" else TensorProto.FLOAT, shape
+        ) for name, shape in mapping.items()]
+
+    graph = h.make_graph(g.nodes, "boolean_" + variant, ports(shapes), ports(outputs), g.constants)
+    model = h.make_model(graph, opset_imports=[h.make_opsetid("", 9)], ir_version=6)
+    onnx.checker.check_model(model)
+    directory.mkdir(exist_ok=True, parents=True)
+    blob = model.SerializeToString()
+    (directory/"model.onnx").write_bytes(blob)
+    manifest.update(input_shapes=shapes, onnx_sha256=hashlib.sha256(blob).hexdigest(),
+                    fp16_coefficient_bytes=2*sum(np.prod(v.dims, dtype=int).item() for v in g.constants),
+                    learned_parameters=0)
+    (directory/"model.json").write_text(json.dumps(manifest, indent=2)+"\n", encoding="utf8")
+
+
+def compile_banks(sources, directory, slots=128):
+    if slots < 1 or not isinstance(sources, dict) or not sources:
+        raise ValueError("Expected named policy banks and a positive Gather capacity")
+    g = Graph()
+    tables, banks, locations = [], {}, {}
+    offset = 0
+    for bank, source in sources.items():
+        if not isinstance(bank, str) or not bank or not isinstance(source, Path):
+            raise ValueError("Each bank needs a name and a policy path")
+        spec = json.loads(source.read_bytes())
+        table, metadata = packed_table(Policy(spec), "radix")
+        key = table.tobytes()
+        if key not in locations:
+            locations[key] = offset
+            tables.append(table)
+            offset += table.size
+        banks[bank] = dict(policy=spec, bank_offset=locations[key], **metadata)
+    shapes = {"features": [slots]}
+    decisions = g.op("Gather", [g.const(np.concatenate(tables)), "features"], axis=0)
+    _write_bundle(g, shapes, {decisions: [slots]}, directory,
+                  dict(name="magiceightball", variant="gather", decisions=decisions,
+                       default_bank=next(iter(banks)), banks=banks))
+
+
 def compile_policy(source, directory, variant, side=64, slots=1, codec="binary"):
     if side < 2 or side & (side-1):
         raise ValueError("Tile side must be a power of two")
@@ -231,32 +275,27 @@ def compile_policy(source, directory, variant, side=64, slots=1, codec="binary")
         if variant == "scan":
             decisions = g.op("Concat", [features, decisions], axis=1)
         outputs[decisions] = [1, len(policy.outputs) + (nf if variant == "scan" else 0), 1, 1]
-    def ports(mapping):
-        return [h.make_tensor_value_info(
-            name, TensorProto.INT32 if variant == "gather" and name == "features" else TensorProto.FLOAT, shape
-        ) for name, shape in mapping.items()]
     # OpenVINO uses producer node names when naming outputs, so keep those names in the manifest.
-    graph = h.make_graph(g.nodes, "boolean_" + variant, ports(shapes), ports(outputs), g.constants)
-    model = h.make_model(graph, opset_imports=[h.make_opsetid("", 9)], ir_version=6)
-    onnx.checker.check_model(model)
-    directory.mkdir(exist_ok=True, parents=True)
-    blob = model.SerializeToString()
-    (directory/"model.onnx").write_bytes(blob)
-    manifest = dict(policy=spec, variant=variant, decisions=decisions,
-                    state_channels=nf if variant=="scan" else 0, tile_side=side,
-                    input_shapes=shapes, onnx_sha256=hashlib.sha256(blob).hexdigest(),
-                    fp16_coefficient_bytes=2*sum(np.prod(v.dims, dtype=int).item() for v in g.constants),
-                    learned_parameters=0, **metadata)
-    (directory/"model.json").write_text(json.dumps(manifest,indent=2)+"\n",encoding="utf8")
+    _write_bundle(g, shapes, outputs, directory, dict(
+        policy=spec, variant=variant, decisions=decisions,
+        state_channels=nf if variant=="scan" else 0, tile_side=side, **metadata,
+    ))
 
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("policy", type=Path)
     p.add_argument("output", type=Path)
-    p.add_argument("--variant", choices=["gates", "dense", "scan", "lookup", "packed", "gather"], required=True)
+    p.add_argument("--variant", choices=["gates", "dense", "scan", "lookup", "packed", "gather", "banks"], required=True)
     p.add_argument("--side", type=int, default=64)
     p.add_argument("--slots", type=int, default=1, help="Independent decisions per Gather request")
     p.add_argument("--codec", choices=["binary", "radix"], default="binary")
     args = p.parse_args()
-    compile_policy(args.policy, args.output, args.variant, args.side, args.slots, args.codec)
+    if args.variant == "banks":
+        sources = json.loads(args.policy.read_bytes())
+        if not isinstance(sources, dict) or any(not isinstance(path, str) for path in sources.values()):
+            p.error("A bank configuration maps names to policy filenames")
+        compile_banks({name: args.policy.parent / path for name, path in sources.items()},
+                      args.output, args.slots)
+    else:
+        compile_policy(args.policy, args.output, args.variant, args.side, args.slots, args.codec)

@@ -148,6 +148,74 @@ def test_usb_identity_distinguishes_both_cold_sticks():
             check_usb_identity("ncs2", devices)
 
 
+def test_policy_banks_share_device_calls_and_keep_results_separate(tmp_path, tokenizer):
+    pytest.importorskip("onnx")
+    ort = pytest.importorskip("onnxruntime")
+    from adaptive import AdaptiveRuntime, Profiles
+    from benchmark_policy_banks import literal_fixtures
+    from build import compile_banks
+    from runtime import Runtime
+
+    alias = tmp_path / "alias"
+    compile_banks({"support": HERE / "support.json", "alias": HERE / "support.json"}, alias, 128)
+    reused = json.loads((alias / "model.json").read_text(encoding="utf8"))
+    assert reused["fp16_coefficient_bytes"] == 32
+    assert reused["banks"]["support"]["bank_offset"] == reused["banks"]["alias"]["bank_offset"] == 0
+
+    compile_banks({"support": HERE / "support.json", "oncall": HERE / "oncall.json"}, tmp_path, 128)
+    engine = Runtime.__new__(Runtime)
+    engine.folder = tmp_path
+    engine.bundle_info = json.loads((tmp_path / "model.json").read_text(encoding="utf8"))
+    engine._use_bank(None)
+    engine.tokenizer = tokenizer
+    engine.fast_count = True
+    engine.lane = "ncs1"
+    options = ort.SessionOptions()
+    options.intra_op_num_threads = 1
+    model = ort.InferenceSession(str(tmp_path / "model.onnx"), options, providers=["CPUExecutionProvider"])
+    calls = []
+
+    class Request:
+        def infer(self, inputs):
+            calls.append(inputs["features"].copy())
+            out = model.run([engine.info["decisions"]], inputs)[0]
+            return {"gather": out.astype(np.float16).view(np.int16)}
+
+    engine.request = Request()
+    cases = list(literal_fixtures())
+    rows = [dict(entry, id=i) for i, (entry, _) in enumerate(cases)]
+    rows.insert(3, {"id": "wrong-bank", "bank": "unknown", "text": "irrelevant"})
+    rows.insert(7, {"id": "overflow", "bank": "oncall", "text": " a" * 131073})
+    reply = engine.decide_mixed(rows)
+    assert reply["device_requests"] == len(calls) == 2
+    assert calls[0][::2].max() < 16 and calls[0][1::2].min() >= 16
+    assert "Unknown policy bank" in reply["documents"][3]["error"]
+    assert "131073" in reply["documents"][7]["error"]
+    accepted = [row for row in reply["documents"] if "result" in row]
+    assert [row["id"] for row in accepted] == list(range(256))
+    assert [row["result"] for row in accepted] == [expected for _, expected in cases]
+
+    profiles = Profiles()
+    loads = []
+
+    def factory():
+        loads.append(True)
+        return engine
+
+    try:
+        live = AdaptiveRuntime({"support_notes": factory, "oncall_notes": factory}, profiles,
+                               banks={"support_notes": "support", "oncall_notes": "oncall"})
+        a = live.batch({"vertical": "support_notes", "documents": [{"text": "package missing; review authorized"}]})
+        b = live.batch({"vertical": "oncall_notes", "documents": [{"text": "queue backed up; paging approved"}]})
+        assert a["documents"][0]["result"]["action"] == "review_delivery"
+        assert b["documents"][0]["result"] == {
+            "answers": {"may_page": False}, "category": "capacity", "action": None,
+        }
+        assert a["device_requests"] == b["device_requests"] == len(loads) == 1
+    finally:
+        profiles.close()
+
+
 def test_json_protocol_keeps_native_stdout_off_the_wire():
     script = (
         "from runtime import json_output_stream; import os; "
