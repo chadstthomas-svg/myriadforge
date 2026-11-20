@@ -1,6 +1,7 @@
 """Compile exact Boolean policies to static graphs for Myriad 2."""
 import argparse
 import hashlib
+from itertools import combinations
 import json
 from pathlib import Path
 
@@ -9,6 +10,7 @@ import onnx
 from onnx import TensorProto, helper as h, numpy_helper
 
 from policy import Policy
+from radix import CAPACITY, encode_ranks
 
 
 class Graph:
@@ -117,7 +119,31 @@ def scanner(g, policy, side):
     return g.op("Max", [scores, "prior"])
 
 
-def packed_table(policy):
+def _two_symbol_rows(codes, facts, base):
+    if facts < 3 or base * base * 256 > CAPACITY:
+        return None
+
+    def masks(bits):
+        return [sum(((mask >> index) & 1) << fact for index, fact in enumerate(bits))
+                for mask in range(1 << len(bits))]
+
+    for lane_facts in combinations(range(facts), 3):
+        address_facts = tuple(i for i in range(facts) if i not in lane_facts)
+        lanes = masks(lane_facts)
+        words = []
+        for address in masks(address_facts):
+            row = [codes[address | lane] for lane in lanes]
+            low, high = min(row), max(row)
+            if any(code not in (low, high) for code in row):
+                break
+            selectors = sum((code != low) << lane for lane, code in enumerate(row))
+            words.append((low * base + high) * 256 + selectors)
+        else:
+            return words, lane_facts + address_facts
+    return None
+
+
+def packed_table(policy, codec="binary"):
     """Encode reachable output vectors using signed, exact FP16 integers."""
     facts = len(policy.literals)
     if facts > 10:
@@ -125,13 +151,30 @@ def packed_table(policy):
     rows = [tuple(map(int, policy.reference([(mask >> j) & 1 for j in range(facts)])))
             for mask in range(1 << facts)]
     codebook = sorted(set(rows))
+    indices = {row: i for i, row in enumerate(codebook)}
+    if codec == "radix":
+        base = len(codebook)
+        codes = [indices[row] for row in rows]
+        lanes = 1
+        while lanes < len(rows) and base ** (lanes + 1) <= CAPACITY:
+            lanes += 1
+        weights = [sum(code * base ** lane
+                       for lane, code in enumerate(codes[first:first + lanes]))
+                   for first in range(0, len(rows), lanes)]
+        metadata = dict(codebook=codebook, radix_digits=lanes)
+        if facts >= 3 and (1 << (facts - 3)) < len(weights):
+            paired = _two_symbol_rows(codes, facts, base)
+            if paired is not None:
+                weights, order = paired
+                metadata.update(radix_digits=8, pair_fact_order=order)
+        return encode_ranks(weights).astype(np.float32), metadata
+
     code_width = max(1, (len(codebook) - 1).bit_length())
     lane_bits = min(facts, (12 // code_width).bit_length() - 1)
     lanes = 1 << lane_bits
     # FP16 represents every integer in [-2048, 2047] exactly. Centering
     # the word at zero fits 12 bits where an unsigned word would fit 11.
     offset = 1 << (code_width * lanes - 1)
-    indices = {row: i for i, row in enumerate(codebook)}
     words = [sum(indices[row] << (lane * code_width)
                  for lane, row in enumerate(rows[first:first + lanes])) - offset
              for first in range(0, len(rows), lanes)]
@@ -139,11 +182,13 @@ def packed_table(policy):
     return table, dict(codebook=codebook, code_width=code_width, lane_bits=lane_bits, offset=offset)
 
 
-def compile_policy(source, directory, variant, side=64, slots=1):
+def compile_policy(source, directory, variant, side=64, slots=1, codec="binary"):
     if side < 2 or side & (side-1):
         raise ValueError("Tile side must be a power of two")
     if slots < 1 or (slots != 1 and variant != "gather"):
         raise ValueError("Multiple positive slots are supported only with Gather")
+    if codec not in ("binary", "radix") or (codec == "radix" and variant != "gather"):
+        raise ValueError("The radix codec is supported only with Gather")
     spec = json.loads(source.read_text(encoding="utf8"))
     policy = Policy(spec)
     g = Graph()
@@ -158,7 +203,7 @@ def compile_policy(source, directory, variant, side=64, slots=1):
     else:
         features = "features"
     if variant in ("packed", "gather"):
-        table, metadata = packed_table(policy)
+        table, metadata = packed_table(policy, codec)
         if variant == "gather":
             shapes = {"features": [slots]}
             decisions = g.op("Gather", [g.const(table.reshape(-1)), "features"], axis=0)
@@ -212,5 +257,6 @@ if __name__ == "__main__":
     p.add_argument("--variant", choices=["gates", "dense", "scan", "lookup", "packed", "gather"], required=True)
     p.add_argument("--side", type=int, default=64)
     p.add_argument("--slots", type=int, default=1, help="Independent decisions per Gather request")
+    p.add_argument("--codec", choices=["binary", "radix"], default="binary")
     args = p.parse_args()
-    compile_policy(args.policy, args.output, args.variant, args.side, args.slots)
+    compile_policy(args.policy, args.output, args.variant, args.side, args.slots, args.codec)

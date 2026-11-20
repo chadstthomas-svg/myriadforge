@@ -12,6 +12,7 @@ from typing import Optional
 
 import numpy as np
 from policy import Policy, count_tokens, load_tokenizer, validate_count
+from radix import decode_ranks
 
 
 @dataclass
@@ -150,9 +151,17 @@ class Runtime:
     def gather_heads(self, facts):
         if not 1 <= len(facts) <= self.batch_capacity:
             raise ValueError("Gather needs 1–%d decisions per request" % self.batch_capacity)
-        masks = [sum(int(bit) << j for j, bit in enumerate(row)) for row in facts]
+        pair_order = self.info.get("pair_fact_order")
+        if pair_order is None:
+            masks = [sum(int(bit) << j for j, bit in enumerate(row)) for row in facts]
+        else:
+            masks = [sum(int(row[fact]) << bit for bit, fact in enumerate(pair_order)) for row in facts]
         addresses = np.zeros(self.batch_capacity, dtype=np.int32)
-        addresses[:len(masks)] = [mask >> self.info["lane_bits"] for mask in masks]
+        radix_digits = self.info.get("radix_digits")
+        if radix_digits is None:
+            addresses[:len(masks)] = [mask >> self.info["lane_bits"] for mask in masks]
+        else:
+            addresses[:len(masks)] = [mask // radix_digits for mask in masks]
         outputs = self.request.infer({"features": addresses})
         # The legacy ONNX converter renames the sole Gather output.
         if len(outputs) != 1:
@@ -164,6 +173,25 @@ class Runtime:
             # IECore 2020.3 exposes native FP16 buffers as signed words.
             words = words.view(np.float16)
         used = words[:len(masks)]
+        if radix_digits is not None:
+            ranks = decode_ranks(used)
+            codebook = np.asarray(self.info["codebook"], dtype=np.float32)
+            base = len(codebook)
+            if pair_order is not None:
+                if np.any(ranks >= base * base * 256):
+                    raise RuntimeError("Radix head returned an invalid policy pair")
+                results = []
+                for rank, mask in zip(ranks, masks):
+                    pair, selectors = divmod(int(rank), 256)
+                    low, high = divmod(pair, base)
+                    if high < low:
+                        raise RuntimeError("Radix head returned an unordered policy pair")
+                    results.append(codebook[high if selectors & (1 << (mask & 7)) else low])
+                return results
+            if np.any(ranks >= base ** radix_digits):
+                raise RuntimeError("Radix head returned an invalid policy word")
+            return [codebook[(int(rank) // base ** (mask % radix_digits)) % base]
+                    for rank, mask in zip(ranks, masks)]
         self.validate_words(used)
         return [self.unpack(word, mask) for word, mask in zip(used, masks)]
 

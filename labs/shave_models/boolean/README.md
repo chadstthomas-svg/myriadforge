@@ -47,6 +47,14 @@ The [512-byte Myriad X target blob](bundles/magiceightball/ncs2-2020.3.blob) was
 
 The [128-slot Myriad X blob](bundles/magiceightball-batch/ncs2-2020.3.blob) also compiled offline to 512 bytes. OpenVINO 2022.3.1 accepted all 128 decisions in one vector with the common IR on its CPU plugin. [Batch compatibility record](measurements/batch-head-compatibility.json)
 
+### Radix packing
+
+The optional [radix bundle](bundles/magiceightball-radix/model.json) stores the same decisions in **32 bytes of constants**, down from 64. Its compiler groups outcomes by the four category facts and uses the three authorization and veto facts to select among eight lanes. Each row contains no more than two possible results. The stick returns both result codes and the selector bits in one exact FP16 word. All row contents reside in the graph. Host decoding permutes the raw fact bits, selects a slot in the returned word and resolves the output labels.
+
+The 512-byte blob size is unchanged because the compiler reserves a whole 64-byte constants section. For an eight-fact control with three reachable decisions, the same codec used 52 constant bytes and reduced the compiled size from **576 to 512 bytes** on each target. The 2022.3.1 CPU plugin passed all 128 MagicEightBall assignments and all 256 control assignments. It also passed the 131,072-token mixed-length replay. Physical timings for the radix bundle are pending. [Radix compatibility and size evidence](measurements/radix-gather-compatibility.json)
+
+Rebuild this variant with `--variant gather --codec radix --slots 128`. The default batch bundle has the physical NCS1 benchmark record.
+
 ## Run on Windows
 
 Set up the chosen stick using `tools/ncs1/setup_env.ps1` or `tools/ncs2/setup_env.ps1`. Install SentencePiece in its isolated environment. The runner selects a visible MYRIAD device. Use `--target` when multiple devices appear on the selected lane.

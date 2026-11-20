@@ -286,17 +286,60 @@ def test_batch_routes_verticals_and_recovers_a_failed_device(tokenizer, tmp_path
         reopened.close()
 
 
-@pytest.mark.parametrize("variant", ["gates", "lookup", "packed", "gather", "dense", "scan"])
-def test_compile_and_evaluate_all_assignments(tmp_path, variant):
+def test_radix_codec_round_trips_every_normal_fp16_bit_pattern():
+    from radix import CAPACITY, encode_ranks, decode_ranks
+
+    ranks = np.arange(CAPACITY)
+    words = encode_ranks(ranks)
+    assert np.unique(words).size == CAPACITY
+    assert np.array_equal(decode_ranks(words), ranks)
+    assert np.array_equal(decode_ranks(words.astype(np.float32)), ranks)
+    with pytest.raises(RuntimeError, match="non-normal"):
+        decode_ranks(np.array([0], dtype=np.float16))
+    with pytest.raises(RuntimeError, match="inexact"):
+        decode_ranks(np.array([0.2], dtype=np.float32))
+
+
+def test_radix_packs_more_facts_into_the_same_constant_section():
+    pytest.importorskip("onnx")
+    from build import packed_table
+    from radix import decode_ranks
+
+    terms = ['"fact%d"' % index for index in range(8)]
+    policy = Policy({
+        "rules": {"some": " OR ".join(terms), "every": " AND ".join(terms)},
+        "answers": {"approved": "@every"},
+        "categories": {"has_evidence": "@some"},
+        "actions": {"approve": "@every"},
+    })
+    binary, _ = packed_table(policy)
+    compact, info = packed_table(policy, "radix")
+    assert binary.size * 2 == 128
+    assert info["radix_digits"] == 10 and compact.size * 2 == 52
+    words = decode_ranks(compact)
+    for mask in range(256):
+        digit = (int(words[mask // 10]) // 3 ** (mask % 10)) % 3
+        assert info["codebook"][digit] == (int(mask == 255), int(mask != 0), int(mask == 255))
+
+
+@pytest.mark.parametrize("variant,codec", [
+    ("gates", "binary"), ("lookup", "binary"), ("packed", "binary"),
+    ("gather", "binary"), ("gather", "radix"), ("dense", "binary"), ("scan", "binary"),
+])
+def test_compile_and_evaluate_all_assignments(tmp_path, variant, codec):
     pytest.importorskip("onnx")
     ort = pytest.importorskip("onnxruntime")
     from benchmark import PHRASES, expected
     from build import compile_policy
     from runtime import Runtime
 
-    compile_policy(HERE / "support.json", tmp_path, variant, side=8, slots=8 if variant == "gather" else 1)
+    compile_policy(HERE / "support.json", tmp_path, variant, side=8,
+                   slots=8 if variant == "gather" else 1, codec=codec)
     engine = Runtime.__new__(Runtime)
     engine.info = json.loads((tmp_path / "model.json").read_text(encoding="utf8"))
+    if codec == "radix":
+        assert engine.info["fp16_coefficient_bytes"] == 32
+        assert engine.info["radix_digits"] == 8
     engine.lane = "ncs1"
     engine.policy = Policy(engine.info["policy"])
     engine.output = engine.info["decisions"]
