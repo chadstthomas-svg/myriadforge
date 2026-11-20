@@ -1,0 +1,425 @@
+{
+  "schema": "myriad2.op-support/1",
+  "chip": "ma2450",
+  "runtime": "OpenVINO 2020.3.2 LTS",
+  "opset": 11,
+  "date": "2026-11-20",
+  "method": "minimal per-op ONNX graph -> MO -> MYRIAD load+infer, one subprocess per op, chunked with settle pauses; transient NC_ERROR retried once",
+  "summary": {
+    "OK": 42,
+    "CHECK_FAIL": 1,
+    "MO_FAIL": 15,
+    "REJECT": 7,
+    "DEVICE_WEDGE": 3
+  },
+  "results": [
+    {
+      "op": "Conv",
+      "family": "conv/pool",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Relu",
+      "family": "activation",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Sigmoid",
+      "family": "activation",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Tanh",
+      "family": "activation",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "LeakyRelu",
+      "family": "activation",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Prelu",
+      "family": "activation",
+      "status": "CHECK_FAIL",
+      "error": "No Op registered for Prelu with domain_version of 11\n\n==> Context: Bad node spec: \n\u0005input\n\u0001s\u0012\u0006output\"\u0005Prelu"
+    },
+    {
+      "op": "Elu",
+      "family": "activation",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Selu",
+      "family": "activation",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for Selu.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during running "
+    },
+    {
+      "op": "HardSigmoid",
+      "family": "activation",
+      "status": "REJECT",
+      "error": "Failed to compile layer \"output/HardSigmoid_\": unsupported layer type \"HardSigmoid\""
+    },
+    {
+      "op": "Softplus",
+      "family": "activation",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for Softplus.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during runn"
+    },
+    {
+      "op": "Softsign",
+      "family": "activation",
+      "status": "REJECT",
+      "error": "Failed to compile layer \"abs_output\": unsupported layer type \"Abs\""
+    },
+    {
+      "op": "Softmax",
+      "family": "activation",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "LogSoftmax",
+      "family": "activation",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for LogSoftmax.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during ru"
+    },
+    {
+      "op": "Erf",
+      "family": "activation",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Sign",
+      "family": "activation",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for Sign.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during running "
+    },
+    {
+      "op": "Add",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Mul",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Sub",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Div",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Pow",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Exp",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Log",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Sqrt",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Abs",
+      "family": "math",
+      "status": "REJECT",
+      "error": "Failed to compile layer \"output\": unsupported layer type \"Abs\""
+    },
+    {
+      "op": "Neg",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Floor",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Round",
+      "family": "math",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for Round.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during running"
+    },
+    {
+      "op": "MatMul",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Gemm",
+      "family": "math",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Transpose",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Reshape",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Flatten",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Squeeze",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Unsqueeze",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Concat",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Slice11",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Cast",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Gather",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Tile11",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "Expand8",
+      "family": "tensor",
+      "status": "REJECT",
+      "error": "Check 'arg_shape[i - start_axis] == 1 || target_shape[i] == 1 || arg_shape[i - start_axis] == target_shape[i]' failed at C:\\j\\workspace\\priv"
+    },
+    {
+      "op": "Shape",
+      "family": "tensor",
+      "status": "REJECT",
+      "error": "Unexpected network batch size : 0"
+    },
+    {
+      "op": "Pad11",
+      "family": "tensor",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for Pad11.onnx: [ ERROR ]  Exception occurred during running replacer \"REPLACEMENT_ID\" (<class 'extensions.load.on"
+    },
+    {
+      "op": "Transpose4d",
+      "family": "tensor",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "MaxPool",
+      "family": "conv/pool",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "AveragePool",
+      "family": "conv/pool",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "GlobalAveragePool",
+      "family": "conv/pool",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "GlobalMaxPool",
+      "family": "conv/pool",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "ConvTranspose",
+      "family": "conv/pool",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "DepthToSpace",
+      "family": "conv/pool",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for DepthToSpace.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during "
+    },
+    {
+      "op": "SpaceToDepth",
+      "family": "conv/pool",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for SpaceToDepth.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during "
+    },
+    {
+      "op": "LpNormalization",
+      "family": "conv/pool",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "LRN",
+      "family": "conv/pool",
+      "status": "DEVICE_WEDGE",
+      "error": "unmeasurable this session (host USB transient)"
+    },
+    {
+      "op": "BatchNormalization",
+      "family": "conv/pool",
+      "status": "DEVICE_WEDGE",
+      "error": "unmeasurable this session (host USB transient)"
+    },
+    {
+      "op": "Resize11",
+      "family": "conv/pool",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for Resize11.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during runn"
+    },
+    {
+      "op": "ReduceMean",
+      "family": "reduction",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "ReduceSum",
+      "family": "reduction",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "ReduceMax",
+      "family": "reduction",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "ArgMax",
+      "family": "reduction",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "ArgMin",
+      "family": "reduction",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for ArgMin.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during runnin"
+    },
+    {
+      "op": "TopK10",
+      "family": "data-dependent",
+      "status": "OK",
+      "error": ""
+    },
+    {
+      "op": "CumSum",
+      "family": "data-dependent",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for CumSum.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during runnin"
+    },
+    {
+      "op": "NonZero",
+      "family": "data-dependent",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for NonZero.onnx:  for node output with type=<UNKNOWN>\n[ ERROR ]  List of operations that cannot be converted to I"
+    },
+    {
+      "op": "Where",
+      "family": "data-dependent",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for Where.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during running"
+    },
+    {
+      "op": "ScatterND",
+      "family": "data-dependent",
+      "status": "MO_FAIL",
+      "error": "mo_onnx conversion failed for ScatterND.onnx: ptimizer with --log_level=DEBUG for more information.\n[ ERROR ]  Exception occurred during run"
+    },
+    {
+      "op": "Clip_afterConv",
+      "family": "data-dependent",
+      "status": "REJECT",
+      "error": "Clamp layer output has incorrect number of inputs (MO-generated Clamp broken in plugin)"
+    },
+    {
+      "op": "Expand_afterConv",
+      "family": "tensor",
+      "status": "MO_FAIL",
+      "error": "MO 2020.3 cannot convert Expand after a Conv"
+    },
+    {
+      "op": "Shape_afterConv",
+      "family": "tensor",
+      "status": "DEVICE_WEDGE",
+      "error": "unmeasurable this session (host USB transient)"
+    },
+    {
+      "op": "Clip11",
+      "family": "data-dependent",
+      "status": "REJECT",
+      "error": "Clamp layer output with id: 3 has incorrect number of inputs!"
+    }
+  ]
+}

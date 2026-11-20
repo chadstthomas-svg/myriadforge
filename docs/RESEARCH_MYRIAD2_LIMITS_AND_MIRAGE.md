@@ -196,6 +196,39 @@ Python boundary. That reinforces the strategic conclusion: don't fight the chip 
 **where 15–23 inferences/s at ~1 W is already enough**, i.e. the always-on gate, and let a bigger model do
 the rest.
 
+### Op-support matrix (WS1, empirical) — `tools/ncs1/op_matrix.py`
+
+A systematic sweep of 68 ops (minimal ONNX graph each, opset 11, MO → pure MYRIAD load+infer,
+subprocess-per-op with hang timeouts, chunked with settle pauses) on real ma2450:
+**42 OK · 7 REJECT · 15 MO_FAIL · 3 DEVICE_WEDGE · 1 CHECK_FAIL** (`tools/ncs1/op_support.json`,
+generated table `docs/NCS1_OPS.md`).
+
+The genuine rejections (converted fine, firmware refused):
+- **`HardSigmoid`** and **`Abs`** — unsupported layer types; **`Softsign`** falls with Abs (it decomposes
+  to Abs). These are MobileNetV3-era activations — exactly what HETERO covers.
+- **`Clip`/`Clamp`** — the MO-generated Clamp node fails in the plugin ("incorrect number of inputs") even
+  behind a Conv; `Expand` also fails after a Conv (and MO cannot convert several data-dependent ops at
+  all: `NonZero`, `Where`, `CumSum`, `ScatterND`, `Softplus`, `Selu`, `LogSoftmax`, `Round`, `ArgMin`).
+- Confirmed supported anchors: `Conv`, `Relu`, `Sigmoid`, `Tanh`, `LeakyRelu`, `Elu`, `Erf`, `ArgMax`,
+  `MatMul`, `Gemm`, `Softmax`, `MaxPool`, `AveragePool`, `TopK`, the reduce family, and the tensor-manip
+  family (`Reshape`/`Transpose`/`Slice`/`Concat`/`Gather`/`Cast`/`Pad`/`Resize`/…).
+
+Probe artifacts (not firmware verdicts, honestly labelled): `Shape` (batch-0 metadata), `Expand` head-only,
+`Prelu` (onnx 1.7.0 ships **no Prelu schema at all**, so it cannot even be expressed), and `LRN` /
+`BatchNormalization` / `Shape_afterConv` wedged by the host-USB transient this session (re-probe after
+recovery).
+
+This table **finishes the WS1 op-coverage deliverable empirically** — measured firmware truth, which
+captures quirks the plugin source does not show — and powers the predictive partitioner
+(`tools/ncs1/hetero_plan.py`): given any ONNX model, it names the ops that will run on the Myriad, the
+ops that will fall back to CPU under HETERO, and any unmeasured ops, before the hardware is touched.
+
+**Partitioner validation:** on the synthesized Conv→HardSigmoid graph it predicts exactly the measured
+truth (Conv → MYRIAD, HardSigmoid → CPU, "HETERO required"). On MobileNetV2-7 it flags the one gap: the
+`BatchNormalization` probe wedged this session, so the tool reports "contains unmeasured ops" rather than
+silently assuming — the conservative answer. (BN is de-facto supported: the pure-MYRIAD bench runs that
+produced §6's numbers execute all 27 BN layers.)
+
 ---
 
 ## 7. Mirage: what it is, where it is strong, where it is missing

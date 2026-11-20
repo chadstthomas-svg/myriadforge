@@ -107,6 +107,18 @@ The model reproduces the other measurements: pipelined (transfer hidden) predict
 USB-bound — the remaining ~5–10× is kernel/firmware efficiency, past the Python boundary.
 Full research write-up: [RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md](RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md).
 
+### Op-support matrix (WS1, done empirically 2026-11-20)
+
+`tools/ncs1/op_matrix.py` swept **68 ops** (minimal ONNX graph each, MO → pure MYRIAD, subprocess-per-op
+with hang timeouts, chunked with settle pauses — rapid successive firmware boots wedge the host USB path):
+**42 OK · 7 REJECT · 15 MO_FAIL · 3 DEVICE_WEDGE · 1 CHECK_FAIL** → `tools/ncs1/op_support.json`,
+generated table [docs/NCS1_OPS.md](NCS1_OPS.md). Genuine rejections: `HardSigmoid`, `Abs` (and
+`Softsign`, which decomposes to Abs), `Clip`/`Clamp` (MO-generated node broken in plugin); MO cannot
+convert several data-dependent ops (`NonZero`, `Where`, `CumSum`, `ScatterND`, `Softplus`, `Selu`, …).
+`tools/ncs1/hetero_plan.py` predicts any model's partition from the table before hardware is touched.
+This was the WS1 deliverable, done by measurement rather than source extraction — it captures firmware
+quirks the source does not show.
+
 ## Architecture (how it plugs into myriadforge)
 
 - **Dual-backend compat layer** `apps/common/ov.py`: detects whichever OpenVINO
