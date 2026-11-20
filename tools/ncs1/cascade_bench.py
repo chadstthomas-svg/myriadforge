@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -27,27 +28,68 @@ REPO = HERE.parent.parent
 VENV_PY = HERE.parent / "ncs1" / ".venv" / "Scripts" / "python.exe"
 DAEMON = HERE / "gate_daemon.py"
 THRESHOLDS = (0.1, 0.2, 0.3, 0.5)
+GATE_MODEL = REPO / "models" / "ncs1" / "mobilenetv2-7.onnx"
+GATE_LABELS = REPO / "models" / "ncs1" / "mobilenetv2-7.labels.txt"
 
 sys.path.insert(0, str(REPO))
 
 
-def run_gate(frames: list[Path], device: str, threshold: float) -> tuple[dict, list[dict]]:
+def _daemon_env() -> dict:
+    """Clean PATH for the daemon: the orchestrator's uv-run PATH carries the main
+    venv's DLLs, which break the ncs1 venv's cv2 import. The daemon wires its own
+    OpenVINO dirs via ncs1_paths.setup()."""
+    env = os.environ.copy()
+    win = Path(os.environ.get("SystemRoot", r"C:\Windows"))
+    clean = [
+        str(VENV_PY.parent),                    # ncs1 venv Scripts
+        str(HERE.parent / "ncs1" / "python37"),  # base python37 dir
+        str(win / "System32"),
+        str(win),
+    ]
+    env["PATH"] = os.pathsep.join(clean)
+    return env
+
+
+def _read_json(proc, key: str) -> dict:
+    """Read lines until one parses as JSON containing `key` (skips OpenVINO log noise)."""
+    while True:
+        line = proc.stdout.readline()
+        if not line:
+            raise RuntimeError("gate daemon exited before replying")
+        line = line.strip()
+        if not line.startswith("{"):
+            continue
+        try:
+            obj = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if key in obj:
+            return obj
+
+
+def run_gate(frames: list[Path], device: str, threshold: float, *, model: str) -> tuple[dict, list[dict]]:
     """Persistent daemon pass: one boot, one JSON reply per frame. Returns (ready, replies)."""
     proc = subprocess.Popen(
-        [str(VENV_PY), str(DAEMON), "--device", device, "--threshold", str(threshold)],
+        [str(VENV_PY), str(DAEMON), "--device", device, "--threshold", str(threshold),
+         "--model", model, "--labels", str(Path(model).with_suffix(".labels.txt"))],
         stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
-        cwd=str(REPO), errors="replace", bufsize=1,
+        cwd=str(REPO), errors="replace", bufsize=1, env=_daemon_env(),
     )
-    ready = json.loads(proc.stdout.readline())
-    replies: list[dict] = []
-    t0 = time.perf_counter_ns()
-    for frame in frames:
-        proc.stdin.write(json.dumps({"frame": str(frame)}) + "\n")
-        proc.stdin.flush()
-        replies.append(json.loads(proc.stdout.readline()))
-    gate_wall_ms = (time.perf_counter_ns() - t0) / 1e6
-    proc.stdin.close()
-    proc.wait(timeout=60)
+    try:
+        ready = _read_json(proc, "ready")
+        replies: list[dict] = []
+        t0 = time.perf_counter_ns()
+        for frame in frames:
+            proc.stdin.write(json.dumps({"frame": str(frame)}) + "\n")
+            proc.stdin.flush()
+            replies.append(_read_json(proc, "fired"))
+        gate_wall_ms = (time.perf_counter_ns() - t0) / 1e6
+    finally:
+        try:
+            proc.stdin.close()
+        except Exception:  # noqa: BLE001
+            pass
+        proc.wait(timeout=60)
     ready["gate_wall_ms"] = round(gate_wall_ms, 1)
     return ready, replies
 
@@ -56,6 +98,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="cascade benchmark: gate vs Mirage brain")
     ap.add_argument("--frames", default="data/samples/frames")
     ap.add_argument("--thresholds", type=float, nargs="*", default=list(THRESHOLDS))
+    ap.add_argument("--model", default=str(GATE_MODEL))
     ap.add_argument("--out", default="results/cascade_bench.json")
     args = ap.parse_args()
 
@@ -100,12 +143,13 @@ def main() -> int:
         for thr in args.thresholds:
             label = f"gate-{device}@{thr}"
             print(f"\n=== {label} ===", flush=True)
-            ready, replies = run_gate(frames, device, thr)
+            ready, replies = run_gate(frames, device, thr, model=args.model)
             gate_ms = ready.get("gate_wall_ms", 0.0)
             hits = [Path(r["frame"]) for r in replies if r.get("fired")]
             print(f"  gate: {ready.get('device')} | fired {len(hits)}/{total_frames} | gate wall {gate_ms:.0f} ms", flush=True)
+            mouts = []
             if hits:
-                mirage_ms, _ = brain_pass(hits)
+                mirage_ms, mouts = brain_pass(hits)
             else:
                 mirage_ms = 0.0
             wall = gate_ms + mirage_ms
@@ -114,7 +158,7 @@ def main() -> int:
                             "gate_ms": round(gate_ms, 1), "mirage_ms": round(mirage_ms, 1),
                             "wall_ms": round(wall, 1),
                             "per_frame_ms": round(wall / total_frames, 1),
-                            "mirage_desc_sample": (outs[0][:160] if outs else "")})
+                            "mirage_desc_sample": (json.dumps(mouts[0], default=str)[:200] if mouts else "")})
             print(f"  wall {wall/1000:.1f} s | mirage {mirage_ms/1000:.1f} s | {len(hits)} invocations", flush=True)
 
     out = {

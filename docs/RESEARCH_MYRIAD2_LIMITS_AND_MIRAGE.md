@@ -16,7 +16,9 @@ inconsistent — that is itself one of the findings.
 1. **The 58 ms decomposes as 1.5 ms fixed dispatch (2.6 %), 14.8 ms input transfer (25.5 %), and 41.7 ms
    compute (71.9 %).** The compute runs at **~14.4 GFLOPS — only ~10–18 % of the 80–150 GFLOPS peak**
    `[measured]`. So the device is **compute-execution-bound, not USB-bound**: the SHAVEs are busy, but their
-   kernels are inefficient. (This corrects an earlier guess that transport dominated.)
+   kernels are inefficient. (This corrects an earlier guess that transport dominated.) And the paired-gap
+   probes (§6) show the deficit is **model-structure**: dense 3×3 Conv kernels reach **31–50 GFLOPS** on the
+   same silicon, while MobileNetV2's depthwise/1×1 path runs at **2.5–3.2 GFLOPS**.
 
 2. **The transfer is real but hideable; the compute is not.** Input moves at **~40 MB/s** (poor for USB 3.0)
    and costs 14.8 ms. Overlapping it with compute via async requests gives **+48 %** (15.7 → 23.15 inf/s)
@@ -179,6 +181,65 @@ of the budget.
 **26 %**, fixed dispatch **2.6 %**. Compute runs at **14.4 GFLOPS = ~18 % of 80 GFLOPS / ~10 % of 150 GFLOPS**
 `[secondary ceiling]`. In other words the device is **compute-execution-bound, and its kernels are ~5–10×
 off peak** — not waiting on USB. The transfer half is already banked (that is exactly what pipelining bought).
+
+### The cascade benchmark vs Mirage — measured (2026-11-20)
+
+`tools/ncs1/cascade_bench.py` + `tools/ncs1/gate_daemon.py` (persistent daemon, one firmware boot per
+pass, cv2-free via PIL + `GateRunner.infer_nchw`): 60 frames of 720p sample video, same Mirage brain,
+three ways of deciding when to invoke it.
+
+| Config | Invocations /60 | Gate | Mirage | Wall |
+|---|---|---|---|---|
+| **no-gate** (Mirage on every frame) | 60 | — | 95.4 s | **95.4 s** (1.59 s/frame) |
+| gate-myriad @0.1–0.5 | 59–60 | 4.5–4.6 s | 94.6–98.0 s | 99–103 s |
+| gate-cpu @0.3–0.5 | 59–60 | 1.44–1.68 s | 72–73 s | 74–75 s |
+
+**The honest finding: on this content the cascade saves nothing** — the gate fires on 59–60/60 frames,
+because MobileNetV2 is *confidently wrong* on every cartoon frame (top-1 ≥ 0.5 nearly everywhere). A
+generic top-1-confidence gate does not discriminate "interesting" on real footage. The result stands as
+a harness validation and a product lesson:
+
+- **The gate needs task-specific semantics** — a person/event/scene detector trained for the actual
+  question, not ImageNet top-1. The contract (`ncs2.event/1` + index) already supports it; the model is
+  the remaining work.
+- **The gate's win is power and host-CPU freedom, not wall-clock**: gate-stick costs ~76 ms/frame
+  (incl. daemon IPC) at ~1 W while gate-cpu costs ~24 ms/frame on a 30 W-class CPU. On real footage
+  where 1–5 % of frames fire, the stick gate runs continuously at ~1 W and cuts Mirage invocations
+  20–100× — the host CPU is otherwise free.
+- Mirage measured **95.4 s / 60 frames = 1.59 s per describe** on the host CPU (720p) — the brain is
+  ~26× the gate's per-frame cost. That ratio is the cascade's economic engine.
+
+---
+
+### The ceiling is model-structure-dependent, not device-wide (paired-gap probes)
+
+The paired-gap method (each compute probe benched against a **zero-compute gap model with the identical
+
+The paired-gap method (each compute probe benched against a **zero-compute gap model with the identical
+input shape**, so transfer and dispatch cancel exactly) answers the next question — *is 14.4 GFLOPS a
+Conv-kernel ceiling or a device-wide wall?* — decisively:
+
+| Probe | Workload class | Compute GFLOPS |
+|---|---|---|
+| Dense Conv 3×3, 32×28×64→64 + GAP (29 MFLOP) | compute-dense | **50.6** |
+| Dense Conv 3×3, 64×56×128→128 + GAP (462 MFLOP) | compute-dense | **31.0** |
+| Dense Conv 3×3, 128×112×128→128 + GAP (3.7 GFLOP) | compute-dense | **35.8** |
+| FC stack, 1×1 convs d=1024 ×8 / d=2048 ×4 + GAP | MobileNetV2's 1×1 path | **2.5–3.2** |
+| MobileNetV2-7 (the gate model, §6) | mixed depthwise + 1×1 + dense | **14.4** |
+
+**Findings:**
+- The device's **dense-Conv kernels are good**: 31–50 GFLOPS sustained = **up to ~63 % of the 80 GFLOPS
+  figure** (and ~25–45 % of 150). The 5–10× "off peak" gap from §6 is NOT a device-wide kernel deficit.
+- **MobileNetV2's own structure is the bottleneck**: its depthwise convs and 1×1 bottleneck path run at
+  **2.5–3.2 GFLOPS** (memory-bound — each 1×1 streams d×d weights and d×d activations), dragging the mix
+  down to 14.4. A compute-dense redesign of the gate (favoring dense 3×3 convs over depthwise/1×1) could
+  plausibly reach **~2–3.5×** on the same silicon.
+- **The 1×1/FC path is the worst class on the device** — relevant for transformer-style models: an
+  all-1×1 workload is memory-bound at ~3 GFLOPS, i.e. ~10× worse than dense conv.
+
+So "how much is on the table" now has a three-layer answer: **~5–10× vs the peak figure** (silicon
+marketing), **~2–3.5× vs dense-Conv kernels for MobileNetV2-class models** (restructure the model), and
+**~1.5× banked** (pipelining, done).
 
 **Per-workload answer:**
 
