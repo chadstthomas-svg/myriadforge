@@ -10,6 +10,17 @@ This lab includes trained ONNX weights, deployable OpenVINO FP16 XML/BIN pairs a
 | [intent](bundles/intent/device-evaluation.json) | Route a novel text utterance to a learned SLURP intent. 91 labels appear in training. One held-out example has an unseen label and counts as a miss. | 2,376/2,967 (80.1%) | 3.08 ms |
 | [forms](bundles/forms/device-evaluation.json) | Localize a button, text field, checkbox and radio button from pixels. Four point-in-box checks on each of 90 new randomized Windows Forms images. | 321/360 (89.2%) | 45.49 ms/image |
 | [grounding](bundles/grounding/device-evaluation.json) | Pick a browser control from recorded Mind2Web steps, using task text, earlier actions and DOM candidates. Ten held-out sites. | 23/310 (7.4%) | 2.82 ms/shortlist |
+| voicetools (training) | Spoken request -> ordered typed tool calls: 12 benign tools (lighting/timers/media), enum slots, one numeric slot, max 2 ordered calls, explicit rejection. TTS fixtures (voicetools/1 spec), held-out TTS condition cells. | device evaluation pending | pending |
+
+The voicetools slice is the research plan's first experiment. The shared
+multi-head graph was approved by the handoff experiment
+([handoff_probe.py](handoff_probe.py)): MO 2020.3 + IECore return multiple
+outputs, so tool-score and slot heads fuse into one 2 s-window graph
+(warm p50 5.14 ms). The condition-matched host reference
+([host_reference.py](host_reference.py), Whistle ASR -> Needle 3) measures
+35.9% full-call exact match, 13.5% false actions on negatives and p95 664 ms
+on the same fixtures - it fails all three acceptance gates, so the on-device
+baseline to beat is loose.
 
 Latency covers a synchronous batch-one call after five warm-ups, in one device session per model. Audio capture, host feature extraction, DOM processing, model load and tool execution are outside these timings. Cold network load took 1.64–1.89 s. The physical device and FP32 reference agreed on every selected class or candidate for voice, intent and grounding. The pixel model had exact grid-point agreement on 98.3% of queries. No energy or direct per-core utilization measurement was made.
 
