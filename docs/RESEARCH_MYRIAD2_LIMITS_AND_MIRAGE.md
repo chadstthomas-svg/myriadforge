@@ -383,10 +383,13 @@ not be attempted before 1–4 pay off.
   unsourced "NCS1 does N FPS" as unverified.
 - **FP16 accumulator saturation.** Raw N(0,1) random kernels produce non-finite outputs on the stick;
   Xavier-scaled inits are finite everywhere. Training-side weight scaling is a hardware-visibility concern.
-- **Weight-fit boundary (first data point).** A 51.2 MB FP16 MatMul-weights graph (5×20k-column tiles,
-  multi-output) fails device init (`NC_ERROR`) and — worse — **drops the stick off USB enumeration**,
-  requiring a physical replug. The 10k×256 (~10 MB) baseline fits comfortably; bracket the boundary
-  downward (50k ≈ 25.6 MB next). Multi-output compile itself is fine at small scale (§6.4).
+- **Weight-fit boundary (bracketed, not exact).** MatMul-constant-weight graphs: 10k×256 (~5.1 MB FP16)
+  loads and runs at 285 qps; **25.6 MB (50k rows, 3-tile multi-output) converts fully in MO but the
+  device load HANGS (0% CPU, firmware/USB layer) and the stick drops off USB** (replug #2); 51.2 MB
+  (100k) fails init outright (`NC_ERROR`) with the same drop. So the boundary is in **(5.1, 25.6) MB** —
+  far below the naive 512 MB DDR estimate. Practical impact: kNN tables stay at the 10k–20k rows the
+  engine ships; each failed bracket costs a physical replug, so exact bracketing is deferred.
+  Multi-output compile itself is fine at small scale (§6.4).
 
 ---
 
@@ -414,7 +417,14 @@ Cactus host stack as reference-to-beat) is underway. Results so far:
   recipe collapsed to the all-none prior; inverse-sqrt class weights recover learning (tool acc on
   firing windows 0.18→0.38 by epoch 8) but the 32-d GAP bottleneck discards the temporal structure
   the slot heads need — architecture v2 keeps time resolution before the acceptance run.
-- **Device evaluation** (`labs/shave_models/eval_voicetools.py`): ready, blocked on the stick replug.
+- **First device acceptance run** (`labs/shave_models/eval_voicetools.py`, MO renames output blobs to
+  `/<head>/Gemm` — canonicalize by head): exact match **22.4%** (gate ≥90% — fail), false-action rate
+  **8.1%** (gate ≤1% — fail), **p95 end-to-end 27.4 ms (gate ≤300 ms — PASS, 11× headroom)**. The full
+  per-window path (host logmel framing + USB + 6-head device inference + JSON) runs p50 9.6 ms —
+  **24× faster than the host Whistle→Needle 3 stack**, so the landmark latency criterion is already
+  met while accuracy gates await architecture v2. Error decomposition (223 positives): call-count
+  wrong **65%** (per-window rule fires spuriously / misses — utterance-level aggregation is the fix),
+  slots-wrong-but-tools-right 30%, tool confusion only **6%** (tool identity is nearly there).
 
 Honest scope notes: fixtures are TTS (condition-matched for every comparison; real-speaker expansion
 is future work with mini_speech_commands as the real-audio anchor); ordered calls come from the
