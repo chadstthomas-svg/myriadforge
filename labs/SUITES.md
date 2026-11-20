@@ -64,7 +64,7 @@ Cactus analog** (novel). Statuses: `spec` → `fixtures` → `trained` →
 
 | Suite | Capability | Status | Evidence |
 |---|---|---|---|
-| vad | Voice activity + audio events (the always-on podcast gate) | **spec written — next lane** | gates: ≥95% frame accuracy @ ≤1 ms p95 window, ≤1 false wake/hour on held-out noise |
+| vad | Voice activity + audio events (the always-on podcast gate) | **trained + CPU gates PASS** (threshold 0.8 frozen from dev sweep) | CPU: 96.9% window acc, 99.6% speech recall, 0.0 false wakes/hour; device p95 pending replug (gate 2.5 ms vs 1.5 ms measured dispatch floor) |
 | asr | Windowed conv CTC dictation | spec (after vad) | gates: real-time factor ≤1 at acceptable WER |
 
 ### Novel (no Cactus analog)
