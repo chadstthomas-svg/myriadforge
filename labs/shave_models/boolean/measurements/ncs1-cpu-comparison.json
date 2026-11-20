@@ -1,0 +1,985 @@
+{
+  "model": "magiceightball",
+  "host": "Intel Core i7-12650H",
+  "sessions": "One sequential session per backend on the same Windows host. Within each session the workload order alternated. A timing claim is scoped to these sessions.",
+  "results": {
+    "ncs1": {
+      "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+      "fixture_contract_sha256": "b09f44b4ce946499533fcc6bcae4e2ec5ed249a103401cdb68476d418e36306a",
+      "truth_table_assignments": 128,
+      "full_context": [
+        {
+          "name": "full_authorized",
+          "input_sha256": "bd18e69336d27b79a4112ffaf75fd42e174ea923d3f1d9f926d799a9efb50382",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "bits": [
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "billing",
+            "action": "review_billing"
+          }
+        },
+        {
+          "name": "full_late_veto",
+          "input_sha256": "8472fa9b8a48701237449c53e242cbf58f1975484652a75222023a3c2f611b17",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0
+          ],
+          "bits": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "billing",
+            "action": null
+          }
+        }
+      ],
+      "overflow": {
+        "tokens": 131073,
+        "rejected": true,
+        "input_sha256": "8c9b69a81459a9e68de3719f3a01382c5d274946224f0ff7fdf2333e2c4e6a00"
+      },
+      "repeats": 31,
+      "warmups": 4,
+      "timings": {
+        "short_128_sequential": {
+          "wall_ms": {
+            "p50": 223.70489999999955,
+            "p95": 232.73324999999988,
+            "max": 250.3390000000003
+          },
+          "host_prepare_ms": {
+            "p50": 6.699199999998129,
+            "p95": 8.012850000007177,
+            "max": 11.061599999987237
+          },
+          "decision_and_decode_ms": {
+            "p50": 217.0243999999908,
+            "p95": 225.01110000000057,
+            "max": 239.01700000000758
+          },
+          "openvino_infer_ms": {
+            "p50": 208.326200000009,
+            "p95": 216.38274999999751,
+            "max": 224.7112999999885
+          },
+          "openvino_requests": 128
+        },
+        "short_128_vector": {
+          "wall_ms": {
+            "p50": 6.428399999997225,
+            "p95": 10.73294999999952,
+            "max": 15.828200000001402
+          },
+          "host_prepare_ms": {
+            "p50": 3.3311999999998676,
+            "p95": 6.423550000000056,
+            "max": 12.021800000001193
+          },
+          "decision_and_decode_ms": {
+            "p50": 2.99749999999932,
+            "p95": 4.5932999999998,
+            "max": 5.176599999998643
+          },
+          "openvino_infer_ms": {
+            "p50": 1.8001999999999185,
+            "p95": 2.240500000000978,
+            "max": 2.9170000000000584
+          },
+          "openvino_requests": 1
+        },
+        "full_authorized_one": {
+          "wall_ms": {
+            "p50": 44.24100000000131,
+            "p95": 55.55420000000044,
+            "max": 57.882199999999884
+          },
+          "host_prepare_ms": {
+            "p50": 41.823899999998915,
+            "p95": 53.227050000000276,
+            "max": 55.039900000000586
+          },
+          "decision_and_decode_ms": {
+            "p50": 2.4124000000007584,
+            "p95": 2.872349999999635,
+            "max": 3.15259999999995
+          },
+          "openvino_infer_ms": {
+            "p50": 2.3028999999983313,
+            "p95": 2.7231000000007555,
+            "max": 2.9914000000008656
+          },
+          "openvino_requests": 1
+        },
+        "full_late_veto_one": {
+          "wall_ms": {
+            "p50": 41.47619999999996,
+            "p95": 55.037450000000376,
+            "max": 60.07490000000004
+          },
+          "host_prepare_ms": {
+            "p50": 38.88149999999868,
+            "p95": 52.649650000000214,
+            "max": 57.50160000000015
+          },
+          "decision_and_decode_ms": {
+            "p50": 2.4073999999991713,
+            "p95": 2.8106999999994997,
+            "max": 3.1636000000005993
+          },
+          "openvino_infer_ms": {
+            "p50": 2.282900000000865,
+            "p95": 2.661699999999989,
+            "max": 3.003200000001982
+          },
+          "openvino_requests": 1
+        },
+        "prepared_head_128_vector": {
+          "wall_ms": {
+            "p50": 2.2780999999998386,
+            "p95": 2.773950000000802,
+            "max": 3.0090999999998758
+          },
+          "openvino_infer_ms": {
+            "p50": 1.6012000000014126,
+            "p95": 2.0153499999997493,
+            "max": 2.171700000001664
+          },
+          "openvino_requests": 1
+        }
+      },
+      "backend": "ncs1",
+      "device": "MYRIAD",
+      "openvino_version": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+      "onnx_sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7",
+      "artifacts": {
+        "shared_tokenizer_archive": {
+          "bytes": 23412,
+          "sha256": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+        },
+        "dual_target_release_archive": {
+          "bytes": 735,
+          "sha256": "6076cc698d9948e5a133ea63b331195aa5c0e2e00c4173310a84614748917850"
+        },
+        "ncs1_native_blob": {
+          "bytes": 512,
+          "sha256": "6c3b0d0cd33174e45cff98b474e7b86f698daee46c02a10c9a17b48ce69b629f"
+        },
+        "native_fp16_coefficients_bytes": 64
+      },
+      "host": {
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "platform": "Windows-10-10.0.26100-SP0",
+        "logical_cpus": 16,
+        "python": "3.7.9"
+      },
+      "runner_initialization_ms": 1764.2291,
+      "physical_usb_preflight": {
+        "stick": "ncs1",
+        "boot_usb_id": "03E7:2150"
+      },
+      "timing_scope": "Resident in-process UTF-8 text decisions. Wall time includes tokenization, evidence, submission and output records. Corpus reads, validation and JSON serialization are outside it. Prepared head timing includes packing and unpacking without text preparation. OpenVINO infer time includes plugin dispatch and any device transfer, not isolated accelerator compute.",
+      "artifact_scope": "File and generated data sizes exclude runtime libraries, firmware and host code."
+    },
+    "openvino-cpu": {
+      "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+      "fixture_contract_sha256": "b09f44b4ce946499533fcc6bcae4e2ec5ed249a103401cdb68476d418e36306a",
+      "truth_table_assignments": 128,
+      "full_context": [
+        {
+          "name": "full_authorized",
+          "input_sha256": "bd18e69336d27b79a4112ffaf75fd42e174ea923d3f1d9f926d799a9efb50382",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "bits": [
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "billing",
+            "action": "review_billing"
+          }
+        },
+        {
+          "name": "full_late_veto",
+          "input_sha256": "8472fa9b8a48701237449c53e242cbf58f1975484652a75222023a3c2f611b17",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0
+          ],
+          "bits": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "billing",
+            "action": null
+          }
+        }
+      ],
+      "overflow": {
+        "tokens": 131073,
+        "rejected": true,
+        "input_sha256": "8c9b69a81459a9e68de3719f3a01382c5d274946224f0ff7fdf2333e2c4e6a00"
+      },
+      "repeats": 31,
+      "warmups": 4,
+      "timings": {
+        "short_128_sequential": {
+          "wall_ms": {
+            "p50": 14.397299964912236,
+            "p95": 20.60814999276772,
+            "max": 21.439700038172305
+          },
+          "host_prepare_ms": {
+            "p50": 4.125999170355499,
+            "p95": 5.354750202968717,
+            "max": 5.55479945614934
+          },
+          "decision_and_decode_ms": {
+            "p50": 10.164300329051912,
+            "p95": 15.155549976043403,
+            "max": 15.741800656542182
+          },
+          "openvino_infer_ms": {
+            "p50": 5.778199760243297,
+            "p95": 8.581800269894302,
+            "max": 8.814499946311116
+          },
+          "openvino_requests": 128
+        },
+        "short_128_vector": {
+          "wall_ms": {
+            "p50": 3.9126999909058213,
+            "p95": 5.992849997710437,
+            "max": 6.719400058500469
+          },
+          "host_prepare_ms": {
+            "p50": 2.9254999244585633,
+            "p95": 4.358499951194972,
+            "max": 4.7836999874562025
+          },
+          "decision_and_decode_ms": {
+            "p50": 1.0319999419152737,
+            "p95": 1.936800021212548,
+            "max": 3.028700011782348
+          },
+          "openvino_infer_ms": {
+            "p50": 0.09790004696696997,
+            "p95": 0.2527999458834529,
+            "max": 0.29090000316500664
+          },
+          "openvino_requests": 1
+        },
+        "full_authorized_one": {
+          "wall_ms": {
+            "p50": 44.251900049857795,
+            "p95": 55.238749948330224,
+            "max": 62.24210001528263
+          },
+          "host_prepare_ms": {
+            "p50": 43.921199976466596,
+            "p95": 54.67420001514256,
+            "max": 61.491800006479025
+          },
+          "decision_and_decode_ms": {
+            "p50": 0.36619999445974827,
+            "p95": 0.6140000186860561,
+            "max": 0.7449000841006637
+          },
+          "openvino_infer_ms": {
+            "p50": 0.2136999974027276,
+            "p95": 0.4370500100776553,
+            "max": 0.4403999773785472
+          },
+          "openvino_requests": 1
+        },
+        "full_late_veto_one": {
+          "wall_ms": {
+            "p50": 43.94299990963191,
+            "p95": 58.16065001999959,
+            "max": 61.02749996352941
+          },
+          "host_prepare_ms": {
+            "p50": 43.60189998988062,
+            "p95": 57.54670000169426,
+            "max": 60.54320000112057
+          },
+          "decision_and_decode_ms": {
+            "p50": 0.43789995834231377,
+            "p95": 0.6232500309124589,
+            "max": 1.2762999394908547
+          },
+          "openvino_infer_ms": {
+            "p50": 0.295999925583601,
+            "p95": 0.4252999206073582,
+            "max": 1.1694999411702156
+          },
+          "openvino_requests": 1
+        },
+        "prepared_head_128_vector": {
+          "wall_ms": {
+            "p50": 0.5165999755263329,
+            "p95": 0.9838499245233834,
+            "max": 2.512499922886491
+          },
+          "openvino_infer_ms": {
+            "p50": 0.08169992361217737,
+            "p95": 0.1811000402085483,
+            "max": 0.3035999834537506
+          },
+          "openvino_requests": 1
+        }
+      },
+      "backend": "openvino-cpu",
+      "device": "CPU",
+      "openvino_version": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "onnx_sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7",
+      "artifacts": {
+        "shared_tokenizer_archive": {
+          "bytes": 23412,
+          "sha256": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+        },
+        "onnx": {
+          "bytes": 258,
+          "sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7"
+        },
+        "ir_xml": {
+          "bytes": 2723,
+          "sha256": "6b827ca84421a9f7248d30e54a87c4f685558838e090005a3735cca4c7f4653e"
+        },
+        "ir_weights": {
+          "bytes": 72,
+          "sha256": "7eddf104bd84e51288e7c526132dec73ec55db5e0a1901e7dbeb26ad0125c9c2"
+        },
+        "cpu_bundle_manifest": {
+          "bytes": 1757,
+          "sha256": "cceab78379a9f0bf37cac202fefa60c1028c19a84c9fce36da2602fd6c23cfe6"
+        }
+      },
+      "host": {
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "logical_cpus": 16,
+        "python": "3.10.20"
+      },
+      "runner_initialization_ms": 1183.3397999871522,
+      "physical_usb_preflight": null,
+      "timing_scope": "Resident in-process UTF-8 text decisions. Wall time includes tokenization, evidence, submission and output records. Corpus reads, validation and JSON serialization are outside it. Prepared head timing includes packing and unpacking without text preparation. OpenVINO infer time includes plugin dispatch and any device transfer, not isolated accelerator compute.",
+      "artifact_scope": "File and generated data sizes exclude runtime libraries, firmware and host code."
+    },
+    "policy-cpu": {
+      "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+      "fixture_contract_sha256": "b09f44b4ce946499533fcc6bcae4e2ec5ed249a103401cdb68476d418e36306a",
+      "truth_table_assignments": 128,
+      "full_context": [
+        {
+          "name": "full_authorized",
+          "input_sha256": "bd18e69336d27b79a4112ffaf75fd42e174ea923d3f1d9f926d799a9efb50382",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "bits": [
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "billing",
+            "action": "review_billing"
+          }
+        },
+        {
+          "name": "full_late_veto",
+          "input_sha256": "8472fa9b8a48701237449c53e242cbf58f1975484652a75222023a3c2f611b17",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0
+          ],
+          "bits": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "billing",
+            "action": null
+          }
+        }
+      ],
+      "overflow": {
+        "tokens": 131073,
+        "rejected": true,
+        "input_sha256": "8c9b69a81459a9e68de3719f3a01382c5d274946224f0ff7fdf2333e2c4e6a00"
+      },
+      "repeats": 31,
+      "warmups": 4,
+      "timings": {
+        "short_128_sequential": {
+          "wall_ms": {
+            "p50": 4.975100000000232,
+            "p95": 10.27424999999993,
+            "max": 11.297100000000171
+          },
+          "host_prepare_ms": {
+            "p50": 3.11740000000027,
+            "p95": 6.007600000001334,
+            "max": 6.664100000001394
+          },
+          "decision_and_decode_ms": {
+            "p50": 1.7972000000061605,
+            "p95": 4.11229999999696,
+            "max": 4.488499999999451
+          },
+          "openvino_requests": 0
+        },
+        "short_128_vector": {
+          "wall_ms": {
+            "p50": 4.568199999999578,
+            "p95": 8.256800000000064,
+            "max": 8.770200000000283
+          },
+          "host_prepare_ms": {
+            "p50": 3.0529999999999724,
+            "p95": 5.406800000000045,
+            "max": 5.99430000000023
+          },
+          "decision_and_decode_ms": {
+            "p50": 1.4544000000000779,
+            "p95": 3.005749999999807,
+            "max": 3.5050999999999277
+          },
+          "openvino_requests": 0
+        },
+        "full_authorized_one": {
+          "wall_ms": {
+            "p50": 39.26120000000033,
+            "p95": 49.47639999999986,
+            "max": 51.841700000000216
+          },
+          "host_prepare_ms": {
+            "p50": 39.19859999999975,
+            "p95": 49.40735000000007,
+            "max": 51.73950000000005
+          },
+          "decision_and_decode_ms": {
+            "p50": 0.05719999999964642,
+            "p95": 0.08864999999991241,
+            "max": 0.1407999999996079
+          },
+          "openvino_requests": 0
+        },
+        "full_late_veto_one": {
+          "wall_ms": {
+            "p50": 35.80130000000015,
+            "p95": 44.254849999999955,
+            "max": 45.59119999999961
+          },
+          "host_prepare_ms": {
+            "p50": 35.7151,
+            "p95": 44.18340000000009,
+            "max": 45.494299999999654
+          },
+          "decision_and_decode_ms": {
+            "p50": 0.05730000000081503,
+            "p95": 0.08175000000010257,
+            "max": 0.09230000000037819
+          },
+          "openvino_requests": 0
+        },
+        "prepared_head_128_vector": {
+          "wall_ms": {
+            "p50": 0.9851000000002941,
+            "p95": 1.5812499999998675,
+            "max": 1.822999999999908
+          },
+          "openvino_requests": 0
+        }
+      },
+      "backend": "policy-cpu",
+      "device": "CPU",
+      "openvino_version": null,
+      "onnx_sha256": null,
+      "artifacts": {
+        "shared_tokenizer_archive": {
+          "bytes": 23412,
+          "sha256": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+        },
+        "source_policy_json": {
+          "bytes": 714,
+          "sha256": "9b9c5c754c41e0dd8b8c5e2f2d7415e30c709d1915f333fabb7c83261ff35a22"
+        }
+      },
+      "host": {
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "platform": "Windows-10-10.0.26100-SP0",
+        "logical_cpus": 16,
+        "python": "3.7.9"
+      },
+      "runner_initialization_ms": 12.243499999999962,
+      "physical_usb_preflight": null,
+      "timing_scope": "Resident in-process UTF-8 text decisions. Wall time includes tokenization, evidence, submission and output records. Corpus reads, validation and JSON serialization are outside it. Prepared head timing includes packing and unpacking without text preparation. OpenVINO infer time includes plugin dispatch and any device transfer, not isolated accelerator compute.",
+      "artifact_scope": "File and generated data sizes exclude runtime libraries, firmware and host code."
+    },
+    "table-cpu": {
+      "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+      "fixture_contract_sha256": "b09f44b4ce946499533fcc6bcae4e2ec5ed249a103401cdb68476d418e36306a",
+      "truth_table_assignments": 128,
+      "full_context": [
+        {
+          "name": "full_authorized",
+          "input_sha256": "bd18e69336d27b79a4112ffaf75fd42e174ea923d3f1d9f926d799a9efb50382",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "bits": [
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "billing",
+            "action": "review_billing"
+          }
+        },
+        {
+          "name": "full_late_veto",
+          "input_sha256": "8472fa9b8a48701237449c53e242cbf58f1975484652a75222023a3c2f611b17",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0
+          ],
+          "bits": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "billing",
+            "action": null
+          }
+        }
+      ],
+      "overflow": {
+        "tokens": 131073,
+        "rejected": true,
+        "input_sha256": "8c9b69a81459a9e68de3719f3a01382c5d274946224f0ff7fdf2333e2c4e6a00"
+      },
+      "repeats": 31,
+      "warmups": 4,
+      "timings": {
+        "short_128_sequential": {
+          "wall_ms": {
+            "p50": 4.531800000000086,
+            "p95": 11.113099999999987,
+            "max": 14.059100000000768
+          },
+          "host_prepare_ms": {
+            "p50": 3.0269999999976704,
+            "p95": 6.662850000000109,
+            "max": 8.759800000003537
+          },
+          "decision_and_decode_ms": {
+            "p50": 1.4477999999975566,
+            "p95": 4.30299999999928,
+            "max": 5.129000000002826
+          },
+          "openvino_requests": 0
+        },
+        "short_128_vector": {
+          "wall_ms": {
+            "p50": 3.8171000000000177,
+            "p95": 6.951999999999847,
+            "max": 7.275199999999593
+          },
+          "host_prepare_ms": {
+            "p50": 2.9815000000001923,
+            "p95": 5.415549999999936,
+            "max": 5.6885999999995995
+          },
+          "decision_and_decode_ms": {
+            "p50": 0.8415999999997759,
+            "p95": 1.7087500000003697,
+            "max": 1.7148000000002384
+          },
+          "openvino_requests": 0
+        },
+        "full_authorized_one": {
+          "wall_ms": {
+            "p50": 37.626099999999774,
+            "p95": 50.03100000000016,
+            "max": 53.85970000000029
+          },
+          "host_prepare_ms": {
+            "p50": 37.55689999999934,
+            "p95": 49.94134999999966,
+            "max": 53.76280000000033
+          },
+          "decision_and_decode_ms": {
+            "p50": 0.06489999999992335,
+            "p95": 0.09769999999997836,
+            "max": 0.10889999999985633
+          },
+          "openvino_requests": 0
+        },
+        "full_late_veto_one": {
+          "wall_ms": {
+            "p50": 36.775000000000446,
+            "p95": 48.95959999999988,
+            "max": 56.30980000000019
+          },
+          "host_prepare_ms": {
+            "p50": 36.702400000000246,
+            "p95": 48.87775000000016,
+            "max": 56.1588000000004
+          },
+          "decision_and_decode_ms": {
+            "p50": 0.06620000000001625,
+            "p95": 0.12214999999970999,
+            "max": 0.1693999999998752
+          },
+          "openvino_requests": 0
+        },
+        "prepared_head_128_vector": {
+          "wall_ms": {
+            "p50": 0.4055999999996729,
+            "p95": 1.458449999999889,
+            "max": 1.5617999999997245
+          },
+          "openvino_requests": 0
+        }
+      },
+      "backend": "table-cpu",
+      "device": "CPU",
+      "openvino_version": null,
+      "onnx_sha256": null,
+      "artifacts": {
+        "shared_tokenizer_archive": {
+          "bytes": 23412,
+          "sha256": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+        },
+        "source_policy_json": {
+          "bytes": 714,
+          "sha256": "9b9c5c754c41e0dd8b8c5e2f2d7415e30c709d1915f333fabb7c83261ff35a22"
+        },
+        "generated_uint8_truth_table": {
+          "bytes": 128,
+          "sha256": "4bc46860c0208ed5c0e6be6b790f18477665e7710d0c58826ecc8bda303160ad"
+        }
+      },
+      "host": {
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "platform": "Windows-10-10.0.26100-SP0",
+        "logical_cpus": 16,
+        "python": "3.7.9"
+      },
+      "runner_initialization_ms": 12.289999999999967,
+      "physical_usb_preflight": null,
+      "timing_scope": "Resident in-process UTF-8 text decisions. Wall time includes tokenization, evidence, submission and output records. Corpus reads, validation and JSON serialization are outside it. Prepared head timing includes packing and unpacking without text preparation. OpenVINO infer time includes plugin dispatch and any device transfer, not isolated accelerator compute.",
+      "artifact_scope": "File and generated data sizes exclude runtime libraries, firmware and host code."
+    },
+    "tree-cpu": {
+      "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+      "fixture_contract_sha256": "b09f44b4ce946499533fcc6bcae4e2ec5ed249a103401cdb68476d418e36306a",
+      "truth_table_assignments": 128,
+      "full_context": [
+        {
+          "name": "full_authorized",
+          "input_sha256": "bd18e69336d27b79a4112ffaf75fd42e174ea923d3f1d9f926d799a9efb50382",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "bits": [
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "billing",
+            "action": "review_billing"
+          }
+        },
+        {
+          "name": "full_late_veto",
+          "input_sha256": "8472fa9b8a48701237449c53e242cbf58f1975484652a75222023a3c2f611b17",
+          "tokens": 131072,
+          "atoms": [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0
+          ],
+          "bits": [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "result": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "billing",
+            "action": null
+          }
+        }
+      ],
+      "overflow": {
+        "tokens": 131073,
+        "rejected": true,
+        "input_sha256": "8c9b69a81459a9e68de3719f3a01382c5d274946224f0ff7fdf2333e2c4e6a00"
+      },
+      "repeats": 31,
+      "warmups": 4,
+      "timings": {
+        "short_128_sequential": {
+          "wall_ms": {
+            "p50": 4.769900000000327,
+            "p95": 9.381249999999897,
+            "max": 9.460600000000152
+          },
+          "host_prepare_ms": {
+            "p50": 3.0727000000005944,
+            "p95": 5.472249999998402,
+            "max": 5.646999999999736
+          },
+          "decision_and_decode_ms": {
+            "p50": 1.6610000000030212,
+            "p95": 3.8166500000014203,
+            "max": 3.8776000000009248
+          },
+          "openvino_requests": 0
+        },
+        "short_128_vector": {
+          "wall_ms": {
+            "p50": 4.0295999999999665,
+            "p95": 7.374849999999933,
+            "max": 7.929299999999806
+          },
+          "host_prepare_ms": {
+            "p50": 2.9703000000003144,
+            "p95": 5.217500000000097,
+            "max": 6.0173999999997285
+          },
+          "decision_and_decode_ms": {
+            "p50": 1.0268999999993866,
+            "p95": 2.0573000000001507,
+            "max": 2.897499999999553
+          },
+          "openvino_requests": 0
+        },
+        "full_authorized_one": {
+          "wall_ms": {
+            "p50": 37.92469999999959,
+            "p95": 52.49849999999956,
+            "max": 59.78350000000043
+          },
+          "host_prepare_ms": {
+            "p50": 37.86109999999976,
+            "p95": 52.3570499999999,
+            "max": 59.68319999999983
+          },
+          "decision_and_decode_ms": {
+            "p50": 0.07070000000020116,
+            "p95": 0.10835000000009032,
+            "max": 0.18160000000033705
+          },
+          "openvino_requests": 0
+        },
+        "full_late_veto_one": {
+          "wall_ms": {
+            "p50": 38.95129999999991,
+            "p95": 52.465849999999925,
+            "max": 54.515100000000146
+          },
+          "host_prepare_ms": {
+            "p50": 38.87670000000032,
+            "p95": 52.36710000000011,
+            "max": 54.42250000000026
+          },
+          "decision_and_decode_ms": {
+            "p50": 0.07219999999996674,
+            "p95": 0.09644999999958159,
+            "max": 0.09760000000014202
+          },
+          "openvino_requests": 0
+        },
+        "prepared_head_128_vector": {
+          "wall_ms": {
+            "p50": 0.5512999999996993,
+            "p95": 0.9714499999997628,
+            "max": 0.984800000000341
+          },
+          "openvino_requests": 0
+        }
+      },
+      "backend": "tree-cpu",
+      "device": "CPU",
+      "openvino_version": null,
+      "onnx_sha256": null,
+      "artifacts": {
+        "shared_tokenizer_archive": {
+          "bytes": 23412,
+          "sha256": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+        },
+        "source_policy_json": {
+          "bytes": 714,
+          "sha256": "9b9c5c754c41e0dd8b8c5e2f2d7415e30c709d1915f333fabb7c83261ff35a22"
+        },
+        "generated_binary_decision_diagram": {
+          "bytes": 46,
+          "sha256": "903d27ddf73c92a5338504c0a74d5a5cd1e91acff811980c484dd34aa3c8ec27"
+        }
+      },
+      "host": {
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "platform": "Windows-10-10.0.26100-SP0",
+        "logical_cpus": 16,
+        "python": "3.7.9"
+      },
+      "runner_initialization_ms": 204.09439999999998,
+      "physical_usb_preflight": null,
+      "timing_scope": "Resident in-process UTF-8 text decisions. Wall time includes tokenization, evidence, submission and output records. Corpus reads, validation and JSON serialization are outside it. Prepared head timing includes packing and unpacking without text preparation. OpenVINO infer time includes plugin dispatch and any device transfer, not isolated accelerator compute.",
+      "artifact_scope": "File and generated data sizes exclude runtime libraries, firmware and host code."
+    }
+  }
+}

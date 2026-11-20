@@ -1,0 +1,139 @@
+{
+  "model": "magiceightball",
+  "backend": "MYRIAD",
+  "lane": "ncs1",
+  "toolchain": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "capacity": 128,
+  "onnx_sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7",
+  "truth_table_cases": 128,
+  "repeats": 13,
+  "timing": {
+    "1": {
+      "ms_per_128_documents": {
+        "p50": 224.96770000000055,
+        "p95": 245.61680000000052,
+        "max": 250.01420000000076
+      },
+      "device_requests": 128
+    },
+    "2": {
+      "ms_per_128_documents": {
+        "p50": 117.83459999999835,
+        "p95": 131.642239999999,
+        "max": 133.3177999999986
+      },
+      "device_requests": 64
+    },
+    "8": {
+      "ms_per_128_documents": {
+        "p50": 35.807900000000004,
+        "p95": 41.56259999999996,
+        "max": 42.346799999999796
+      },
+      "device_requests": 16
+    },
+    "16": {
+      "ms_per_128_documents": {
+        "p50": 20.212700000000083,
+        "p95": 23.63155999999904,
+        "max": 23.63179999999865
+      },
+      "device_requests": 8
+    },
+    "32": {
+      "ms_per_128_documents": {
+        "p50": 12.926099999999607,
+        "p95": 17.198360000000427,
+        "max": 20.61200000000074
+      },
+      "device_requests": 4
+    },
+    "64": {
+      "ms_per_128_documents": {
+        "p50": 10.716400000001514,
+        "p95": 13.9665800000003,
+        "max": 16.044200000001396
+      },
+      "device_requests": 2
+    },
+    "128": {
+      "ms_per_128_documents": {
+        "p50": 9.123599999999676,
+        "p95": 11.659800000000683,
+        "max": 13.410600000000272
+      },
+      "device_requests": 1
+    }
+  },
+  "mixed_length_device_requests": 1,
+  "mixed_length_results": [
+    {
+      "id": "early",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "billing",
+        "action": "review_billing"
+      },
+      "error": null
+    },
+    {
+      "id": "overflow",
+      "tokens": null,
+      "result": null,
+      "error": "Input has 131073 Needle tokens; maximum is 131072"
+    },
+    {
+      "id": "late",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "delivery",
+        "action": "review_delivery"
+      },
+      "error": null
+    },
+    {
+      "id": "veto",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "delivery",
+        "action": null
+      },
+      "error": null
+    },
+    {
+      "id": "empty",
+      "tokens": 0,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "error": null
+    }
+  ],
+  "physical_usb_preflight": {
+    "stick": "ncs1",
+    "boot_usb_id": "03E7:2150"
+  },
+  "release_archive_bytes": 735,
+  "shipped_tokenizer": {
+    "bytes": 23412,
+    "sha256": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+  },
+  "shipped_release": {
+    "bytes": 735,
+    "sha256": "6076cc698d9948e5a133ea63b331195aa5c0e2e00c4173310a84614748917850"
+  },
+  "firmware_teardown": "XLinkResetRemote emitted a dispatcherClosedSem diagnostic after the report was written. The process exited 0 and Windows enumerated cold USB 03E7:2150 again."
+}

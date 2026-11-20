@@ -43,7 +43,7 @@ Across 60 alternating initializations per archive in one Python 3.7 process, med
 
 ### Native release format
 
-The release restores the manifest and both 512-byte native graphs byte for byte. The runtime checks the graph layout and selects the requested physical target through the 2020.3 plugin. The standard 2022.3 NCS2 lane uses the common IR. The release loader has software tests for both platform selections and exact restoration. Physical replay of the release remains pending.
+The release restores the manifest and both 512-byte native graphs byte for byte. The runtime checks the graph layout and selects the requested physical target through the 2020.3 plugin. The current release and tokenizer passed physical replay on NCS1, including all 128 Boolean assignments and the mixed 131,072-token replay. NCS2 uses the common IR in the standard 2022.3 lane and has software verification. [Current release replay](measurements/release-vector-ncs1.json)
 
 ```powershell
 python "$b/release.py" "$b/bundles/magiceightball-batch" "$b/bundles/magiceightball.m8b"
@@ -53,6 +53,8 @@ python "$b/release.py" "$b/bundles/magiceightball-batch" "$b/bundles/magiceightb
 On the 2020.3 runtime with an NCS2, use `--release-stick ncs2`. The hardware benchmark can select the corresponding release image with `--expect-stick ncs2` when run inside that runtime.
 
 The [128-slot NCS1 blob](bundles/magiceightball-batch/ncs1-native.blob) also occupies 512 bytes. Both builds use a single rank-one Gather over the same 64-byte table. The 2020.3.2 serializer aligns each section to 64 bytes. These blobs contain 192 bytes of headers, 64 each for input and output descriptors, 128 for the Gather stage and 64 for the table. The compiler emits the same byte count for a two-entry bank. This establishes the size floor for this resident rank-one Gather layout under that compiler. [Intel serializer source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/backend/serialize.cpp#L150-L175) · [Intel Gather stage source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/stages/gather.cpp#L67-L82) · [Parsed artifact layouts](measurements/batch-head-compatibility.json)
+
+In a matched release comparison, NCS1 handled 128 short decisions in one request in **6.43 ms median**, down from **223.70 ms** when sent individually. A CPU lookup took **3.82 ms** for the same batch. Fresh 131,072-token requests were dominated by host tokenization and evidence extraction. [NCS1 release and matched CPU results](RELEASE-NCS1.md)
 
 ReLU, Clip and Sigmoid controls compiled to **448 bytes** on both targets with 128-element FP16 vectors. These controls have no resident constants section and measure container overhead for simpler operations. The tested graph that keeps the complete decision table on the VPU remains 512 bytes. [Release and stock-stage controls](measurements/native-release-and-stock-controls.json)
 
@@ -76,7 +78,7 @@ Rebuild this variant with `--variant gather --codec radix --slots 128`. The defa
 
 The [banked bundle](bundles/magiceightball-banks/model.json) holds customer support and on-call triage in a single Gather graph. Each policy contributes a distinct 32-byte table. The combined graph compiled to **512 bytes** for each target. The caller names a bank and the runtime adds that bank's fixed offset to each address. A single request can carry up to 128 documents across both banks. The compiler shares storage for byte-identical tables. [Both compiled layouts and CPU verification](measurements/two-bank-compatibility.json)
 
-The CPU verification passed all 256 decisions, three mixed 131,072-token inputs and overflow rejection. The on-call policy requires both capacity signals before proposing a page for a capacity-only incident. Each policy ignores distractor terms from the other policy. Physical timings for this bundle are pending.
+The physical NCS1 replay passed all 256 decisions, three mixed 131,072-token inputs and overflow rejection. Across 13 warmed trials, one mixed request for 128 short documents took 6.8 ms median. Separate requests for the same two banks took 8.2 ms median. The on-call policy requires both capacity signals before proposing a page for a capacity-only incident. Each policy ignores distractor terms from the other policy. [Physical two-bank replay](measurements/two-banks-ncs1.json)
 
 ```powershell
 python "$b/build.py" "$b/policy-banks.json" "$b/bundles/magiceightball-banks" --variant banks --slots 128
@@ -117,7 +119,7 @@ Use `--stream` when new text arrives over time. Each JSONL request appends its s
 
 The host reuses the exact token count and literal facts for the prefix ending at a stable ASCII-space boundary. It keeps the last unfinished segment and enough preceding lexemes to match phrases across appends. Very long spans without ASCII spaces can require recounting that span. `--explain` retains the full text to include rules that are used only in explanations.
 
-In the OpenVINO 2022.3.1 CPU control, the first 130,432 tokens took 36.4 ms. Across 24 short appends, median host preparation fell from **28.9 ms** for complete-document requests to **0.056 ms** for incremental requests, with p95 of **35.5 ms** and **0.079 ms**, respectively. The final veto cleared the proposed action at exactly 131,072 tokens. An append that would reach 131,073 tokens was rejected. Stick timings for the append path are pending. [CPU append benchmark](measurements/stream-context-cpu.json)
+In the current NCS1 release replay, the first 130,432 tokens took 51.8 ms. Across 24 short appends near the limit, median total time fell from **52.1 ms** for complete-document requests to **1.9 ms** for incremental requests. The final veto cleared the proposed action at exactly 131,072 tokens. An append that would reach 131,073 tokens was rejected. The earlier CPU control measured host preparation falling from **28.9 ms** to **0.056 ms**. [Physical NCS1 append replay](measurements/release-stream-ncs1.json) · [CPU append control](measurements/stream-context-cpu.json)
 
 ## Adaptive batches
 
