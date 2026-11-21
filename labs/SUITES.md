@@ -46,7 +46,7 @@ Cactus analog** (novel). Statuses: `spec` → `fixtures` → `trained` →
 | Suite | Capability | Status | Evidence |
 |---|---|---|---|
 | **boolean (MagicEightBall)** | Staged Boolean policy → yes/no + category + action, up to 131,072 tokens | **release-lane evidence complete** | 128/128 physical, 30-min soak (107,104 requests), 7-backend matched comparison, cold identity recorded |
-| **voicetools** | Voice → ordered typed tool calls (acoustic Needle) | trained v2; device eval pending | CPU control 74.9% exact / 6.8% false / p95 13.7 ms vs host reference 44.4% / 13.5% / 430 ms, same fixture IDs |
+| **voicetools** | Voice → ordered typed tool calls (acoustic Needle) | **device-evaluated v2** | MYRIAD 74.9% exact / 6.8% false / p95 27.8 ms; **device/CPU agreement 297/297**; host reference 44.4% / 13.5% / 430 ms — student wins every axis on-device |
 | voice | Isolated command classification (wake/kws primitive) | evidence complete | 90.7% @ p95 3.89 ms |
 | intent | Text intent routing (91 SLURP labels) | evidence complete | 80.1% @ p95 3.08 ms |
 | grounding | Browser control ranking | experimental | 7.4% — first bottleneck named (32-candidate retrieval limit) |
@@ -64,7 +64,7 @@ Cactus analog** (novel). Statuses: `spec` → `fixtures` → `trained` →
 
 | Suite | Capability | Status | Evidence |
 |---|---|---|---|
-| vad | Voice activity + audio events (the always-on podcast gate) | **trained + CPU gates PASS** (threshold 0.8 frozen from dev sweep) | CPU: 96.9% window acc, 99.6% speech recall, 0.0 false wakes/hour; device p95 pending replug (gate 2.5 ms vs 1.5 ms measured dispatch floor) |
+| vad | Voice activity + audio events (the always-on podcast gate) | device-evaluated v0 | quality gates PASS on device (96.9% acc, 99.6% recall, 0.0 false wakes/hour @ threshold 0.8, FP16 agreement with CPU); **latency gate FAIL**: p95 9.8 ms vs 2.5 ms — iteration lane: head restructure or async overlap |
 | asr | Windowed conv CTC dictation | spec (after vad) | gates: real-time factor ≤1 at acceptable WER |
 
 ### Novel (no Cactus analog)

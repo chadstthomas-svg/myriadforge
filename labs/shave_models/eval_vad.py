@@ -157,7 +157,7 @@ def main():
         "load_ms": round(load_ms, 1),
         "sweep": sweep,
     }
-    run_dir = args.run_dir if args.run_dir else args.bundle
+    run_dir = (args.run_dir if args.run_dir else args.bundle).resolve()
     report = run_dir / f"device-evaluation-{args.device}.json"
     report.parent.mkdir(parents=True, exist_ok=True)
     report.write_text(json.dumps({"metrics": metrics}, indent=2) + "\n", encoding="utf-8")
