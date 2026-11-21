@@ -1,0 +1,112 @@
+{
+  "model": "vad",
+  "spec_version": "vad/1",
+  "classes": [
+    "speech",
+    "noise",
+    "silence"
+  ],
+  "input_shape": [
+    1,
+    1,
+    40,
+    200
+  ],
+  "seed": 132,
+  "epochs": 12,
+  "windows": 13640,
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": 0.7708,
+      "heldout_acc": 0.8514,
+      "speech_recall": 1.0,
+      "false_wake_rate": 0.9472
+    },
+    {
+      "epoch": 1,
+      "train_loss": 0.5046,
+      "heldout_acc": 0.9068,
+      "speech_recall": 0.9933,
+      "false_wake_rate": 0.1
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3199,
+      "heldout_acc": 0.9547,
+      "speech_recall": 0.9933,
+      "false_wake_rate": 0.0861
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.2635,
+      "heldout_acc": 0.9203,
+      "speech_recall": 0.9907,
+      "false_wake_rate": 0.0389
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.2342,
+      "heldout_acc": 0.9577,
+      "speech_recall": 0.985,
+      "false_wake_rate": 0.0222
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.2123,
+      "heldout_acc": 0.9534,
+      "speech_recall": 0.9928,
+      "false_wake_rate": 0.0333
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.1949,
+      "heldout_acc": 0.963,
+      "speech_recall": 0.9933,
+      "false_wake_rate": 0.0306
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.1916,
+      "heldout_acc": 0.9569,
+      "speech_recall": 0.9928,
+      "false_wake_rate": 0.0222
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.1826,
+      "heldout_acc": 0.9525,
+      "speech_recall": 0.9979,
+      "false_wake_rate": 0.0583
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.1768,
+      "heldout_acc": 0.9534,
+      "speech_recall": 0.9979,
+      "false_wake_rate": 0.0472
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.1688,
+      "heldout_acc": 0.9669,
+      "speech_recall": 0.9948,
+      "false_wake_rate": 0.0222
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.172,
+      "heldout_acc": 0.9669,
+      "speech_recall": 0.9948,
+      "false_wake_rate": 0.0167
+    }
+  ],
+  "acceptance": {
+    "window_accuracy_min": 0.95,
+    "speech_recall_min": 0.98,
+    "false_wake_per_hour_max": 1.0,
+    "p95_window_ms_max": 6.0,
+    "min_held_out_noise_clips": 300
+  },
+  "onnx_sha256": "5cab9a5beb3f622b1320d10b6bb186faa01c80c9413be72786447c9cd2c1fee6"
+}

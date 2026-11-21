@@ -1,0 +1,155 @@
+{
+  "schema": "myriadforge.suites/2",
+  "updated": "2026-11-20",
+  "contract": {
+    "artifacts": [
+      "<id>_spec.py - frozen task spec + acceptance gates (versioned)",
+      "fixtures + manifest outside the repo (reproducible builder, SHA-256 verified)",
+      "train_<id>.py trainer with honest metrics (arch/recipe/history in model.json)",
+      "bundles/<id>/ model.onnx + model.json + FP16 IR (or blob) with digests",
+      "eval_<id>.py device evaluation (isolated run dirs, digests, timing boundary, negative gate)",
+      "release path: GitHub evidence first, HF only where licensing is clear"
+    ],
+    "strict_stick_claim": "every learned stage on the identified physical stick; CPU/sim/HETERO recorded as distinct measurements"
+  },
+  "suites": [
+    {
+      "id": "boolean",
+      "name": "MagicEightBall",
+      "capability": "Needle-style staged Boolean decisions, yes/no + category + action",
+      "reference": "Cactus Needle 3",
+      "artifact": "512B Gather blob in 735B M8B1 archive + 23.4KB tokenizer",
+      "status": "release-lane-evidence-complete",
+      "evidence": "D:/MyriadForge-ncs1-release/labs/shave_models/boolean/RELEASE-NCS1.md",
+      "gates": "128/128 assignments physical, 30-min soak 107,104 requests, 7-backend matched comparison",
+      "lanes": {
+        "ncs1": "measured",
+        "cpu": "measured",
+        "ort": "prepared",
+        "litert": "n-a",
+        "ncs2": "compiled-offline",
+        "coral": "n-a"
+      }
+    },
+    {
+      "id": "voicetools",
+      "capability": "voice -> ordered typed tool calls (acoustic Needle)",
+      "reference": "Whistle -> Needle 3",
+      "artifact": "multi-head conv on [1,1,40,200] windows, 6 heads",
+      "status": "trained-v4-slot-abstention-sealed-evaluated",
+      "evidence": "slot-level abstention (v4 rule, thresholds 0.8/0.8 frozen from dev sweep): SEALED 16.9% -> 11.88% false on MYRIAD (unknown-slot 47%, OOD 35%, unsupported 25%, noise 2.7%); diagnostic 74.0% exact / 5.4% false / p95 9.7 ms; remaining: model-capacity/training iterations for the 1% gate",
+      "gates": ">=90% exact, <=1% false, p95<=300ms, >=300 held-out negatives",
+      "lanes": {
+        "ncs1": "measured",
+        "cpu": "measured",
+        "ort": "measured",
+        "litert": "pending-wsl2-worker",
+        "ncs2": "prepared",
+        "coral": "n-a"
+      }
+    },
+    {
+      "id": "voice",
+      "capability": "isolated command classification",
+      "reference": "Whistle keyword spotting",
+      "artifact": "conv classifier [1,1,40,98]",
+      "status": "evidence-complete",
+      "evidence": "90.7% on 901 held-out recordings, p95 3.89 ms",
+      "gates": "n/a (superseded by voicetools for tool semantics; remains the wake/kws primitive)"
+    },
+    {
+      "id": "intent",
+      "capability": "text intent routing",
+      "reference": "Needle (text in)",
+      "artifact": "hashed-gram linear, 91 SLURP labels",
+      "status": "evidence-complete",
+      "evidence": "80.1% on 2,967 held-out, p95 3.08 ms"
+    },
+    {
+      "id": "forms",
+      "capability": "UI control localization from pixels",
+      "reference": "Mirage vision",
+      "artifact": "pixel->4-point conv",
+      "status": "evidence-complete",
+      "evidence": "89.2% (321/360 point-in-box), p95 45.49 ms"
+    },
+    {
+      "id": "grounding",
+      "capability": "browser control ranking",
+      "reference": "Needle UI",
+      "artifact": "ranker on task/DOM features",
+      "status": "experimental",
+      "evidence": "7.4% (23/310); first bottleneck named: 32-candidate retrieval limit -> block scoring on-stick"
+    },
+    {
+      "id": "vad",
+      "capability": "voice activity + audio events (always-on podcast gate)",
+      "reference": "silero-vad / pyannote segmentation",
+      "artifact": "tiny conv on log-mel windows (voicetools pipeline reuse)",
+      "status": "trained-v0.1-device-evaluated",
+      "evidence": "quality gates PASS on device @ threshold 0.9 (96.75% acc, 98.2% recall, 0.0 false wakes/h); latency gate FAIL 9.95 ms vs 6.0 - next: helper-built opset-11 graph (handoff envelope); ort lane 0.14 ms p50",
+      "gates": "planned: >=95% frame accuracy @ <=1 ms p95 window, false-wake <=1/hour equivalent on held-out noise",
+      "lanes": {
+        "ncs1": "measured",
+        "cpu": "measured",
+        "ort": "measured",
+        "litert": "pending-wsl2-worker",
+        "ncs2": "prepared",
+        "coral": "n-a"
+      }
+    },
+    {
+      "id": "retrieval",
+      "capability": "embeddings + kNN search on-stick",
+      "reference": "nomic-embed / HNSW (host)",
+      "artifact": "encoder student -> kNN-as-MatMul engine (285 qps @ 10k rows measured)",
+      "status": "spec",
+      "evidence": "engine measured; encoder student untrained",
+      "gates": "planned: Recall@10 within 2 pts of host encoder at <=64ms p95 per batch"
+    },
+    {
+      "id": "vision-gate",
+      "capability": "task-specific image gate (cascade fix)",
+      "reference": "ImageNet MobileNetV2 (mismatched - fires 59/60 on cartoons)",
+      "artifact": "trained conv gate, compute-dense design (35.8 GFLOPS ceiling)",
+      "status": "spec",
+      "evidence": "none yet",
+      "gates": "planned: task-relevant fire rate <10% on non-trigger content (the measured MobileNetV2 failure mode)"
+    },
+    {
+      "id": "docqa",
+      "capability": "local document QA (span reader)",
+      "reference": "Mirage text / Needle retrieval",
+      "artifact": "span reader over retrieval-suite spans",
+      "status": "spec",
+      "evidence": "none yet",
+      "gates": "planned: EM/F1 on held-out docs + unanswerable rejection"
+    },
+    {
+      "id": "asr",
+      "capability": "dictation (CTC student)",
+      "reference": "Whistle / whisper",
+      "artifact": "windowed conv CTC, fixed vocab buckets",
+      "status": "spec",
+      "evidence": "none yet",
+      "gates": "planned: real-time factor <=1 at acceptable WER per language"
+    },
+    {
+      "id": "cascade-gate",
+      "capability": "always-on gate orchestrating host brains (novel - no Cactus analog)",
+      "reference": "none (Mirage punts wake/gate to the user)",
+      "artifact": "gate suite bundles + cascade orchestrator",
+      "status": "measured-mismatched",
+      "evidence": "cascade bench: ImageNet gate fires 59/60 on cartoons (saves nothing); fixed by vision-gate + voicetools task gates"
+    },
+    {
+      "id": "confidence",
+      "capability": "calibrated abstention + handoff (cross-cutting)",
+      "reference": "Cactus confidence probes",
+      "artifact": "per-suite calibration + abstention thresholds",
+      "status": "spec",
+      "evidence": "abstention planned in voicetools v2 thresholds",
+      "gates": "planned: risk-coverage curves per suite, every abstention counted"
+    }
+  ]
+}

@@ -84,263 +84,263 @@
   "history": [
     {
       "epoch": 0,
-      "train_loss": 4.5816,
-      "valid_tool_acc_pos_windows": 0.242,
+      "train_loss": 3.0877,
+      "valid_tool_acc_pos_windows": 0.2876,
       "valid_slot_acc": {
-        "room": 0.064,
+        "room": 0.096,
         "device": 0.0,
         "scene": 0.0,
         "level": 0.0,
-        "seconds": 0.0
+        "seconds": 0.038
       }
     },
     {
       "epoch": 1,
-      "train_loss": 4.0646,
-      "valid_tool_acc_pos_windows": 0.4045,
+      "train_loss": 2.4839,
+      "valid_tool_acc_pos_windows": 0.4804,
       "valid_slot_acc": {
-        "room": 0.22,
-        "device": 0.111,
-        "scene": 0.033,
-        "level": 0.074,
-        "seconds": 0.0
+        "room": 0.207,
+        "device": 0.241,
+        "scene": 0.216,
+        "level": 0.125,
+        "seconds": 0.077
       }
     },
     {
       "epoch": 2,
-      "train_loss": 3.2969,
-      "valid_tool_acc_pos_windows": 0.5892,
+      "train_loss": 1.9014,
+      "valid_tool_acc_pos_windows": 0.6242,
       "valid_slot_acc": {
-        "room": 0.376,
-        "device": 0.296,
-        "scene": 0.233,
-        "level": 0.118,
-        "seconds": 0.367
+        "room": 0.37,
+        "device": 0.345,
+        "scene": 0.297,
+        "level": 0.125,
+        "seconds": 0.308
       }
     },
     {
       "epoch": 3,
-      "train_loss": 2.5814,
-      "valid_tool_acc_pos_windows": 0.6624,
+      "train_loss": 1.4772,
+      "valid_tool_acc_pos_windows": 0.6667,
       "valid_slot_acc": {
-        "room": 0.45,
-        "device": 0.444,
-        "scene": 0.367,
-        "level": 0.162,
-        "seconds": 0.533
+        "room": 0.393,
+        "device": 0.414,
+        "scene": 0.405,
+        "level": 0.234,
+        "seconds": 0.538
       }
     },
     {
       "epoch": 4,
-      "train_loss": 2.005,
-      "valid_tool_acc_pos_windows": 0.6815,
+      "train_loss": 1.1571,
+      "valid_tool_acc_pos_windows": 0.6797,
       "valid_slot_acc": {
-        "room": 0.477,
-        "device": 0.741,
-        "scene": 0.433,
-        "level": 0.279,
-        "seconds": 0.4
+        "room": 0.43,
+        "device": 0.414,
+        "scene": 0.351,
+        "level": 0.219,
+        "seconds": 0.5
       }
     },
     {
       "epoch": 5,
-      "train_loss": 1.5711,
-      "valid_tool_acc_pos_windows": 0.6752,
+      "train_loss": 0.9049,
+      "valid_tool_acc_pos_windows": 0.6863,
       "valid_slot_acc": {
-        "room": 0.431,
-        "device": 0.704,
-        "scene": 0.433,
-        "level": 0.294,
-        "seconds": 0.567
+        "room": 0.444,
+        "device": 0.414,
+        "scene": 0.459,
+        "level": 0.328,
+        "seconds": 0.5
       }
     },
     {
       "epoch": 6,
-      "train_loss": 1.2699,
-      "valid_tool_acc_pos_windows": 0.7229,
+      "train_loss": 0.7154,
+      "valid_tool_acc_pos_windows": 0.7059,
       "valid_slot_acc": {
-        "room": 0.523,
-        "device": 0.704,
-        "scene": 0.433,
-        "level": 0.353,
-        "seconds": 0.6
+        "room": 0.481,
+        "device": 0.414,
+        "scene": 0.405,
+        "level": 0.328,
+        "seconds": 0.615
       }
     },
     {
       "epoch": 7,
-      "train_loss": 1.0249,
-      "valid_tool_acc_pos_windows": 0.7134,
+      "train_loss": 0.5838,
+      "valid_tool_acc_pos_windows": 0.6536,
       "valid_slot_acc": {
-        "room": 0.495,
-        "device": 0.741,
-        "scene": 0.5,
-        "level": 0.412,
-        "seconds": 0.533
+        "room": 0.452,
+        "device": 0.414,
+        "scene": 0.405,
+        "level": 0.344,
+        "seconds": 0.538
       }
     },
     {
       "epoch": 8,
-      "train_loss": 0.8486,
-      "valid_tool_acc_pos_windows": 0.7325,
+      "train_loss": 0.4826,
+      "valid_tool_acc_pos_windows": 0.6601,
       "valid_slot_acc": {
-        "room": 0.495,
-        "device": 0.704,
-        "scene": 0.467,
-        "level": 0.353,
-        "seconds": 0.467
+        "room": 0.489,
+        "device": 0.414,
+        "scene": 0.459,
+        "level": 0.312,
+        "seconds": 0.462
       }
     },
     {
       "epoch": 9,
-      "train_loss": 0.7054,
-      "valid_tool_acc_pos_windows": 0.7325,
+      "train_loss": 0.4062,
+      "valid_tool_acc_pos_windows": 0.6863,
       "valid_slot_acc": {
-        "room": 0.523,
-        "device": 0.815,
-        "scene": 0.5,
-        "level": 0.368,
-        "seconds": 0.5
+        "room": 0.474,
+        "device": 0.414,
+        "scene": 0.351,
+        "level": 0.359,
+        "seconds": 0.538
       }
     },
     {
       "epoch": 10,
-      "train_loss": 0.5986,
-      "valid_tool_acc_pos_windows": 0.7102,
+      "train_loss": 0.3302,
+      "valid_tool_acc_pos_windows": 0.6961,
       "valid_slot_acc": {
-        "room": 0.587,
-        "device": 0.778,
-        "scene": 0.533,
-        "level": 0.412,
-        "seconds": 0.5
+        "room": 0.504,
+        "device": 0.414,
+        "scene": 0.432,
+        "level": 0.359,
+        "seconds": 0.577
       }
     },
     {
       "epoch": 11,
-      "train_loss": 0.5403,
-      "valid_tool_acc_pos_windows": 0.6975,
+      "train_loss": 0.3031,
+      "valid_tool_acc_pos_windows": 0.6634,
       "valid_slot_acc": {
-        "room": 0.541,
-        "device": 0.778,
-        "scene": 0.533,
-        "level": 0.441,
-        "seconds": 0.5
+        "room": 0.519,
+        "device": 0.414,
+        "scene": 0.378,
+        "level": 0.328,
+        "seconds": 0.577
       }
     },
     {
       "epoch": 12,
-      "train_loss": 0.4486,
-      "valid_tool_acc_pos_windows": 0.7166,
+      "train_loss": 0.2703,
+      "valid_tool_acc_pos_windows": 0.683,
       "valid_slot_acc": {
-        "room": 0.486,
-        "device": 0.815,
-        "scene": 0.467,
-        "level": 0.441,
-        "seconds": 0.433
+        "room": 0.526,
+        "device": 0.414,
+        "scene": 0.432,
+        "level": 0.344,
+        "seconds": 0.577
       }
     },
     {
       "epoch": 13,
-      "train_loss": 0.385,
-      "valid_tool_acc_pos_windows": 0.707,
+      "train_loss": 0.2318,
+      "valid_tool_acc_pos_windows": 0.7026,
       "valid_slot_acc": {
-        "room": 0.56,
-        "device": 0.778,
-        "scene": 0.433,
-        "level": 0.412,
-        "seconds": 0.5
+        "room": 0.519,
+        "device": 0.414,
+        "scene": 0.405,
+        "level": 0.375,
+        "seconds": 0.577
       }
     },
     {
       "epoch": 14,
-      "train_loss": 0.3788,
-      "valid_tool_acc_pos_windows": 0.6815,
+      "train_loss": 0.2063,
+      "valid_tool_acc_pos_windows": 0.6797,
       "valid_slot_acc": {
-        "room": 0.514,
-        "device": 0.704,
-        "scene": 0.467,
-        "level": 0.397,
+        "room": 0.474,
+        "device": 0.448,
+        "scene": 0.459,
+        "level": 0.359,
         "seconds": 0.5
       }
     },
     {
       "epoch": 15,
-      "train_loss": 0.3259,
-      "valid_tool_acc_pos_windows": 0.6879,
+      "train_loss": 0.2033,
+      "valid_tool_acc_pos_windows": 0.6863,
       "valid_slot_acc": {
-        "room": 0.541,
-        "device": 0.741,
-        "scene": 0.467,
-        "level": 0.412,
-        "seconds": 0.5
+        "room": 0.504,
+        "device": 0.414,
+        "scene": 0.378,
+        "level": 0.359,
+        "seconds": 0.538
       }
     },
     {
       "epoch": 16,
-      "train_loss": 0.3142,
-      "valid_tool_acc_pos_windows": 0.672,
+      "train_loss": 0.1837,
+      "valid_tool_acc_pos_windows": 0.719,
       "valid_slot_acc": {
-        "room": 0.56,
-        "device": 0.852,
-        "scene": 0.5,
-        "level": 0.412,
+        "room": 0.519,
+        "device": 0.414,
+        "scene": 0.459,
+        "level": 0.359,
         "seconds": 0.5
       }
     },
     {
       "epoch": 17,
-      "train_loss": 0.2795,
-      "valid_tool_acc_pos_windows": 0.6943,
+      "train_loss": 0.1723,
+      "valid_tool_acc_pos_windows": 0.6601,
       "valid_slot_acc": {
-        "room": 0.505,
-        "device": 0.741,
-        "scene": 0.433,
-        "level": 0.456,
-        "seconds": 0.5
+        "room": 0.467,
+        "device": 0.414,
+        "scene": 0.378,
+        "level": 0.359,
+        "seconds": 0.577
       }
     },
     {
       "epoch": 18,
-      "train_loss": 0.2952,
-      "valid_tool_acc_pos_windows": 0.6975,
+      "train_loss": 0.1569,
+      "valid_tool_acc_pos_windows": 0.6601,
       "valid_slot_acc": {
-        "room": 0.505,
-        "device": 0.778,
-        "scene": 0.4,
-        "level": 0.441,
-        "seconds": 0.5
+        "room": 0.452,
+        "device": 0.483,
+        "scene": 0.405,
+        "level": 0.344,
+        "seconds": 0.538
       }
     },
     {
       "epoch": 19,
-      "train_loss": 0.2557,
-      "valid_tool_acc_pos_windows": 0.7261,
+      "train_loss": 0.1516,
+      "valid_tool_acc_pos_windows": 0.6699,
       "valid_slot_acc": {
-        "room": 0.514,
-        "device": 0.815,
-        "scene": 0.467,
-        "level": 0.397,
-        "seconds": 0.433
+        "room": 0.481,
+        "device": 0.414,
+        "scene": 0.486,
+        "level": 0.375,
+        "seconds": 0.538
       }
     },
     {
       "epoch": 20,
-      "train_loss": 0.252,
-      "valid_tool_acc_pos_windows": 0.7229,
+      "train_loss": 0.1512,
+      "valid_tool_acc_pos_windows": 0.7026,
       "valid_slot_acc": {
-        "room": 0.55,
-        "device": 0.778,
-        "scene": 0.4,
-        "level": 0.412,
-        "seconds": 0.467
+        "room": 0.437,
+        "device": 0.414,
+        "scene": 0.351,
+        "level": 0.344,
+        "seconds": 0.577
       }
     }
   ],
-  "windows": 4397,
+  "windows": 6521,
   "acceptance": {
     "exact_match_min": 0.9,
     "false_action_max": 0.01,
     "p95_ms_max": 300,
     "min_negatives": 300
   },
-  "onnx_sha256": "ebc7ba2ce98e80df8a7579fb4285380150759143d465f0b0a0f5e766af98d88f"
+  "onnx_sha256": "c3f1b648037bdd7f60c6446f686978da4b96f8d76f7061af71fdf440b3c995a0"
 }

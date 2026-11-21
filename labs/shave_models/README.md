@@ -1,5 +1,11 @@
-# Custom models for Myriad 2
+# Custom models for MyriadForge
 
+> **Suites:** every model family here is one *suite* in the registry
+> ([SUITES.md](SUITES.md) · [suites.json](suites.json)) — a frozen spec,
+> digest-verified fixtures, a trainer, a bundle, and a device evaluation
+> under one contract. MagicEightBall ([boolean/](boolean/README.md)) is the
+> release template; [vad](vad_spec.py) is the next suite through the contract.
+>
 This lab includes trained ONNX weights, deployable OpenVINO FP16 XML/BIN pairs and held-out evaluation records for the original Intel NCS1. The host prepares inputs and interprets scores. All learned layers in the four FP16 bundles ran through `IECore.load_network(..., device_name="MYRIAD")` on the MA2450. The separate Needle bundle is a native Cactus model with its own Windows host evaluation.
 
 [MagicEightBall](boolean/README.md) returns a yes/no answer, a category and a tool proposal from up to 131,072 Needle 3 tokens. Its smallest physically replayed NCS1 graph is **480 bytes**. The batch runner learns exact execution paths by vertical and document structure. [Physical comparison](boolean/measurements/compact-gather-physical-ncs1.json)

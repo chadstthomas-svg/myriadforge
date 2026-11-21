@@ -119,6 +119,9 @@ fall back to the host CPU automatically — a graph pure MYRIAD rejects runs on
 
 ## Documentation
 
+- [labs/SUITES.md](labs/SUITES.md) — **the suite system**: 13 model suites under one contract
+  (frozen spec → digest-verified fixtures → trainer → bundle → device evaluation), per-suite
+  portability lane matrices (NCS1 / CPU / ORT / LiteRT / NCS2), and the build order.
 - [docs/RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md](docs/RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md) — the deep
   research: the measured cost decomposition (**72 % compute / 26 % transfer / 2.6 % dispatch**, compute at
   ~14 GFLOPS ≈ 10–18 % of peak), what public benchmarks actually show, and what Cactus Compute's **Mirage**

@@ -408,10 +408,11 @@ Cactus host stack as reference-to-beat) is underway. Results so far:
   multi-head graph is trainable, no head-splitting needed. Warm p50 **5.14 ms** per 2 s window:
   the ≤300 ms end-to-end budget has ~58× headroom for framing.
 - **Host reference FAILS all three acceptance gates** (`labs/shave_models/host_reference.py`,
-  Whistle ASR → Needle 3 over the same test split): exact match **35.9%** (gate ≥90%), false-action
-  rate **13.5%** (gate ≤1%), p95 **664 ms** (gate ≤300 ms). The two-stage host stack is both slow and
-  inaccurate on a narrow frozen task schema — the on-device baseline to beat is loose, which
-  strengthens the case for the single trained acoustic graph.
+  Whistle ASR → Needle 3 over the same test split). Corrected resident-Whistle run (per-fixture
+  construction had inflated ASR latency ~2.4×; superseded report preserved): exact match **44.4%**
+  (gate ≥90%), false-action rate **13.5%** (gate ≤1%), p95 **430 ms** (gate ≤300 ms). The two-stage
+  host stack is both slower and less accurate than the trained student on a narrow frozen task
+  schema.
 - **Trainer** (`labs/shave_models/train_voicetools.py`): multi-head (tool[13] + room/device/scene/
   level/seconds none-indexed heads), per-window training over the eval-contract window set. First
   recipe collapsed to the all-none prior; inverse-sqrt class weights recover learning (tool acc on
@@ -419,12 +420,23 @@ Cactus host stack as reference-to-beat) is underway. Results so far:
   the slot heads need — architecture v2 keeps time resolution before the acceptance run.
 - **First device acceptance run** (`labs/shave_models/eval_voicetools.py`, MO renames output blobs to
   `/<head>/Gemm` — canonicalize by head): exact match **22.4%** (gate ≥90% — fail), false-action rate
-  **8.1%** (gate ≤1% — fail), **p95 end-to-end 27.4 ms (gate ≤300 ms — PASS, 11× headroom)**. The full
-  per-window path (host logmel framing + USB + 6-head device inference + JSON) runs p50 9.6 ms —
-  **24× faster than the host Whistle→Needle 3 stack**, so the landmark latency criterion is already
-  met while accuracy gates await architecture v2. Error decomposition (223 positives): call-count
-  wrong **65%** (per-window rule fires spuriously / misses — utterance-level aggregation is the fix),
-  slots-wrong-but-tools-right 30%, tool confusion only **6%** (tool identity is nearly there).
+  **8.1%** (gate ≤1% — fail), **p95 end-to-end 27.4 ms (gate ≤300 ms — PASS, 11× headroom)**. Error
+  decomposition (223 positives): call-count wrong **65%** (per-window rule fires spuriously / misses
+  — utterance-level aggregation is the fix), slots-wrong-but-tools-right 30%, tool confusion only
+  **6%**.
+- **Architecture v2 (time-preserving heads) rewrites the accuracy picture — confirmed on hardware.**
+  Three-way matched comparison on identical fixture IDs: v1 device **22.4%** → v2 device **74.9%**
+  exact (+52.5 pts), false actions 8.1% → 6.8%, p95 27.8 ms (gate ≤300 ms — PASS, 10.8×); v2 CPU
+  control 74.9% / 6.8% / 13.7 ms. **Device/CPU agreement 297/297 fixtures** — the MYRIAD FP16 graph
+  is decision-identical to the CPU control (the strict-stick validation the unified plan asks for).
+  The student beats the corrected host reference on every axis ON DEVICE. Remaining gates (exact
+  ≥90%, false ≤1%) are the utterance-level-aggregation + abstention-calibration lanes; the
+  ≥300-negative sealed acceptance set is separate from the current 74-negative diagnostic split.
+- **VAD suite device v0** (first from-scratch suite): quality gates PASS on MYRIAD with FP16
+  agreement to CPU (96.9% window accuracy, 99.6% speech recall, 0.0 false wakes/hour at the frozen
+  threshold 0.8) — but the **latency gate FAILS**: p95 9.8 ms vs the 2.5 ms budget (the tiny graph's
+  GAP+flatten head layout runs slower on the stick than its MAC count suggests). Iteration lane:
+  restructure the head to the handoff-graph pattern or overlap via async pipelining.
 
 Honest scope notes: fixtures are TTS (condition-matched for every comparison; real-speaker expansion
 is future work with mini_speech_commands as the real-audio anchor); ordered calls come from the

@@ -23,3 +23,25 @@ jobs:
         run: |
           uv run --no-sync python -c "import onnx, onnxruntime; from sentencepiece import sentencepiece_model_pb2"
           uv run --no-sync pytest -q tests labs/shave_models/boolean/test_boolean.py
+  boolean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Boolean suite deps
+        run: pip install numpy pytest sentencepiece protobuf
+      - name: Run the Boolean differential suite (device parts skip off-hardware)
+        working-directory: labs/shave_models/boolean
+        run: python -m pytest test_boolean.py -q
+
+  digests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify bundle manifests match their artifacts
+        run: python labs/shave_models/check_digests.py

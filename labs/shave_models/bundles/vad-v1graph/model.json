@@ -1,0 +1,17 @@
+{
+  "model": "vad-v1graph",
+  "classes": [
+    "speech",
+    "noise",
+    "silence"
+  ],
+  "input_shape": [
+    1,
+    1,
+    40,
+    200
+  ],
+  "source_digest": "5cab9a5beb3f622b1320d10b6bb186faa01c80c9413be72786447c9cd2c1fee6",
+  "onnx_sha256": "58ad07530727bc430d624e806088c6938cef2e2bbbb932372b81ed8c3d31b338",
+  "note": "trained weights transplanted into the builder-built opset-11 graph (handoff pattern); latency lane experiment"
+}
