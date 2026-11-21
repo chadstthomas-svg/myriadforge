@@ -342,5 +342,22 @@
     "p95_ms_max": 300,
     "min_negatives": 300
   },
-  "onnx_sha256": "c3f1b648037bdd7f60c6446f686978da4b96f8d76f7061af71fdf440b3c995a0"
+  "onnx_sha256": "c3f1b648037bdd7f60c6446f686978da4b96f8d76f7061af71fdf440b3c995a0",
+  "tflite": {
+    "file": "model.tflite",
+    "io": {
+      "input": [
+        1,
+        1,
+        40,
+        200
+      ],
+      "output": [
+        1,
+        48
+      ]
+    },
+    "layout": "six heads concatenated: tool13 | room6 | device6 | scene5 | level12 | seconds6 (=48)",
+    "note": "litert-torch 0.10 conversion in WSL2; host decoder splits the span"
+  }
 }

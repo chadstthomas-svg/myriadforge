@@ -43,7 +43,7 @@
         "ncs1": "measured",
         "cpu": "measured",
         "ort": "measured",
-        "litert": "pending-wsl2-worker",
+        "litert": "converted+runtime-verified",
         "ncs2": "prepared",
         "coral": "n-a"
       }
