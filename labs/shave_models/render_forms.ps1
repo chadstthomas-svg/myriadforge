@@ -1,9 +1,9 @@
-param([Parameter(Mandatory)][string]$Output, [int]$Count = 720)
+param([Parameter(Mandatory)][string]$Output, [int]$Count = 720, [int]$Seed = 471)
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 $folder = [IO.Directory]::CreateDirectory($Output).FullName
-$rng = [Random]::new(471)
+$rng = [Random]::new($Seed)
 $phrases = @('Library','Display','Archive','Filter','Choose a topic','Project','Options','Details','Layout','Preview','Notes')
 $roles = @('button','textbox','checkbox','radio')
 $rows = [Collections.Generic.List[object]]::new()

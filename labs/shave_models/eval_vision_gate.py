@@ -42,6 +42,8 @@ def main():
     ap.add_argument("--run-dir", type=Path, default="")
     ap.add_argument("--manifest", default="manifest.jsonl",
                     help="manifest file name (manifest-sealed.jsonl for the sealed set)")
+    ap.add_argument("--split", default="test",
+                    help="rows to evaluate (test for diagnostics, sealed for sealed manifests)")
     args = ap.parse_args()
 
     sys.path.insert(0, str(args.toolchain.resolve()))
@@ -73,8 +75,7 @@ def main():
 
     all_rows = [json.loads(line) for line
                 in (args.fixtures / args.manifest).read_text(encoding="utf-8").splitlines()]
-    rows = [r for r in all_rows if r["split"] == ("sealed" if args.manifest != "manifest.jsonl"
-                                                 else "test")]
+    rows = [r for r in all_rows if r["split"] == args.split]
     print(f"{len(rows)} held-out frames, device {args.device}", flush=True)
 
     elapsed, results = [], []

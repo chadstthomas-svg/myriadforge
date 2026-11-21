@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<mapping>
+	<map>
+		<framework name="head.weight" out_port_id="head.weight"/>
+		<IR id="23" name="onnx_initializer_node_head.weight/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/Relu_2_output_0" out_port_id="/Relu_2_output_0"/>
+		<IR id="15" name="/Relu_2" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="c1.weight" out_port_id="c1.weight"/>
+		<IR id="1" name="onnx_initializer_node_c1.weight/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/ReduceMean_output_0" out_port_id="/ReduceMean_output_0"/>
+		<IR id="22" name="/ReduceMean" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="/c4/Conv_output_0" out_port_id="/c4/Conv_output_0"/>
+		<IR id="19" name="/c4/Conv" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="c2.weight" out_port_id="c2.weight"/>
+		<IR id="6" name="onnx_initializer_node_c2.weight/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/c2/Conv_output_0" out_port_id="/c2/Conv_output_0"/>
+		<IR id="9" name="/c2/Conv" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="frames" out_port_id="frames"/>
+		<IR id="0" name="frames" out_port_id="0"/>
+	</map>
+	<map>
+		<framework name="/Relu_output_0" out_port_id="/Relu_output_0"/>
+		<IR id="5" name="/Relu" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/head/Gemm" out_port_id="0"/>
+		<IR id="26" name="/head/Gemm" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="/c1/Conv_output_0" out_port_id="/c1/Conv_output_0"/>
+		<IR id="4" name="/c1/Conv" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="/c3/Conv_output_0" out_port_id="/c3/Conv_output_0"/>
+		<IR id="14" name="/c3/Conv" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="/Relu_3_output_0" out_port_id="/Relu_3_output_0"/>
+		<IR id="20" name="/Relu_3" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="/Relu_1_output_0" out_port_id="/Relu_1_output_0"/>
+		<IR id="10" name="/Relu_1" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="c3.weight" out_port_id="c3.weight"/>
+		<IR id="11" name="onnx_initializer_node_c3.weight/Output_0/Data__const" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="c4.weight" out_port_id="c4.weight"/>
+		<IR id="16" name="onnx_initializer_node_c4.weight/Output_0/Data__const" out_port_id="1"/>
+	</map>
+</mapping>

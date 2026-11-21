@@ -55,9 +55,9 @@ class DenseGate(nn.Module):
         return self.head(h.mean(dim=(2, 3)))
 
 
-def load(fixtures: Path):
+def load(fixtures: Path, manifest: str = "manifest.jsonl"):
     rows = [json.loads(line) for line
-            in (fixtures / "manifest.jsonl").read_text(encoding="utf-8").splitlines()]
+            in (fixtures / manifest).read_text(encoding="utf-8").splitlines()]
     X, Y, split_of = [], [], []
     for row in rows:
         X.append(frame_to_nchw(Path(row["wav"])))
@@ -69,6 +69,8 @@ def load(fixtures: Path):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--fixtures", type=Path, required=True)
+    ap.add_argument("--manifest", default="manifest.jsonl",
+                    help="manifest file name (manifest-v1.jsonl for the corrected task)")
     ap.add_argument("--epochs", type=int, default=15)
     ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--lr", type=float, default=1e-3)
@@ -78,7 +80,7 @@ def main():
     torch.manual_seed(SEED)
     rng = np.random.default_rng(SEED)
     print("loading frames...", flush=True)
-    X, Y, split_of = load(args.fixtures)
+    X, Y, split_of = load(args.fixtures, args.manifest)
     train_idx = np.where(split_of == "train")[0]
     test_idx = np.where(split_of == "test")[0]
     rng.shuffle(train_idx)
