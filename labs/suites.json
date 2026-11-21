@@ -112,9 +112,17 @@
       "capability": "task-specific image gate (cascade fix)",
       "reference": "ImageNet MobileNetV2 (mismatched - fires 59/60 on cartoons)",
       "artifact": "trained conv gate, compute-dense design (35.8 GFLOPS ceiling)",
-      "status": "spec",
-      "evidence": "none yet",
-      "gates": "planned: task-relevant fire rate <10% on non-trigger content (the measured MobileNetV2 failure mode)"
+      "status": "trained-v0-device-evaluated-all-gates-pass",
+      "evidence": "MYRIAD diagnostic: 100% accuracy, trigger recall 100%, fire-rate on non-trigger 0.0% (the measured ImageNet failure mode was 59/60 fired), p50 8.1 ms <= 60 (362 MFLOPs compute-dense stack rides the 35.8-GFLOPS ceiling). Caveat recorded: sealed set must add unseen animations before generalization claims",
+      "gates": "planned: task-relevant fire rate <10% on non-trigger content (the measured MobileNetV2 failure mode)",
+      "lanes": {
+        "ncs1": "measured",
+        "cpu": "prepared",
+        "ort": "prepared",
+        "litert": "pending-wsl2-worker",
+        "ncs2": "prepared",
+        "coral": "n-a"
+      }
     },
     {
       "id": "docqa",

@@ -1,0 +1,1112 @@
+{
+  "metrics": {
+    "device": "MYRIAD",
+    "ncs1_runtime": "OpenVINO 2020.3.2",
+    "spec_version": "vision-gate/1",
+    "frames": 178,
+    "accuracy": 1.0,
+    "trigger_recall": 1.0,
+    "fire_rate_nontrigger": 0.0,
+    "p50_ms": 8.1,
+    "p95_ms": 8.7,
+    "load_ms": 1764.2,
+    "all_finite": true,
+    "model_digests": {
+      "onnx_sha256": "c8e60406dfeb8a07990b99ebe993e064e018b1f2ce70c65d1402820a9b210775",
+      "ir_xml_sha256": "713a43da50a18d03bc477d456c5c2fc94b6b0934592ff0f3b6982fc7d1d75fc2"
+    },
+    "caveat": "diagnostic held-out = BBB-cartoon vs COCO-photo; the sealed set must add unseen animations (other studios) before any generalization claim",
+    "acceptance": {
+      "accuracy_min": {
+        "required": 0.9,
+        "measured": 1.0,
+        "pass": true
+      },
+      "fire_rate_nontrigger_max": {
+        "required": 0.1,
+        "measured": 0.0,
+        "pass": true
+      },
+      "recall_on_trigger_min": {
+        "required": 0.95,
+        "measured": 1.0,
+        "pass": true
+      },
+      "p50_ms_max": {
+        "required": 60.0,
+        "measured": 8.1,
+        "pass": true
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "coco_000000017031",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000327701",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000121153",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000112626",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000236592",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000508639",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000426297",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000381971",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000201934",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000191013",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000100624",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000425361",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000206831",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000534673",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000480842",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000554735",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000151962",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000279927",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000057725",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000319184",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000216636",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000300155",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000174482",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000289222",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000544306",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000370677",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000269682",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000361551",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000364126",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000514914",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000322968",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000213033",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000328117",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000404534",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000567011",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000119452",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000357903",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000433103",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000424642",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000502599",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000419601",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000475779",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000020107",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000509403",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000563267",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000099053",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000359833",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000378453",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000261982",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000004795",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000128699",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000365745",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000058029",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000477689",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000016439",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000261712",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000355817",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000306893",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000454750",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000164885",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000446703",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000441491",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000188592",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000131138",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000562448",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000569825",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000446522",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000417779",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000206218",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000379533",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000242678",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000155571",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000042276",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000176634",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000288882",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000236914",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000172877",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000000776",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000302452",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000469652",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000216739",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000161978",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000369037",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000217060",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000410487",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000157138",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000353180",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000067180",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000269314",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000367095",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000434297",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000224337",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000117908",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000473974",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000336209",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000425226",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000539143",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000147518",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000358427",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "coco_000000309655",
+      "kind": "coco_natural_photo",
+      "label": "trigger",
+      "pred": "trigger"
+    },
+    {
+      "id": "bbb_frame_0182_t006.067",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0183_t006.100",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0184_t006.133",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0185_t006.167",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0186_t006.200",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0187_t006.233",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0188_t006.267",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0189_t006.300",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0190_t006.333",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0191_t006.367",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0192_t006.400",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0193_t006.433",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0194_t006.467",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0195_t006.500",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0196_t006.533",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0197_t006.567",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0198_t006.600",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0199_t006.633",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0200_t006.667",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0201_t006.700",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0202_t006.733",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0203_t006.767",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0204_t006.800",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0205_t006.833",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0206_t006.867",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0207_t006.900",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0208_t006.933",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0209_t006.967",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0210_t007.000",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0211_t007.033",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0212_t007.067",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0213_t007.100",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0214_t007.133",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0215_t007.167",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0216_t007.200",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0217_t007.233",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0218_t007.267",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0219_t007.300",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0220_t007.333",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0221_t007.367",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0222_t007.400",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0223_t007.433",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0224_t007.467",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0225_t007.500",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0226_t007.533",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0227_t007.567",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0228_t007.600",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0229_t007.633",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0230_t007.667",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0231_t007.700",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0232_t007.733",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0233_t007.767",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0234_t007.800",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0235_t007.833",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0236_t007.867",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0237_t007.900",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0238_t007.933",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0239_t007.967",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0240_t008.000",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0241_t008.033",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0242_t008.067",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0243_t008.100",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0244_t008.133",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0245_t008.167",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0246_t008.200",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0247_t008.233",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0248_t008.267",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0249_t008.300",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0250_t008.333",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0251_t008.367",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0252_t008.400",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0253_t008.433",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0254_t008.467",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0255_t008.500",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0256_t008.533",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0257_t008.567",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0258_t008.600",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    },
+    {
+      "id": "bbb_frame_0259_t008.633",
+      "kind": "bbb_cartoon_frame",
+      "label": "non-trigger",
+      "pred": "non-trigger"
+    }
+  ]
+}

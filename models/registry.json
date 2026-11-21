@@ -80,6 +80,16 @@
       "local_path": "labs/shave_models/boolean/bundles/magiceightball.m8b",
       "status": "release-lane-evidence-complete",
       "source": "Suite boolean (MagicEightBall): staged Boolean policy -> yes/no + category + action, 512B native Gather blob in a 735B M8B1 archive + 23.4KB compact tokenizer (derived from Cactus Needle 3, apache-2.0, attribution required). Release evidence: D:/MyriadForge-ncs1-release/labs/shave_models/boolean/RELEASE-NCS1.md"
+    },
+    "myriadforge/vision-gate": {
+      "candidates": [
+        "model.onnx"
+      ],
+      "file": "model.onnx",
+      "format": "onnx",
+      "local_path": "labs/shave_models/bundles/vision-gate/model.onnx",
+      "status": "ok",
+      "source": "Suite vision-gate (vision-gate/1): task-specific trigger gate, compute-dense 3x3 stack per the paired-gap ceiling. Trained on COCO val2017 (CC-licensed) vs Big Buck Bunny frames (CC BY); device eval ALL GATES PASS (100% acc, 0.0% fire on non-trigger, p50 8.1 ms). See labs/shave_models/vision_gate_spec.py."
     }
   },
   "schema": "myriadforge.registry/1"
