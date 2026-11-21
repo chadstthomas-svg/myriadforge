@@ -87,13 +87,13 @@
       "reference": "silero-vad / pyannote segmentation",
       "artifact": "tiny conv on log-mel windows (voicetools pipeline reuse)",
       "status": "device-evaluated-gates-pass",
-      "evidence": "ALL GATES PASS (paired-gap method, single session, 600 windows): accuracy 96.75% >= 95, speech recall 98.2% >= 98 (threshold 0.9), false wakes 0.0/h <= 1, absolute p95 3.89 ms <= 12, paired ratio 1.59x <= 2.0 (gap floor 2.45 ms same-session - confirms the session-variance finding: same bundle measured 9.8 ms in worse sessions)",
+      "evidence": "ALL GATES PASS (paired-gap method, single session, 600 windows): accuracy 96.75% >= 95, speech recall 98.2% >= 98 (threshold 0.9), false wakes 0.0/h <= 1, absolute p95 3.89 ms <= 12, paired ratio 1.59x <= 2.0 (gap floor 2.45 ms same-session - confirms the session-variance finding: same bundle measured 9.8 ms in worse sessions); LiteRT artifact converted (model.tflite 8,216 B, IO [1,1,40,200]->[1,3], 40 real windows runtime-verified through XNNPACK)",
       "gates": "planned: >=95% frame accuracy @ <=1 ms p95 window, false-wake <=1/hour equivalent on held-out noise",
       "lanes": {
         "ncs1": "measured",
         "cpu": "measured",
         "ort": "measured",
-        "litert": "pending-wsl2-worker",
+        "litert": "converted+runtime-verified",
         "ncs2": "prepared",
         "coral": "n-a"
       }
