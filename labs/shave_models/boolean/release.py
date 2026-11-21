@@ -5,7 +5,7 @@ from pathlib import Path
 import struct
 import zlib
 
-from blob_layout import inspect_blob
+from blob_layout import compact_gather_blob, inspect_blob
 
 
 MAGIC = b"M8B1"
@@ -21,18 +21,23 @@ def _validate(manifest, blobs):
     shape = inputs.get("features") if isinstance(inputs, dict) else None
     if not isinstance(shape, list) or len(shape) != 1 or type(shape[0]) is not int or shape[0] < 1:
         raise ValueError("Release has invalid Gather geometry")
-    for blob in blobs.values():
-        layout = inspect_blob(blob)
+    for stick, blob in blobs.items():
+        count = manifest.get("fp16_coefficient_bytes") if stick == "ncs1" else None
+        layout = inspect_blob(blob, compact_coefficients=count)
         if (layout["input_bytes"] != shape[0] * 4 or layout["output_bytes"] != shape[0] * 2
                 or layout["stage_count"] != 1 or layout["sole_stage"]["type"] != 100):
             raise ValueError("Native Gather blob does not match the release geometry")
 
 
-def pack_bundle(directory):
+def pack_bundle(directory, compact_ncs1=False):
     manifest = (directory / "model.json").read_bytes()
     blobs = {stick: (directory / filename).read_bytes()
              for stick, (filename, _) in TARGETS.items()}
-    _validate(json.loads(manifest), blobs)
+    model = json.loads(manifest)
+    _validate(model, blobs)
+    if compact_ncs1:
+        blobs["ncs1"] = compact_gather_blob(blobs["ncs1"], model.get("fp16_coefficient_bytes"))
+        manifest = json.dumps(model, ensure_ascii=False, separators=(",", ":")).encode("utf8")
     fields = (manifest, blobs["ncs1"], blobs["ncs2"])
     return zlib.compress(HEADER.pack(MAGIC, *(len(field) for field in fields)) + b"".join(fields), 9)
 
@@ -59,7 +64,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("bundle", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--compact-ncs1", action="store_true", help="Remove verified NCS1 terminal zero padding")
     args = parser.parse_args()
-    archive = pack_bundle(args.bundle)
+    archive = pack_bundle(args.bundle, args.compact_ncs1)
     args.output.write_bytes(archive)
     print("%d bytes" % len(archive))

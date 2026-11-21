@@ -1,0 +1,204 @@
+{
+  "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+  "fixture_contract_sha256": "b09f44b4ce946499533fcc6bcae4e2ec5ed249a103401cdb68476d418e36306a",
+  "truth_table_assignments": 128,
+  "full_context": [
+    {
+      "name": "full_authorized",
+      "input_sha256": "bd18e69336d27b79a4112ffaf75fd42e174ea923d3f1d9f926d799a9efb50382",
+      "tokens": 131072,
+      "atoms": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "bits": [
+        1.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "billing",
+        "action": "review_billing"
+      }
+    },
+    {
+      "name": "full_late_veto",
+      "input_sha256": "8472fa9b8a48701237449c53e242cbf58f1975484652a75222023a3c2f611b17",
+      "tokens": 131072,
+      "atoms": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0
+      ],
+      "bits": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "billing",
+        "action": null
+      }
+    }
+  ],
+  "overflow": {
+    "tokens": 131073,
+    "rejected": true,
+    "input_sha256": "8c9b69a81459a9e68de3719f3a01382c5d274946224f0ff7fdf2333e2c4e6a00"
+  },
+  "repeats": 31,
+  "warmups": 4,
+  "timings": {
+    "short_128_sequential": {
+      "wall_ms": {
+        "p50": 25.791100000000178,
+        "p95": 31.88354999999987,
+        "max": 33.13159999999993
+      },
+      "host_prepare_ms": {
+        "p50": 4.889299999992325,
+        "p95": 6.050900000000414,
+        "max": 6.373200000002299
+      },
+      "decision_and_decode_ms": {
+        "p50": 20.73400000000092,
+        "p95": 25.509699999999746,
+        "max": 26.947899999997915
+      },
+      "openvino_infer_ms": {
+        "p50": 13.040700000001237,
+        "p95": 16.511699999998797,
+        "max": 17.937900000001505
+      },
+      "openvino_requests": 128
+    },
+    "short_128_vector": {
+      "wall_ms": {
+        "p50": 4.035099999999403,
+        "p95": 4.802049999999891,
+        "max": 6.0171000000002195
+      },
+      "host_prepare_ms": {
+        "p50": 2.76809999999994,
+        "p95": 3.177749999999868,
+        "max": 4.60130000000003
+      },
+      "decision_and_decode_ms": {
+        "p50": 1.2653000000000247,
+        "p95": 1.5743000000001395,
+        "max": 1.7671999999997468
+      },
+      "openvino_infer_ms": {
+        "p50": 0.23689999999998435,
+        "p95": 0.3921999999998427,
+        "max": 0.4477999999998872
+      },
+      "openvino_requests": 1
+    },
+    "full_authorized_one": {
+      "wall_ms": {
+        "p50": 33.53209999999951,
+        "p95": 41.246899999999975,
+        "max": 43.12629999999995
+      },
+      "host_prepare_ms": {
+        "p50": 33.025000000000304,
+        "p95": 40.638550000000166,
+        "max": 42.66129999999979
+      },
+      "decision_and_decode_ms": {
+        "p50": 0.4910999999996335,
+        "p95": 0.6887999999996008,
+        "max": 0.7529000000001673
+      },
+      "openvino_infer_ms": {
+        "p50": 0.35100000000021225,
+        "p95": 0.490150000000078,
+        "max": 0.5763999999999214
+      },
+      "openvino_requests": 1
+    },
+    "full_late_veto_one": {
+      "wall_ms": {
+        "p50": 32.94730000000001,
+        "p95": 41.37479999999982,
+        "max": 44.12390000000066
+      },
+      "host_prepare_ms": {
+        "p50": 32.21499999999988,
+        "p95": 40.804149999999595,
+        "max": 43.720699999999724
+      },
+      "decision_and_decode_ms": {
+        "p50": 0.5121999999992966,
+        "p95": 0.7249499999999465,
+        "max": 0.7630999999994614
+      },
+      "openvino_infer_ms": {
+        "p50": 0.3696999999993622,
+        "p95": 0.529850000000387,
+        "max": 0.5756000000003425
+      },
+      "openvino_requests": 1
+    },
+    "prepared_head_128_vector": {
+      "wall_ms": {
+        "p50": 0.8181000000000438,
+        "p95": 1.171499999999881,
+        "max": 1.2313999999999936
+      },
+      "openvino_infer_ms": {
+        "p50": 0.2275999999996614,
+        "p95": 0.33769999999999634,
+        "max": 0.3988999999999798
+      },
+      "openvino_requests": 1
+    }
+  },
+  "backend": "openvino-2020-cpu",
+  "device": "CPU",
+  "openvino_version": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "onnx_sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7",
+  "runner_initialization_ms": 173.35920000000004,
+  "artifacts": {
+    "shared_tokenizer_archive": {
+      "bytes": 23412,
+      "sha256": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+    },
+    "ir_xml": {
+      "bytes": 2723,
+      "sha256": "6b827ca84421a9f7248d30e54a87c4f685558838e090005a3735cca4c7f4653e"
+    },
+    "ir_weights": {
+      "bytes": 72,
+      "sha256": "7eddf104bd84e51288e7c526132dec73ec55db5e0a1901e7dbeb26ad0125c9c2"
+    },
+    "onnx": {
+      "bytes": 258,
+      "sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7"
+    }
+  }
+}

@@ -1,0 +1,539 @@
+{
+  "simulated_cases": 18,
+  "matched_cases": 18,
+  "ungated_matched_cases": 11,
+  "expected_no_action_cases": 10,
+  "wrong_proposals": {
+    "magiceightball": 0,
+    "ungated": 7
+  },
+  "repeats": 15,
+  "workload_ms": {
+    "logistics-text": {
+      "p50": 0.5040999967604876,
+      "p95": 0.8582999929785726,
+      "max": 0.9989999234676361
+    },
+    "logistics-structured": {
+      "p50": 0.32270001247525215,
+      "p95": 0.5735299899242818,
+      "max": 0.5903999553993344
+    },
+    "logistics-full_context": {
+      "p50": 29.40570004284382,
+      "p95": 61.654259986244135,
+      "max": 66.11410004552454
+    },
+    "oncall-text": {
+      "p50": 0.7131000747904181,
+      "p95": 0.965509994421154,
+      "max": 1.1150999926030636
+    },
+    "oncall-structured": {
+      "p50": 0.7792001124471426,
+      "p95": 1.3064200873486695,
+      "max": 1.5076000709086657
+    },
+    "oncall-full_context": {
+      "p50": 32.79029997065663,
+      "p95": 55.77731996309012,
+      "max": 57.83770000562072
+    }
+  },
+  "cases": [
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "carrier-trace",
+      "tokens": 15,
+      "expected": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "address-review",
+      "tokens": 18,
+      "expected": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "address",
+        "action": "verify_address"
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "address",
+        "action": "verify_address"
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "address",
+        "action": "verify_address"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "two-exceptions",
+      "tokens": 18,
+      "expected": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "mixed_exception",
+        "action": "review_shipment"
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "mixed_exception",
+        "action": "review_shipment"
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "mixed_exception",
+        "action": "review_shipment"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "await-approval",
+      "tokens": 14,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "fraud-hold",
+      "tokens": 17,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "non-exception",
+      "tokens": 19,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": null,
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": null,
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": null,
+        "action": null
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "structured",
+      "id": "archived-approval",
+      "tokens": 31,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "address",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "address",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "address",
+        "action": "verify_address"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "structured",
+      "id": "archived-hold",
+      "tokens": 31,
+      "expected": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "full_context",
+      "id": "late-hold",
+      "tokens": 131072,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "network-page",
+      "tokens": 18,
+      "expected": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      },
+      "actual": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "capacity-page",
+      "tokens": 18,
+      "expected": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "capacity",
+        "action": "page_capacity"
+      },
+      "actual": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "capacity",
+        "action": "page_capacity"
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "capacity",
+        "action": "page_capacity"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "mixed-page",
+      "tokens": 17,
+      "expected": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "mixed_incident",
+        "action": "page_incident"
+      },
+      "actual": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "mixed_incident",
+        "action": "page_incident"
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "mixed_incident",
+        "action": "page_incident"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "uncorroborated-capacity",
+      "tokens": 20,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "capacity",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "capacity",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "capacity",
+        "action": null
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "planned-downtime",
+      "tokens": 20,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "unrelated-event",
+      "tokens": 17,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": null,
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": null,
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": false
+        },
+        "category": null,
+        "action": null
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "structured",
+      "id": "stale-paging-approval",
+      "tokens": 36,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "structured",
+      "id": "archived-maintenance",
+      "tokens": 32,
+      "expected": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      },
+      "actual": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "full_context",
+      "id": "late-cancel",
+      "tokens": 131072,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    }
+  ],
+  "backend": "CPU",
+  "physical_usb_preflight": null,
+  "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+  "onnx_sha256": "72481bf69d70da97d0d0055c02f555ef2bd6b08625fdbf7c5d10b8995db5f6bb",
+  "scenario_sha256": "9b0777ab4e45f0ba6f5eed0d28e1fba3afc725436c844f3b41c868b8a8910b04",
+  "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+  "evidence_type": "hand-authored simulation",
+  "manifest_sha256": "7aafb73515f9dc25afe8b2a4dc58ac431cd5f4816aa93d3919b0cecbb648e269"
+}

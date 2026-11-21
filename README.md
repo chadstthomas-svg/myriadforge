@@ -63,7 +63,7 @@ on either the NCS1 (Myriad 2) or an NCS2 (Myriad X).
 
 Four custom FP16 models now have physical NCS1 evaluation records covering speech commands, text intent routing, desktop control localization and browser target ranking. The model lab also includes a locally fine-tuned Cactus Needle UI adapter. [Model bundles, measurements and reproduction instructions](labs/shave_models/README.md)
 
-[MagicEightBall](labs/shave_models/boolean/README.md) is a 131,072-token Boolean decision model that returns a yes/no answer, a category and a tool proposal in one pass. Its smallest tested NCS1 build compiles to 512 bytes.
+[MagicEightBall](labs/shave_models/boolean/README.md) is a 131,072-token Boolean decision model that returns a yes/no answer, a category and a tool proposal in one pass. Its **480-byte** compact native build passed replay on the physical NCS1. [Physical size comparison](labs/shave_models/boolean/measurements/compact-gather-physical-ncs1.json)
 
 Native Windows only (the MYRIAD driver story is Windows-native — not WSL2).
 

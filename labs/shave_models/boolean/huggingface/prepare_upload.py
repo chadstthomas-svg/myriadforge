@@ -12,8 +12,18 @@ REPO = LAB.parents[2]
 ARTIFACTS = (
     "runtime.py", "policy.py", "release.py", "radix.py", "blob_layout.py", "compact_tokenizer.py", "stream.py",
     "support.json", "COMPETITORS.md", "bundles/magiceightball.m8b", "needle3-tokenizer.m8t.xz",
+    "bundles/magiceightball-ncs1-compact.m8b",
+    "oncall.json", "adaptive.py", "supervisor.py", "simulate_industries.py", "build.py", "benchmark.py",
+    "benchmark_batch_heads.py", "benchmark_stream.py",
+    "industries/README.md", "industries/adaptive.json", "industries/logistics.json", "industries/policies.json",
+    "industries/scenarios.json", "industries/bundle/model.json", "industries/bundle/model.onnx",
+    "industries/bundle/ncs1-native.blob",
     "measurements/release-vector-ncs1.json", "measurements/release-stream-ncs1.json",
     "measurements/ncs1-cpu-comparison.json", "measurements/two-banks-ncs1.json",
+    "measurements/compare-compiled-table-cpu.json", "measurements/compare-openvino-2020-cpu.json",
+    "measurements/industry-simulation-cpu.json", "measurements/industry-simulation-ncs1.json",
+    "measurements/soak-release-30m-ncs1.json", "measurements/compact-gather-physical-ncs1.json",
+    "measurements/compact-release-vector-ncs1.json",
     "measurements/constant-free-pooling.json", "measurements/native-release-and-stock-controls.json",
     "measurements/streamed-parameters-compatibility.json", "measurements/decision-diagram-native-controls.json",
 )

@@ -1,0 +1,543 @@
+{
+  "simulated_cases": 18,
+  "matched_cases": 18,
+  "ungated_matched_cases": 11,
+  "expected_no_action_cases": 10,
+  "wrong_proposals": {
+    "magiceightball": 0,
+    "ungated": 7
+  },
+  "repeats": 15,
+  "workload_ms": {
+    "logistics-text": {
+      "p50": 1.9835999999999743,
+      "p95": 2.188110000000254,
+      "max": 2.300599999999875
+    },
+    "logistics-structured": {
+      "p50": 1.9295999999995317,
+      "p95": 2.331220000000034,
+      "max": 2.516299999999916
+    },
+    "logistics-full_context": {
+      "p50": 35.86040000000068,
+      "p95": 64.58602999999997,
+      "max": 73.0700999999998
+    },
+    "oncall-text": {
+      "p50": 2.265999999999657,
+      "p95": 2.7947999999996753,
+      "max": 2.8815999999993736
+    },
+    "oncall-structured": {
+      "p50": 2.1626000000001255,
+      "p95": 2.5457299999997574,
+      "max": 2.729200000000098
+    },
+    "oncall-full_context": {
+      "p50": 34.86110000000053,
+      "p95": 64.56761000000044,
+      "max": 80.89979999999919
+    }
+  },
+  "cases": [
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "carrier-trace",
+      "tokens": 15,
+      "expected": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "address-review",
+      "tokens": 18,
+      "expected": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "address",
+        "action": "verify_address"
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "address",
+        "action": "verify_address"
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "address",
+        "action": "verify_address"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "two-exceptions",
+      "tokens": 18,
+      "expected": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "mixed_exception",
+        "action": "review_shipment"
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "mixed_exception",
+        "action": "review_shipment"
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "mixed_exception",
+        "action": "review_shipment"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "await-approval",
+      "tokens": 14,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "fraud-hold",
+      "tokens": 17,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "text",
+      "id": "non-exception",
+      "tokens": 19,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": null,
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": null,
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": null,
+        "action": null
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "structured",
+      "id": "archived-approval",
+      "tokens": 31,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "address",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "address",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "address",
+        "action": "verify_address"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "structured",
+      "id": "archived-hold",
+      "tokens": 31,
+      "expected": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "logistics",
+      "workload": "full_context",
+      "id": "late-hold",
+      "tokens": 131072,
+      "expected": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_escalate": false
+        },
+        "category": "parcel",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_escalate": true
+        },
+        "category": "parcel",
+        "action": "trace_parcel"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "network-page",
+      "tokens": 18,
+      "expected": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      },
+      "actual": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "capacity-page",
+      "tokens": 18,
+      "expected": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "capacity",
+        "action": "page_capacity"
+      },
+      "actual": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "capacity",
+        "action": "page_capacity"
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "capacity",
+        "action": "page_capacity"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "mixed-page",
+      "tokens": 17,
+      "expected": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "mixed_incident",
+        "action": "page_incident"
+      },
+      "actual": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "mixed_incident",
+        "action": "page_incident"
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "mixed_incident",
+        "action": "page_incident"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "uncorroborated-capacity",
+      "tokens": 20,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "capacity",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "capacity",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "capacity",
+        "action": null
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "planned-downtime",
+      "tokens": 20,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "text",
+      "id": "unrelated-event",
+      "tokens": 17,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": null,
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": null,
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": false
+        },
+        "category": null,
+        "action": null
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "structured",
+      "id": "stale-paging-approval",
+      "tokens": 36,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "structured",
+      "id": "archived-maintenance",
+      "tokens": 32,
+      "expected": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      },
+      "actual": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    },
+    {
+      "vertical": "oncall",
+      "workload": "full_context",
+      "id": "late-cancel",
+      "tokens": 131072,
+      "expected": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_page": false
+        },
+        "category": "network",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_page": true
+        },
+        "category": "network",
+        "action": "page_network"
+      }
+    }
+  ],
+  "backend": "MYRIAD",
+  "physical_usb_preflight": {
+    "stick": "ncs1",
+    "boot_usb_id": "03E7:2150"
+  },
+  "runtime": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "onnx_sha256": "72481bf69d70da97d0d0055c02f555ef2bd6b08625fdbf7c5d10b8995db5f6bb",
+  "scenario_sha256": "9b0777ab4e45f0ba6f5eed0d28e1fba3afc725436c844f3b41c868b8a8910b04",
+  "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+  "evidence_type": "hand-authored simulation",
+  "manifest_sha256": "7aafb73515f9dc25afe8b2a4dc58ac431cd5f4816aa93d3919b0cecbb648e269",
+  "native_blob_sha256": "fdbe4ace9b7d936db8da5a2daa11262e44c4ffad35336f0090683d60c7966c34"
+}

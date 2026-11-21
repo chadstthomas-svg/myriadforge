@@ -2,7 +2,7 @@
 language:
   - en
 license: other
-license_name: MIT and Apache-2.0
+license_name: mit-and-apache-2.0
 license_link: LICENSE
 tags:
   - intel-ncs1
@@ -17,7 +17,7 @@ tags:
 
 ![Eight, a small black billiard-ball automaton, and Relay, a floating green microchip, inspect a glowing circuit on a violet workbench.](./assets/workbench.webp)
 
-MagicEightBall reads up to **131,072 Needle 3 tokens** and returns a Boolean answer, a category, and a proposed action. The host counts tokens and extracts evidence. A **512-byte** native graph on the original Intel Neural Compute Stick evaluates the compiled decision.
+MagicEightBall reads up to **131,072 Needle 3 tokens** and returns a Boolean answer, a category, and a proposed action. The host counts tokens and extracts evidence. This private development preview includes the **512-byte** native build that passed the sustained NCS1 run and a **480-byte** candidate that passed direct and packaged physical replay.
 
 ## Three decisions at the workbench
 
@@ -52,10 +52,20 @@ The release passed all 128 support-policy assignments on a physical NCS1, includ
 | CPU Boolean interpreter | 714-byte source policy | 4.57 / 8.26 ms | 39.26 / 49.48 ms |
 | CPU lookup | 128-byte generated table | 3.82 / 6.95 ms | 37.63 / 50.03 ms |
 | CPU decision diagram | 46-byte generated diagram | 4.03 / 7.37 ms | 37.92 / 52.50 ms |
+| Compiled CPU lookup | 128-byte table and 2,560-byte native library | 3.29 / 4.02 ms | 33.58 / 38.09 ms |
+| OpenVINO 2020.3.2 CPU Gather | Same 258-byte source ONNX | 4.04 / 4.80 ms | 33.53 / 41.25 ms |
 
 The CPU table and diagram figures cover decision data. Their runners also use the policy, tokenizer, and output mapping. The NCS1 took 223.70 ms median for the same 128 decisions issued one by one, about 35 times as long as the batch. In the streaming replay, short appends near the context limit took **1.90 ms median** after ingesting the initial prefix. Fresh full-context requests spend most of their time in host preparation. [Complete comparison report](./measurements/ncs1-cpu-comparison.json) · [Physical stream replay](./measurements/release-stream-ncs1.json)
 
-The 512-byte graph is the smallest physically verified native artifact in this comparison. The size report lists the smaller CPU decision data, alternate compiled layouts, and published NCS workloads that use different inputs. [Size and competitor comparison](./COMPETITORS.md)
+The **480-byte radix Gather** is the smallest native artifact verified in this comparison. It passed all 128 assignments, two exact-limit documents and overflow rejection on NCS1. It took 5.31 ms median for one batch of 128 short decisions, compared with 5.37 ms for its 512-byte padded control. The packaged candidate also passed the vector and mixed-context replay. Its separate sustained run is in progress. [Physical compact comparison](./measurements/compact-gather-physical-ncs1.json) · [Packaged candidate replay](./measurements/compact-release-vector-ncs1.json) · [Size and competitor comparison](./COMPETITORS.md)
+
+A **30-minute** mixed workload on the physical NCS1 completed **107,104 native requests** and **3,507,656 checked decisions**, with **26,776 overflows rejected**. The run exercised full documents, incremental vetoes and 128-decision batches on the resident release. [Physical soak report](./measurements/soak-release-30m-ncs1.json)
+
+## Industry use cases
+
+Two starter packs are ready to try on one resident NCS1 graph. **Logistics and fulfillment** triages missing shipments and address exceptions. **Software on-call** triages network and capacity incidents. The record-mode examples take evidence from a declared field, so an archived approval or hold stays outside the decision. [Run the starter packs](./industries/README.md) · [Labeled cases](./industries/scenarios.json)
+
+Both CPU and physical NCS1 agreed with all **18 of 18** simulated outcomes, including two 131,072-token cases with late vetoes. MagicEightBall issued zero proposals on the ten expected no-action cases. A baseline using the same rules without approval or veto checks issued seven. These results are from hand-authored simulations. [CPU simulation](./measurements/industry-simulation-cpu.json) · [Physical NCS1 simulation](./measurements/industry-simulation-ncs1.json)
 
 ## Scope and downloads
 
@@ -64,9 +74,11 @@ The shipped English support policy recognizes specific phrases and evaluates aut
 | Artifact | Bytes |
 |---|---:|
 | [Native release archive](./bundles/magiceightball.m8b), including both targets | 735 |
+| [Compact candidate archive](./bundles/magiceightball-ncs1-compact.m8b), with the 480-byte NCS1 image | 699 |
 | [Shared tokenizer](./needle3-tokenizer.m8t.xz) | 23,412 |
-| Release data total | **24,147** |
+| Stock archive plus tokenizer | **24,147** |
+| Compact archive plus tokenizer | **24,111** |
 
-The totals cover those two files. Python, OpenVINO, firmware, runner source and the artwork have separate sizes. [Checksums](./SHA256SUMS.txt)
+Each total covers one archive and the shared tokenizer. Python, OpenVINO, firmware, runner source and the artwork have separate sizes. [Checksums](./SHA256SUMS.txt)
 
 MyriadForge source and policy use the MIT license. The shared tokenizer restores the original Apache-2.0 Needle 3 tokenizer bytes and verifies the pinned SHA-256. [License](./LICENSE) · [Tokenizer provenance](./NOTICE.txt)

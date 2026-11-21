@@ -159,6 +159,30 @@ def test_native_release_round_trips_both_devices_and_banked_manifest(tmp_path):
             read_release(archive)
 
 
+def test_native_release_preserves_every_live_byte_when_compacting_ncs1(tmp_path):
+    from blob_layout import compact_gather_blob, inspect_blob
+    from release import pack_bundle, read_release
+
+    bundle = HERE / "bundles" / "magiceightball-radix"
+    stock = (bundle / "ncs1-native.blob").read_bytes()
+    archive = tmp_path / "radix.m8b"
+    packed = pack_bundle(bundle, compact_ncs1=True)
+    archive.write_bytes(packed)
+    manifest, blobs = read_release(archive)
+    size = manifest["fp16_coefficient_bytes"]
+    compact = blobs["ncs1"]
+    assert len(compact) == 480 and len(stock) == 512
+    assert compact[:56] == stock[:56] and compact[60:] == stock[60:480]
+    assert blobs["ncs2"] == (bundle / "ncs2-2020.3.blob").read_bytes()
+    assert inspect_blob(compact, compact_coefficients=size)["sections"]["constants"] == 32
+    with pytest.raises(ValueError, match="manifest disagree"):
+        compact_gather_blob(stock, size - 2)
+    with pytest.raises(ValueError, match="zero padding"):
+        compact_gather_blob(stock[:-1] + b"\x01", size)
+    with pytest.raises(ValueError, match="constant extent"):
+        inspect_blob(compact, compact_coefficients=size + 2)
+
+
 def test_stream_matches_full_tokenizer_and_evidence_for_each_append(tokenizer):
     from runtime import Runtime
     from stream import DecisionStream
