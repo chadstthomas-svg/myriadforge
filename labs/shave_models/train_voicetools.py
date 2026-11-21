@@ -136,8 +136,29 @@ class HeadedNet(nn.Module):
         return {name: head(flat) for name, head in self.heads.items()}
 
 
-def build_examples(fixtures: Path):
+def extra_negative_rows(vad_dir: Path):
+    """vad-suite noise/silence clips as extra all-none rows (train split only).
+
+    Cross-suite reuse inside the lab: the vad bootstrap synthesized 1,500+
+    deterministic non-speech clips the voicetools reject head never saw.
+    """
+    rows = []
+    for line in (vad_dir / "manifest.jsonl").read_text(encoding="utf-8").splitlines():
+        r = json.loads(line)
+        if r["label"] not in ("noise", "silence") or r["split"] != "train":
+            continue
+        wav = Path(r["wav"])
+        if not wav.is_absolute():
+            wav = vad_dir / wav
+        rows.append({"id": f"vad_{r['id']}", "wav": str(wav), "text": "", "calls": [],
+                     "kind": f"vad_{r['label']}", "voice": "", "rate": 0, "pitch": "0%",
+                     "split": "train", "seconds": 2.0})
+    return rows
+
+
+def build_examples(fixtures: Path, extra_neg=()):
     rows = [json.loads(line) for line in (fixtures / "manifest.jsonl").read_text(encoding="utf-8").splitlines()]
+    rows = rows + list(extra_neg)
     X, Y = [], []
     for row in rows:
         samples = read_wav(fixtures / row["wav"])
@@ -164,13 +185,19 @@ def main():
     ap.add_argument("--neg-weight", type=float, default=0.25,
                     help="loss weight of all-none (negative/silence) windows")
     ap.add_argument("--arch", choices=["v1", "v2"], default="v2")
+    ap.add_argument("--extra-negatives", type=Path, default=Path("D:/models/ncs-shave-research/vad"),
+                    help="vad fixtures dir whose train noise/silence become extra all-none windows")
+    ap.add_argument("--reject-weight", type=float, default=3.0,
+                    help="multiplier on the tool head's reject-class weight")
     ap.add_argument("--out", type=Path, default=Path(__file__).resolve().parent / "bundles" / "voicetools")
     args = ap.parse_args()
 
     torch.manual_seed(SEED)
     rng = np.random.default_rng(SEED)
     print("building windows...", flush=True)
-    X, Y = build_examples(args.fixtures)
+    extra = extra_negative_rows(args.extra_negatives) if args.extra_negatives else []
+    print(f"extra non-speech negatives: {len(extra)}", flush=True)
+    X, Y = build_examples(args.fixtures, extra)
     n = len(X)
     idx = rng.permutation(n)
     n_valid = int(0.08 * n)
@@ -183,6 +210,8 @@ def main():
     for h in HEADS:
         counts = np.bincount([Y[i][h] for i in train_idx], minlength=HEADS[h]).astype(np.float32)
         w = 1.0 / np.sqrt(np.maximum(counts, 1.0))
+        if h == "tool":
+            w[NONE_IDX["tool"]] *= args.reject_weight  # push borderline windows to reject
         weights[h] = torch.from_numpy(w / w.mean())
     win_w = torch.tensor([1.0 if Y[i]["tool"] != NONE_IDX["tool"] else args.neg_weight
                           for i in train_idx])

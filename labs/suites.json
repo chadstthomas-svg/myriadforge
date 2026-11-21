@@ -36,8 +36,8 @@
       "capability": "voice -> ordered typed tool calls (acoustic Needle)",
       "reference": "Whistle -> Needle 3",
       "artifact": "multi-head conv on [1,1,40,200] windows, 6 heads",
-      "status": "trained-v3-device-evaluated",
-      "evidence": "device 75.3% exact / 6.8% false / p95 27.7 ms (utterance rule @ 0.8, FP16 decisions identical to CPU); host reference 44.4% / 13.5% / 430 ms; remaining gates need a reject-head training iteration + sealed negatives",
+      "status": "trained-v3-sealed-evaluated",
+      "evidence": "diagnostic: 78.9% exact / 1.4% false (v3 reject-head iteration fixed non-speech rejection: vad negatives + reject weight); SEALED 421 unseen negatives on MYRIAD: 19.0% false actions - noise 1.0% PASS, unseen in-domain-shaped text 50-87% FAIL; fix lane = broad-scale OOD text negatives; p95 27.7 ms PASS",
       "gates": ">=90% exact, <=1% false, p95<=300ms, >=300 held-out negatives",
       "lanes": {
         "ncs1": "measured",

@@ -51,17 +51,20 @@ V0_SOURCES = {
 
 # Acceptance gates (declare BEFORE opening any sealed set). The false-wake
 # budget is expressed per hour of held-out non-speech at 1 s hop.
-# p95 budget note (revised 2026-11-20, declared before any sealed device run):
-# device physics for ONE [1,1,40,200] FP32 window = ~0.8 ms input transfer
-# (32 KB @ ~40 MB/s) + ~1.5 ms fixed dispatch (profile_split) + compute - so a
-# 2.5 ms sync budget is BELOW the floor. The v0 flatten-head measured 9.8 ms
-# p95; the handoff-pattern head (full GAP + tiny Gemm) targets the measured
-# 5.0 ms handoff envelope. Gate = 6.0 ms sync p95 (floor + margin); async
-# overlap (2 requests) is the throughput story, not this gate.
+# p95 budget note (revised twice, 2026-11-20 - falsified hypotheses recorded):
+# (1) 2.5 ms was below the dispatch+transfer physics floor. (2) 6.0 ms assumed
+# the torch-export path cost the extra ~3 ms - FALSIFIED: a builder-built
+# opset-11 transplant of the SAME weights measured 8.8/14.8 ms with byte-
+# identical outputs, so the variance is SESSION/USB-bound (the handoff 5.0 ms
+# was a different session). Final gate: absolute p95 <= 12 ms sync AND a
+# session-relative paired-gap check (vad p95 <= 2x a zero-compute gap model of
+# the same input shape, measured in the same session) - the compute_probe
+# method that cancels host-USB state.
 ACCEPTANCE = {
     "window_accuracy_min": 0.95,      # all three classes, held-out conditions
     "speech_recall_min": 0.98,        # speech windows correctly gated IN
     "false_wake_per_hour_max": 1.0,   # non-speech windows misclassified as speech
-    "p95_window_ms_max": 6.0,         # device inference per window, warm, batch 1
+    "p95_window_ms_max": 12.0,        # device inference per window, warm, batch 1
+    "paired_gap_ratio_max": 2.0,      # vad p95 <= 2x same-session gap-model p95
     "min_held_out_noise_clips": 300,  # independent noise sources in the sealed set
 }

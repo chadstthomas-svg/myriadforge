@@ -46,7 +46,7 @@ Cactus analog** (novel). Statuses: `spec` → `fixtures` → `trained` →
 | Suite | Capability | Status | Evidence |
 |---|---|---|---|
 | **boolean (MagicEightBall)** | Staged Boolean policy → yes/no + category + action, up to 131,072 tokens | **release-lane evidence complete** | 128/128 physical, 30-min soak (107,104 requests), 7-backend matched comparison, cold identity recorded |
-| **voicetools** | Voice → ordered typed tool calls (acoustic Needle) | **device-evaluated v3** | MYRIAD 75.3% exact / 6.8% false / p95 27.7 ms (utterance rule @ 0.8, FP16-identical to CPU); remaining gates: reject-head iteration + sealed negatives |
+| **voicetools** | Voice → ordered typed tool calls (acoustic Needle) | **sealed-evaluated v3** | diagnostic 78.9% / 1.4% false (reject-head iteration fixed noise rejection); **sealed 421 unseen negatives: 19.0% false** — noise 1.0% PASS, unseen in-domain text 50-87% FAIL → broad-OOD-text fix lane; p95 PASS |
 | voice | Isolated command classification (wake/kws primitive) | evidence complete | 90.7% @ p95 3.89 ms |
 | intent | Text intent routing (91 SLURP labels) | evidence complete | 80.1% @ p95 3.08 ms |
 | grounding | Browser control ranking | experimental | 7.4% — first bottleneck named (32-candidate retrieval limit) |

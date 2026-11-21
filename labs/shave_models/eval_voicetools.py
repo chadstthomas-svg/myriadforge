@@ -148,6 +148,8 @@ def main():
     ap.add_argument("--fixtures", type=Path, default=Path("D:/models/ncs-shave-research/voicetools"))
     ap.add_argument("--toolchain", type=Path, default=Path("D:/NTVStudy/tools/ncs1"))
     ap.add_argument("--split", default="test")
+    ap.add_argument("--manifest", default="manifest.jsonl",
+                    help="manifest file name (manifest-sealed.jsonl for the sealed set)")
     ap.add_argument("--device", choices=["myriad", "cpu"], default="myriad",
                     help="cpu = matched same-student control on the OpenVINO 2020.3 CPU plugin")
     ap.add_argument("--run-dir", type=Path, default="",
@@ -190,7 +192,7 @@ def main():
     out_names = [str(o) for o in net.outputs]
 
     rows = [json.loads(line) for line
-            in (args.fixtures / "manifest.jsonl").read_text(encoding="utf-8").splitlines()]
+            in (args.fixtures / args.manifest).read_text(encoding="utf-8").splitlines()]
     rows = [row for row in rows if row["split"] == args.split]
     print(f"{len(rows)} fixtures (split {args.split}), device {args.device}, "
           f"outputs {out_names}", flush=True)
@@ -200,9 +202,10 @@ def main():
     finiteness_checked = False
     for row in rows:
         samples = read_wav(args.fixtures / row["wav"])
+        seconds = row.get("seconds") or len(samples) / RATE  # sealed rows omit seconds
         window_outs = []
         t_start = time.perf_counter()
-        for w_start in window_starts(row["seconds"]):
+        for w_start in window_starts(seconds):
             seg = samples[int(w_start * RATE): int(w_start * RATE) + (WIN_FRAMES - 1) * HOP + 400]
             if len(seg) < 400:
                 continue
