@@ -63,11 +63,15 @@ def window_starts(seconds):
 
 
 class TinyVad(nn.Module):
+    """Head = the handoff-proven pattern: GlobalAveragePool over BOTH axes ->
+    a tiny Gemm (16->3). The v0 800-wide flatten head measured p95 9.8 ms on
+    the stick; this shape matches the 5.0 ms handoff graph."""
+
     def __init__(self):
         super().__init__()
         self.stem = nn.Conv2d(1, 8, (1, 9), padding=(0, 4))
         self.block1 = nn.Conv2d(8, 16, (1, 9), padding=(0, 4))
-        self.head = nn.Linear(16 * 50, len(CLASSES))
+        self.head = nn.Linear(16, len(CLASSES))
         for m in self.modules():
             if isinstance(m, (nn.Conv2d, nn.Linear)):
                 nn.init.xavier_uniform_(m.weight)
@@ -76,7 +80,7 @@ class TinyVad(nn.Module):
     def forward(self, x):
         h = F.max_pool2d(F.relu(self.stem(x)), (1, 2))
         h = F.max_pool2d(F.relu(self.block1(h)), (1, 2))
-        flat = h.mean(dim=2).flatten(1)  # GAP over mel axis, keep time -> [B, 16*50]
+        flat = h.mean(dim=(2, 3))  # full GAP -> [B, 16]
         return self.head(flat)
 
 

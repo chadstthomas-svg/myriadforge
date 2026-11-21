@@ -27,7 +27,7 @@ import numpy as np
 LAB = Path(__file__).resolve().parent
 sys.path.insert(0, str(LAB))
 
-from tools_spec import (ACCEPTANCE, TASK_SPEC_VERSION,  # noqa: E402
+from tools_spec import (ACCEPTANCE, FIRE_THRESHOLD, TASK_SPEC_VERSION,  # noqa: E402
                         WINDOW_SECONDS, WINDOW_STRIDE)
 
 RATE = 16000
@@ -73,23 +73,64 @@ def softmax(x):
     return e / e.sum()
 
 
-def decide(window_out, info):
-    """One window's head outputs -> (fired_tool_or_None, call_dict_or_None, confidence)."""
+SLOT_OF = {"room": "room", "device": "device", "scene": "scene",
+           "level": "level", "seconds": "seconds"}
+
+
+def call_from_window(window_out, info):
+    """Slot heads of one window -> call dict (no tool decision here)."""
     labels = info["labels"]
-    tool_idx = int(np.argmax(window_out["tool"]))
-    conf = float(softmax(window_out["tool"])[tool_idx])
-    if tool_idx == labels["none_idx"]["tool"] or conf < FIRE_THRESHOLD:
-        return None, None, conf
-    tool = labels["tools"][tool_idx]
-    call = {"tool": tool}
-    slot_of = {"room": "room", "device": "device", "scene": "scene",
-               "level": "level", "seconds": "seconds"}
-    for head, key in slot_of.items():
+    call = {}
+    for head, key in SLOT_OF.items():
         idx = int(np.argmax(window_out[head]))
         if idx != labels["none_idx"][head]:
             value = labels["enums"][head][idx]
             call[key] = int(value) if head in ("level", "seconds") else str(value)
+    return call
+
+
+def decide(window_out, info):
+    """Per-window rule (v1/v2 record compatibility): argmax tool, confidence gate."""
+    labels = info["labels"]
+    probs = softmax(window_out["tool"])
+    tool_idx = int(np.argmax(probs))
+    conf = float(probs[tool_idx])
+    if tool_idx == labels["none_idx"]["tool"] or conf < FIRE_THRESHOLD:
+        return None, None, conf
+    tool = labels["tools"][tool_idx]
+    call = {"tool": tool, **call_from_window(window_out, info)}
     return tool, call, conf
+
+
+def decide_utterance(window_outs, info, threshold):
+    """Utterance-level rule: a tool fires at its BEST window (max tool confidence
+    across the utterance, above the frozen threshold); calls are ordered by the
+    window position of that best confidence, capped at 2 (the spec's max)."""
+    labels = info["labels"]
+    best = {}
+    for wi, out in enumerate(window_outs):
+        probs = softmax(out["tool"])
+        tool_idx = int(np.argmax(probs))
+        if tool_idx == labels["none_idx"]["tool"]:
+            continue
+        tool = labels["tools"][tool_idx]
+        conf = float(probs[tool_idx])
+        if tool not in best or conf > best[tool][0]:
+            best[tool] = (conf, wi, {"tool": tool, **call_from_window(out, info)})
+    fired = [(wi, -conf, call) for tool, (conf, wi, call) in best.items() if conf >= threshold]
+    fired.sort(key=lambda x: (x[0], x[1]))
+    return [call for _, _, call in fired[:2]]
+
+
+def _window_rule_calls(window_outs, info):
+    """Per-window rule over stored outputs (record compatibility path)."""
+    got, seen = [], set()
+    for out in window_outs:
+        tool, call, _conf = decide(out, info)
+        if tool is not None and tool not in seen:
+            seen.add(tool)
+            got.append(call)
+    return got
 
 
 def normalize(call):
@@ -112,6 +153,13 @@ def main():
     ap.add_argument("--run-dir", type=Path, default="",
                     help="isolated report directory (default: the bundle dir; reports are "
                          "named device-evaluation-<device>.json so prior reports survive)")
+    ap.add_argument("--rule", choices=["utterance", "window"], default="utterance",
+                    help="utterance = best-window-per-tool aggregation (default); "
+                         "window = the v1/v2 per-first-occurrence rule")
+    ap.add_argument("--threshold", type=float, default=None,
+                    help="speech-tool fire threshold; default = tools_spec FIRE_THRESHOLD")
+    ap.add_argument("--sweep", action="store_true",
+                    help="calibration sweep over thresholds on this split (no freeze)")
     args = ap.parse_args()
 
     sys.path.insert(0, str(args.toolchain.resolve()))
@@ -152,7 +200,7 @@ def main():
     finiteness_checked = False
     for row in rows:
         samples = read_wav(args.fixtures / row["wav"])
-        got_calls, fired_seen = [], set()
+        window_outs = []
         t_start = time.perf_counter()
         for w_start in window_starts(row["seconds"]):
             seg = samples[int(w_start * RATE): int(w_start * RATE) + (WIN_FRAMES - 1) * HOP + 400]
@@ -172,65 +220,82 @@ def main():
                 finiteness_checked = True
                 if not all(np.isfinite(v).all() for v in window_out.values()):
                     raise ValueError("non-finite head output on the first inference")
-            tool, call, _conf = decide(window_out, info)
-            if tool is not None and tool not in fired_seen:
-                fired_seen.add(tool)
-                got_calls.append(call)
+            window_outs.append(window_out)
         elapsed.append((time.perf_counter() - t_start) * 1000)
-        want = [normalize(c) for c in row["calls"]]
-        got = [normalize(c) for c in got_calls]
-        exact = got == want
-        if row["kind"].startswith("neg"):
-            if got:
-                false_on_neg += 1
-        else:
-            positives += 1
-            hits += int(exact)
-        results.append({"id": row["id"], "kind": row["kind"], "got": got,
-                        "want": want, "exact": exact})
+        results.append({"id": row["id"], "kind": row["kind"], "window_outs": window_outs,
+                        "want": [normalize(c) for c in row["calls"]]})
 
     elapsed = np.asarray(elapsed)
-    negatives = len(rows) - positives
-    metrics = {
-        "exact_match": round(hits / max(1, positives), 4),
-        "exact_hits": hits, "positives": positives,
-        "false_action_rate": round(false_on_neg / max(1, negatives), 4),
-        "negatives": negatives, "false_actions": false_on_neg,
-        "p50_end_to_end_ms": round(float(np.percentile(elapsed, 50)), 1),
-        "p95_end_to_end_ms": round(float(np.percentile(elapsed, 95)), 1),
-        "load_ms": round(load_ms, 1),
-        "device": "MYRIAD" if args.device == "myriad" else "CPU",
-        "ncs1_runtime": "OpenVINO 2020.3.2",
-        "spec_version": TASK_SPEC_VERSION,
-        "model_digests": {"onnx_sha256": info["onnx_sha256"],
-                          "ir_xml_sha256": hashlib.sha256(xml.read_bytes()).hexdigest(),
-                          "ir_bin_sha256": hashlib.sha256(binary.read_bytes()).hexdigest()},
-        "timing_boundary": ("end-to-end per fixture = host logmel framing over every window + "
-                            "USB/device inference + decision; model load and WAV decode excluded"),
-        "fixture_ids": "manifest-order replay (identical IDs across device/CPU runs)",
-    }
-    metrics["acceptance"] = {
-        gate: {"required": required, "measured": metrics[measured_key],
-               "pass": bool(metrics[measured_key] >= required if key == "exact_match_min"
-                            else metrics[measured_key] <= required)}
-        for gate, (required, key, measured_key) in {
-            "exact_match_min": (ACCEPTANCE["exact_match_min"], "exact_match_min", "exact_match"),
-            "false_action_max": (ACCEPTANCE["false_action_max"], "false_action_max", "false_action_rate"),
-            "p95_ms_max": (ACCEPTANCE["p95_ms_max"], "p95_ms_max", "p95_end_to_end_ms"),
-        }.items()
-    }
-    metrics["acceptance"]["min_negatives"] = {
-        "required": ACCEPTANCE["min_negatives"], "measured": negatives,
-        "pass": bool(negatives >= ACCEPTANCE["min_negatives"]),
-        "note": "the sealed acceptance set needs >=300 held-out negatives; "
-                "the current test split is a diagnostic set",
-    }
-    run_dir = args.run_dir if args.run_dir else args.bundle
-    report = run_dir / f"device-evaluation-{args.device}.json"
-    report.parent.mkdir(parents=True, exist_ok=True)
-    report.write_text(
-        json.dumps({"metrics": metrics, "results": results}, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(metrics, indent=2))
+    negatives = sum(1 for row, _ in zip(rows, results) if row["kind"].startswith("neg"))
+    positives = len(rows) - negatives
+
+    def score(threshold):
+        hits = false_on_neg = 0
+        scored = []
+        for row, res in zip(rows, results):
+            got_calls = (decide_utterance(res["window_outs"], info, threshold)
+                         if args.rule == "utterance"
+                         else [c for c in _window_rule_calls(res["window_outs"], info)])
+            got = [normalize(c) for c in got_calls]
+            exact = got == res["want"]
+            if row["kind"].startswith("neg"):
+                false_on_neg += int(bool(got))
+            else:
+                hits += int(exact)
+            scored.append({"id": row["id"], "kind": row["kind"], "got": got,
+                           "want": res["want"], "exact": exact})
+        m = {"rule": args.rule, "threshold": threshold,
+             "exact_match": round(hits / max(1, positives), 4),
+             "exact_hits": hits, "positives": positives,
+             "false_action_rate": round(false_on_neg / max(1, negatives), 4),
+             "negatives": negatives, "false_actions": false_on_neg,
+             "p50_end_to_end_ms": round(float(np.percentile(elapsed, 50)), 1),
+             "p95_end_to_end_ms": round(float(np.percentile(elapsed, 95)), 1),
+             "load_ms": round(load_ms, 1),
+             "device": "MYRIAD" if args.device == "myriad" else "CPU",
+             "ncs1_runtime": "OpenVINO 2020.3.2",
+             "spec_version": TASK_SPEC_VERSION,
+             "model_digests": {"onnx_sha256": info["onnx_sha256"],
+                               "ir_xml_sha256": hashlib.sha256(xml.read_bytes()).hexdigest(),
+                               "ir_bin_sha256": hashlib.sha256(binary.read_bytes()).hexdigest()},
+             "timing_boundary": ("end-to-end per fixture = host logmel framing over every window + "
+                                 "USB/device inference + decision; model load and WAV decode excluded"),
+             "fixture_ids": "manifest-order replay (identical IDs across device/CPU runs)"}
+        m["acceptance"] = {
+            gate: {"required": required, "measured": m[measured_key],
+                   "pass": bool(m[measured_key] >= required if key == "exact_match_min"
+                                else m[measured_key] <= required)}
+            for gate, (required, key, measured_key) in {
+                "exact_match_min": (ACCEPTANCE["exact_match_min"], "exact_match_min", "exact_match"),
+                "false_action_max": (ACCEPTANCE["false_action_max"], "false_action_max", "false_action_rate"),
+                "p95_ms_max": (ACCEPTANCE["p95_ms_max"], "p95_ms_max", "p95_end_to_end_ms"),
+            }.items()}
+        m["acceptance"]["min_negatives"] = {
+            "required": ACCEPTANCE["min_negatives"], "measured": negatives,
+            "pass": bool(negatives >= ACCEPTANCE["min_negatives"]),
+            "note": "the sealed acceptance set needs >=300 held-out negatives; "
+                    "the current test split is a diagnostic set"}
+        return m, scored
+
+    run_dir = (args.run_dir if args.run_dir else args.bundle).resolve()
+    run_dir.mkdir(parents=True, exist_ok=True)
+    if args.sweep:
+        sweep = []
+        for t in (0.5, 0.6, 0.7, 0.8, 0.9):
+            m, _ = score(t)
+            sweep.append({k: m[k] for k in ("threshold", "exact_match", "false_action_rate",
+                                            "p95_end_to_end_ms")})
+            print(sweep[-1], flush=True)
+        report = run_dir / f"calibration-{args.device}-{args.split}.json"
+        report.write_text(json.dumps({"rule": args.rule, "sweep": sweep}, indent=2) + "\n",
+                          encoding="utf-8")
+        print(f"written -> {report}")
+        return
+    m, scored = score(args.threshold if args.threshold is not None else FIRE_THRESHOLD)
+    report = run_dir / f"device-evaluation-{args.device}-{args.rule}.json"
+    report.write_text(json.dumps({"metrics": m, "results": scored}, indent=2) + "\n",
+                      encoding="utf-8")
+    print(json.dumps(m, indent=2))
     print(f"written -> {report}")
 
 

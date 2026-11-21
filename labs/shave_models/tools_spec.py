@@ -153,6 +153,15 @@ PAIRS = 480                # ordered distinct-tool pairs
 NEG_PER_KIND = 120         # x3 speech kinds = 360 speech negatives
 SILENCE_NEGATIVES = 40     # appended programmatically, not synthesized
 
+# --- decision rule ----------------------------------------------------------
+# Utterance-level aggregation (v3 of the decision rule): a tool fires at its
+# best window above FIRE_THRESHOLD; calls ordered by that window's position.
+# 0.8 frozen 2026-11-20 from the dev (valid) sweep: balanced exact (79.8%)
+# against false actions (12.5%); 0.9 trades 5.4 pts of exact for 5 pts of
+# false actions. The false-action gate still needs a rejection-head training
+# iteration (confidently-wrong-on-negatives is a model issue, not a threshold).
+FIRE_THRESHOLD = 0.8
+
 # --- acceptance gate (declare BEFORE opening the sealed set) ----------------
 ACCEPTANCE = {
     "exact_match_min": 0.90,     # full-call exact match on the held-out cells

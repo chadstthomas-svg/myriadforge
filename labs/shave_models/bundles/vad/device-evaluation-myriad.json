@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "device": "MYRIAD",
+    "ncs1_runtime": "OpenVINO 2020.3.2",
+    "spec_version": "vad/1",
+    "windows": 13640,
+    "model_digests": {
+      "onnx_sha256": "5cab9a5beb3f622b1320d10b6bb186faa01c80c9413be72786447c9cd2c1fee6",
+      "ir_xml_sha256": "93c162ecb01ffa833025fa721c701df33e3cddfff92ed3f41690fac25110df4e",
+      "ir_bin_sha256": "12a417ee87736ef9382048801597539c2203968c6bbe558360dfbe7a182b4556"
+    },
+    "timing_boundary": "per-window device inference only (host framing excluded here; the voicetools eval covers the framed end-to-end path)",
+    "p50_window_ms": 6.95,
+    "p95_window_ms": 9.95,
+    "load_ms": 1543.8,
+    "sweep": [
+      {
+        "threshold": 0.5,
+        "window_accuracy": 0.9675,
+        "speech_recall": 0.9938,
+        "false_wake_rate": 0.00376,
+        "false_wakes_per_hour": 13.5
+      },
+      {
+        "threshold": 0.7,
+        "window_accuracy": 0.9675,
+        "speech_recall": 0.9903,
+        "false_wake_rate": 0.00269,
+        "false_wakes_per_hour": 9.7
+      },
+      {
+        "threshold": 0.8,
+        "window_accuracy": 0.9675,
+        "speech_recall": 0.9881,
+        "false_wake_rate": 0.00108,
+        "false_wakes_per_hour": 3.9
+      },
+      {
+        "threshold": 0.9,
+        "window_accuracy": 0.9675,
+        "speech_recall": 0.9823,
+        "false_wake_rate": 0.0,
+        "false_wakes_per_hour": 0.0
+      },
+      {
+        "threshold": 0.95,
+        "window_accuracy": 0.9675,
+        "speech_recall": 0.9734,
+        "false_wake_rate": 0.0,
+        "false_wakes_per_hour": 0.0
+      }
+    ]
+  }
+}
