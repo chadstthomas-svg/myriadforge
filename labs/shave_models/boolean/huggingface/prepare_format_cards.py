@@ -9,7 +9,7 @@ from shutil import copyfile
 from prepare_upload import CARD, LAB, NOTICE, REPO
 
 
-FAMILY = "https://huggingface.co/chadstthomas/MagicEightBall"
+FAMILY = "https://huggingface.co/tablinum/MagicEightBall"
 FORMATS = {
     "onnx": ("ONNX", "model.onnx", "onnxruntime",
              "Portable radix Gather export. The graph accepts 128 packed INT32 addresses and returns 128 FP32 "

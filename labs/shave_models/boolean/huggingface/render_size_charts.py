@@ -61,10 +61,10 @@ def observations():
         ],
         "portable_files": [
             ["ONNX radix Gather", (LAB / "bundles/magiceightball-radix/model.onnx").stat().st_size,
-             "https://huggingface.co/chadstthomas/MagicEightBall-ONNX/blob/main/verification.json"],
-            ["GGUF", 1024, "https://huggingface.co/chadstthomas/MagicEightBall-GGUF/blob/main/verification.json"],
+             "https://huggingface.co/tablinum/MagicEightBall-ONNX/blob/main/verification.json"],
+            ["GGUF", 1024, "https://huggingface.co/tablinum/MagicEightBall-GGUF/blob/main/verification.json"],
             ["FP32 dense reference", (LAB / "bundles/dense/model.onnx").stat().st_size,
-             "https://huggingface.co/chadstthomas/MagicEightBall-FP32/blob/main/verification.json"],
+             "https://huggingface.co/tablinum/MagicEightBall-FP32/blob/main/verification.json"],
         ],
         "decision_data": [["CPU decision diagram", diagram], ["CPU lookup table", lookup]],
         "deployment": {"compact_archive": compact_archive, "shared_tokenizer": tokenizer},
