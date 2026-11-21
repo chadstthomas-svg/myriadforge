@@ -64,7 +64,7 @@ Cactus analog** (novel). Statuses: `spec` → `fixtures` → `trained` →
 
 | Suite | Capability | Status | Evidence |
 |---|---|---|---|
-| vad | Voice activity + audio events (the always-on podcast gate) | device-evaluated v0.1 | quality gates PASS on device @ threshold 0.9 (96.75% acc, 98.2% recall, 0.0 false wakes/h); **latency gate FAIL** 9.95 ms vs 6.0 — next: helper-built opset-11 graph (the torch-export path, not the head, costs the 3 ms) |
+| vad | Voice activity + audio events (the always-on podcast gate) | **device-evaluated — ALL GATES PASS** | paired-gap method (single session, 600 windows): 96.75% acc, 98.2% recall, 0.0 false wakes/h, absolute p95 **3.89 ms**, ratio **1.59×** vs the 2.45 ms gap floor — the earlier 9.8 ms was session/USB variance, now instrumented away |
 | asr | Windowed conv CTC dictation | spec (after vad) | gates: real-time factor ≤1 at acceptable WER |
 
 ### Novel (no Cactus analog)

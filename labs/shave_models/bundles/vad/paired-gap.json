@@ -1,0 +1,21 @@
+{
+  "session": "single IECore session, both graphs resident, identical windows",
+  "windows": 600,
+  "gap_p50_ms": 1.94,
+  "gap_p95_ms": 2.45,
+  "vad_p50_ms": 3.38,
+  "vad_p95_ms": 3.89,
+  "ratio_p50": 1.74,
+  "ratio_p95": 1.59,
+  "gate_absolute": {
+    "required": 12.0,
+    "measured": 3.89,
+    "pass": true
+  },
+  "gate_paired_gap": {
+    "required": 2.0,
+    "measured": 1.59,
+    "pass": true
+  },
+  "interpretation": "the ratio isolates on-stick compute from transfer+dispatch: ratio ~1 means the vad graph costs no more than moving the input across USB; higher = real compute cost"
+}

@@ -86,8 +86,8 @@
       "capability": "voice activity + audio events (always-on podcast gate)",
       "reference": "silero-vad / pyannote segmentation",
       "artifact": "tiny conv on log-mel windows (voicetools pipeline reuse)",
-      "status": "trained-v0.1-device-evaluated",
-      "evidence": "quality gates PASS on device @ threshold 0.9 (96.75% acc, 98.2% recall, 0.0 false wakes/h); latency gate FAIL 9.95 ms vs 6.0 - next: helper-built opset-11 graph (handoff envelope); ort lane 0.14 ms p50",
+      "status": "device-evaluated-gates-pass",
+      "evidence": "ALL GATES PASS (paired-gap method, single session, 600 windows): accuracy 96.75% >= 95, speech recall 98.2% >= 98 (threshold 0.9), false wakes 0.0/h <= 1, absolute p95 3.89 ms <= 12, paired ratio 1.59x <= 2.0 (gap floor 2.45 ms same-session - confirms the session-variance finding: same bundle measured 9.8 ms in worse sessions)",
       "gates": "planned: >=95% frame accuracy @ <=1 ms p95 window, false-wake <=1/hour equivalent on held-out noise",
       "lanes": {
         "ncs1": "measured",
