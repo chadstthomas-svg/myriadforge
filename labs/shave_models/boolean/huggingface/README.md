@@ -26,9 +26,9 @@ MagicEightBall reads up to **131,072 Needle 3 tokens** and returns a Boolean ans
 | Card | Runtime |
 |---|---|
 | Native NCS1 | The archives on this page use OpenVINO 2020.3.2 and the physical stick. |
-| [ONNX](https://huggingface.co/chadstthomas/MagicEightBall-ONNX) | The 192-byte radix Gather runs under ONNX Runtime on CPU. |
-| [FP32 Base](https://huggingface.co/chadstthomas/MagicEightBall-FP32) | The 1,832-byte dense reference uses FP32 weights and direct Boolean outputs. |
-| [GGUF](https://huggingface.co/chadstthomas/MagicEightBall-GGUF) | The 1,024-byte container runs with the included MagicEightBall CPU reader. |
+| [ONNX](https://huggingface.co/tablinum/MagicEightBall-ONNX) | The 192-byte radix Gather runs under ONNX Runtime on CPU. |
+| [FP32 Base](https://huggingface.co/tablinum/MagicEightBall-FP32) | The 1,832-byte dense reference uses FP32 weights and direct Boolean outputs. |
+| [GGUF](https://huggingface.co/tablinum/MagicEightBall-GGUF) | The 1,024-byte container runs with the included MagicEightBall CPU reader. |
 
 ## Size comparisons
 

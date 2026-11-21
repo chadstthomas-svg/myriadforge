@@ -2,7 +2,7 @@
 
 MagicEightBall is an Intel Neural Compute Stick decision model. It accepts one UTF-8 document of up to **131,072 Needle 3 tokens** and returns a yes/no answer, a category and an optional proposed action. It runs the decision lookup on the VPU in one request. The host counts tokens, extracts literal evidence and decodes the result. The proposed action is returned as data. The model identifier is `magiceightball`.
 
-[NCS1 release guide](RELEASE-NCS1.md) · [Frontline starter packs](industries/frontline/README.md) · [Hugging Face model family](https://huggingface.co/chadstthomas/MagicEightBall)
+[NCS1 release guide](RELEASE-NCS1.md) · [Frontline starter packs](industries/frontline/README.md) · [Hugging Face model family](https://huggingface.co/tablinum/MagicEightBall)
 
 ## Edit the policy
 
