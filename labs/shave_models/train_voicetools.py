@@ -69,6 +69,12 @@ def logmel(samples: np.ndarray) -> np.ndarray:
 
 
 def read_wav(path: Path) -> np.ndarray:
+    path = Path(path)
+    if path.suffix.lower() == ".flac":  # LibriSpeech ships flac
+        import soundfile as sf
+        data, sr = sf.read(str(path), dtype="float32")
+        assert sr == RATE and data.ndim == 1
+        return data
     with wave.open(str(path), "rb") as src:
         assert src.getframerate() == RATE and src.getnchannels() == 1 and src.getsampwidth() == 2
         return np.frombuffer(src.readframes(src.getnframes()), dtype=np.int16).astype(np.float32) / 32768.0
@@ -147,7 +153,8 @@ def extra_negative_rows(vad_dir: Path):
     """
     rows = []
     manifest = vad_dir / "manifest.jsonl"
-    for mf in (manifest, vad_dir / "manifest-sealed.jsonl"):
+    mfs = [manifest, vad_dir / "manifest-sealed.jsonl"] if vad_dir.is_dir() else [vad_dir]
+    for mf in mfs:
         if not mf.exists():
             continue
         for line in mf.read_text(encoding="utf-8").splitlines():

@@ -84,280 +84,263 @@
   "history": [
     {
       "epoch": 0,
-      "train_loss": 3.0877,
-      "valid_tool_acc_pos_windows": 0.2876,
+      "train_loss": 2.1452,
+      "valid_tool_acc_pos_windows": 0.25,
       "valid_slot_acc": {
-        "room": 0.096,
+        "room": 0.15,
         "device": 0.0,
         "scene": 0.0,
-        "level": 0.0,
-        "seconds": 0.038
+        "level": 0.014,
+        "seconds": 0.0
       }
     },
     {
       "epoch": 1,
-      "train_loss": 2.4839,
-      "valid_tool_acc_pos_windows": 0.4804,
+      "train_loss": 1.7266,
+      "valid_tool_acc_pos_windows": 0.5362,
       "valid_slot_acc": {
-        "room": 0.207,
-        "device": 0.241,
-        "scene": 0.216,
-        "level": 0.125,
-        "seconds": 0.077
+        "room": 0.283,
+        "device": 0.286,
+        "scene": 0.111,
+        "level": 0.176,
+        "seconds": 0.136
       }
     },
     {
       "epoch": 2,
-      "train_loss": 1.9014,
-      "valid_tool_acc_pos_windows": 0.6242,
+      "train_loss": 1.3285,
+      "valid_tool_acc_pos_windows": 0.6316,
       "valid_slot_acc": {
-        "room": 0.37,
-        "device": 0.345,
-        "scene": 0.297,
-        "level": 0.125,
-        "seconds": 0.308
+        "room": 0.398,
+        "device": 0.464,
+        "scene": 0.407,
+        "level": 0.189,
+        "seconds": 0.182
       }
     },
     {
       "epoch": 3,
-      "train_loss": 1.4772,
-      "valid_tool_acc_pos_windows": 0.6667,
+      "train_loss": 0.995,
+      "valid_tool_acc_pos_windows": 0.6283,
       "valid_slot_acc": {
-        "room": 0.393,
-        "device": 0.414,
-        "scene": 0.405,
-        "level": 0.234,
-        "seconds": 0.538
+        "room": 0.496,
+        "device": 0.536,
+        "scene": 0.444,
+        "level": 0.27,
+        "seconds": 0.5
       }
     },
     {
       "epoch": 4,
-      "train_loss": 1.1571,
-      "valid_tool_acc_pos_windows": 0.6797,
+      "train_loss": 0.7475,
+      "valid_tool_acc_pos_windows": 0.7007,
       "valid_slot_acc": {
-        "room": 0.43,
-        "device": 0.414,
-        "scene": 0.351,
-        "level": 0.219,
-        "seconds": 0.5
+        "room": 0.496,
+        "device": 0.429,
+        "scene": 0.519,
+        "level": 0.338,
+        "seconds": 0.545
       }
     },
     {
       "epoch": 5,
-      "train_loss": 0.9049,
-      "valid_tool_acc_pos_windows": 0.6863,
+      "train_loss": 0.5685,
+      "valid_tool_acc_pos_windows": 0.6974,
       "valid_slot_acc": {
-        "room": 0.444,
-        "device": 0.414,
-        "scene": 0.459,
-        "level": 0.328,
-        "seconds": 0.5
+        "room": 0.54,
+        "device": 0.429,
+        "scene": 0.519,
+        "level": 0.378,
+        "seconds": 0.727
       }
     },
     {
       "epoch": 6,
-      "train_loss": 0.7154,
-      "valid_tool_acc_pos_windows": 0.7059,
+      "train_loss": 0.4462,
+      "valid_tool_acc_pos_windows": 0.6908,
       "valid_slot_acc": {
-        "room": 0.481,
-        "device": 0.414,
-        "scene": 0.405,
-        "level": 0.328,
-        "seconds": 0.615
+        "room": 0.504,
+        "device": 0.429,
+        "scene": 0.481,
+        "level": 0.351,
+        "seconds": 0.773
       }
     },
     {
       "epoch": 7,
-      "train_loss": 0.5838,
-      "valid_tool_acc_pos_windows": 0.6536,
+      "train_loss": 0.3551,
+      "valid_tool_acc_pos_windows": 0.6842,
       "valid_slot_acc": {
-        "room": 0.452,
-        "device": 0.414,
-        "scene": 0.405,
-        "level": 0.344,
-        "seconds": 0.538
+        "room": 0.522,
+        "device": 0.393,
+        "scene": 0.407,
+        "level": 0.351,
+        "seconds": 0.636
       }
     },
     {
       "epoch": 8,
-      "train_loss": 0.4826,
-      "valid_tool_acc_pos_windows": 0.6601,
+      "train_loss": 0.2857,
+      "valid_tool_acc_pos_windows": 0.6875,
       "valid_slot_acc": {
-        "room": 0.489,
-        "device": 0.414,
-        "scene": 0.459,
-        "level": 0.312,
-        "seconds": 0.462
+        "room": 0.522,
+        "device": 0.429,
+        "scene": 0.407,
+        "level": 0.365,
+        "seconds": 0.818
       }
     },
     {
       "epoch": 9,
-      "train_loss": 0.4062,
-      "valid_tool_acc_pos_windows": 0.6863,
+      "train_loss": 0.2351,
+      "valid_tool_acc_pos_windows": 0.7039,
       "valid_slot_acc": {
-        "room": 0.474,
-        "device": 0.414,
-        "scene": 0.351,
-        "level": 0.359,
-        "seconds": 0.538
+        "room": 0.575,
+        "device": 0.393,
+        "scene": 0.556,
+        "level": 0.365,
+        "seconds": 0.773
       }
     },
     {
       "epoch": 10,
-      "train_loss": 0.3302,
-      "valid_tool_acc_pos_windows": 0.6961,
+      "train_loss": 0.201,
+      "valid_tool_acc_pos_windows": 0.6447,
       "valid_slot_acc": {
-        "room": 0.504,
-        "device": 0.414,
-        "scene": 0.432,
-        "level": 0.359,
-        "seconds": 0.577
+        "room": 0.549,
+        "device": 0.393,
+        "scene": 0.556,
+        "level": 0.297,
+        "seconds": 0.636
       }
     },
     {
       "epoch": 11,
-      "train_loss": 0.3031,
-      "valid_tool_acc_pos_windows": 0.6634,
+      "train_loss": 0.1886,
+      "valid_tool_acc_pos_windows": 0.6776,
       "valid_slot_acc": {
-        "room": 0.519,
-        "device": 0.414,
-        "scene": 0.378,
-        "level": 0.328,
-        "seconds": 0.577
+        "room": 0.513,
+        "device": 0.429,
+        "scene": 0.481,
+        "level": 0.446,
+        "seconds": 0.682
       }
     },
     {
       "epoch": 12,
-      "train_loss": 0.2703,
-      "valid_tool_acc_pos_windows": 0.683,
+      "train_loss": 0.1682,
+      "valid_tool_acc_pos_windows": 0.6743,
       "valid_slot_acc": {
-        "room": 0.526,
-        "device": 0.414,
-        "scene": 0.432,
-        "level": 0.344,
-        "seconds": 0.577
+        "room": 0.549,
+        "device": 0.429,
+        "scene": 0.407,
+        "level": 0.351,
+        "seconds": 0.636
       }
     },
     {
       "epoch": 13,
-      "train_loss": 0.2318,
-      "valid_tool_acc_pos_windows": 0.7026,
+      "train_loss": 0.1431,
+      "valid_tool_acc_pos_windows": 0.6908,
       "valid_slot_acc": {
-        "room": 0.519,
-        "device": 0.414,
-        "scene": 0.405,
-        "level": 0.375,
-        "seconds": 0.577
+        "room": 0.487,
+        "device": 0.464,
+        "scene": 0.333,
+        "level": 0.351,
+        "seconds": 0.636
       }
     },
     {
       "epoch": 14,
-      "train_loss": 0.2063,
-      "valid_tool_acc_pos_windows": 0.6797,
+      "train_loss": 0.1376,
+      "valid_tool_acc_pos_windows": 0.6941,
       "valid_slot_acc": {
-        "room": 0.474,
-        "device": 0.448,
-        "scene": 0.459,
-        "level": 0.359,
-        "seconds": 0.5
+        "room": 0.54,
+        "device": 0.429,
+        "scene": 0.444,
+        "level": 0.419,
+        "seconds": 0.636
       }
     },
     {
       "epoch": 15,
-      "train_loss": 0.2033,
-      "valid_tool_acc_pos_windows": 0.6863,
+      "train_loss": 0.1216,
+      "valid_tool_acc_pos_windows": 0.6875,
       "valid_slot_acc": {
-        "room": 0.504,
-        "device": 0.414,
-        "scene": 0.378,
-        "level": 0.359,
-        "seconds": 0.538
+        "room": 0.531,
+        "device": 0.429,
+        "scene": 0.407,
+        "level": 0.324,
+        "seconds": 0.636
       }
     },
     {
       "epoch": 16,
-      "train_loss": 0.1837,
-      "valid_tool_acc_pos_windows": 0.719,
+      "train_loss": 0.1108,
+      "valid_tool_acc_pos_windows": 0.6678,
       "valid_slot_acc": {
-        "room": 0.519,
-        "device": 0.414,
-        "scene": 0.459,
-        "level": 0.359,
-        "seconds": 0.5
+        "room": 0.549,
+        "device": 0.429,
+        "scene": 0.296,
+        "level": 0.338,
+        "seconds": 0.636
       }
     },
     {
       "epoch": 17,
-      "train_loss": 0.1723,
-      "valid_tool_acc_pos_windows": 0.6601,
+      "train_loss": 0.1083,
+      "valid_tool_acc_pos_windows": 0.6776,
       "valid_slot_acc": {
-        "room": 0.467,
-        "device": 0.414,
-        "scene": 0.378,
-        "level": 0.359,
-        "seconds": 0.577
+        "room": 0.549,
+        "device": 0.393,
+        "scene": 0.407,
+        "level": 0.351,
+        "seconds": 0.727
       }
     },
     {
       "epoch": 18,
-      "train_loss": 0.1569,
-      "valid_tool_acc_pos_windows": 0.6601,
+      "train_loss": 0.1027,
+      "valid_tool_acc_pos_windows": 0.6875,
       "valid_slot_acc": {
-        "room": 0.452,
-        "device": 0.483,
-        "scene": 0.405,
-        "level": 0.344,
-        "seconds": 0.538
+        "room": 0.504,
+        "device": 0.429,
+        "scene": 0.222,
+        "level": 0.365,
+        "seconds": 0.682
       }
     },
     {
       "epoch": 19,
-      "train_loss": 0.1516,
-      "valid_tool_acc_pos_windows": 0.6699,
+      "train_loss": 0.0979,
+      "valid_tool_acc_pos_windows": 0.6875,
       "valid_slot_acc": {
-        "room": 0.481,
-        "device": 0.414,
-        "scene": 0.486,
-        "level": 0.375,
-        "seconds": 0.538
+        "room": 0.522,
+        "device": 0.429,
+        "scene": 0.444,
+        "level": 0.351,
+        "seconds": 0.682
       }
     },
     {
       "epoch": 20,
-      "train_loss": 0.1512,
-      "valid_tool_acc_pos_windows": 0.7026,
+      "train_loss": 0.1033,
+      "valid_tool_acc_pos_windows": 0.6645,
       "valid_slot_acc": {
-        "room": 0.437,
-        "device": 0.414,
-        "scene": 0.351,
-        "level": 0.344,
-        "seconds": 0.577
+        "room": 0.504,
+        "device": 0.464,
+        "scene": 0.407,
+        "level": 0.378,
+        "seconds": 0.682
       }
     }
   ],
-  "windows": 6521,
+  "windows": 9224,
   "acceptance": {
     "exact_match_min": 0.9,
     "false_action_max": 0.01,
     "p95_ms_max": 300,
     "min_negatives": 300
   },
-  "onnx_sha256": "c3f1b648037bdd7f60c6446f686978da4b96f8d76f7061af71fdf440b3c995a0",
-  "tflite": {
-    "file": "model.tflite",
-    "io": {
-      "input": [
-        1,
-        1,
-        40,
-        200
-      ],
-      "output": [
-        1,
-        48
-      ]
-    },
-    "layout": "six heads concatenated: tool13 | room6 | device6 | scene5 | level12 | seconds6 (=48)",
-    "note": "litert-torch 0.10 conversion in WSL2; host decoder splits the span"
-  }
+  "onnx_sha256": "c980223f5cf668f6c98000f34aad344b5418ccc4178782e4ead4064d0268c1fe"
 }

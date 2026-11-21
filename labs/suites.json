@@ -36,8 +36,8 @@
       "capability": "voice -> ordered typed tool calls (acoustic Needle)",
       "reference": "Whistle -> Needle 3",
       "artifact": "multi-head conv on [1,1,40,200] windows, 6 heads",
-      "status": "trained-v4b-shipped-sealed-evaluated",
-      "evidence": "v5 capacity iteration FALSIFIED (64-ch wider head + 30 epochs: sealed 12.11% vs v4b 11.88%, diagnostic 76.7%/5.4% - identical quality, worse latency 31-43 ms; v4b restored as shipped, deterministic repro): the ~75% exact / ~12% sealed-false plateau is DATA-scale (1,834 utterances, 134 call groups, 30 TTS cells), not capacity - remaining lever = real-speaker/corpus expansion (the research plan's FLEURS-style lane); slot abstention (0.8/0.8) delivered sealed 19.0 -> 11.88%",
+      "status": "trained-v6-librispeech-sealed-evaluated",
+      "evidence": "v6 adds 2,703 LibriSpeech dev-clean real-speaker clips (CC BY 4.0) as all-none windows (4,827 total negatives): SEALED 11.40% false on MYRIAD (best; 16.9 -> 11.88 -> 11.40 across iterations), diagnostic exact 77.6% + false 2.7% (both improved together - real-speaker data is the productive lever). Gates 90/1 remain FAIL = data-scale; p95 20.2 ms PASS. Shipped bundle: v6.",
       "gates": ">=90% exact, <=1% false, p95<=300ms, >=300 held-out negatives",
       "lanes": {
         "ncs1": "measured",
