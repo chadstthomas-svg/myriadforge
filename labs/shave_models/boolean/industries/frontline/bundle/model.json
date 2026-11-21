@@ -1,0 +1,316 @@
+{
+  "name": "magiceightball",
+  "variant": "gather",
+  "decisions": "v0",
+  "default_bank": "dealership",
+  "banks": {
+    "dealership": {
+      "policy": {
+        "name": "dealership",
+        "rules": {
+          "service": "\"service requested\" OR \"maintenance enquiry\"",
+          "inspection": "\"inspection requested\" OR \"inspection referral\"",
+          "intake": "@service OR @inspection",
+          "ready": "@intake AND \"intake approved\" AND NOT (\"do not queue\" OR \"customer declined\")"
+        },
+        "answers": {
+          "may_route": "@ready"
+        },
+        "categories": {
+          "combined_intake": "@service AND @inspection",
+          "service": "@service",
+          "inspection": "@inspection"
+        },
+        "actions": {
+          "review_combined_intake": "@ready AND @service AND @inspection",
+          "review_service_intake": "@ready AND @service",
+          "review_inspection_intake": "@ready AND @inspection"
+        }
+      },
+      "bank_offset": 0,
+      "codebook": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "radix_digits": 8,
+      "pair_fact_order": [
+        4,
+        5,
+        6,
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "manufacturing": {
+      "policy": {
+        "name": "manufacturing",
+        "rules": {
+          "mechanical": "\"vibration alert\" OR \"bearing overheat\"",
+          "service": "\"filter differential high\" OR \"lubrication low\"",
+          "intake": "@mechanical OR @service",
+          "ready": "@intake AND \"maintenance review approved\" AND NOT (\"maintenance hold\" OR \"work order blocked\")"
+        },
+        "answers": {
+          "may_route": "@ready"
+        },
+        "categories": {
+          "combined_maintenance": "@mechanical AND @service",
+          "mechanical": "@mechanical",
+          "service": "@service"
+        },
+        "actions": {
+          "review_combined_maintenance": "@ready AND @mechanical AND @service",
+          "review_mechanical_alert": "@ready AND @mechanical",
+          "review_service_alert": "@ready AND @service"
+        }
+      },
+      "bank_offset": 0,
+      "codebook": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "radix_digits": 8,
+      "pair_fact_order": [
+        4,
+        5,
+        6,
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "store_security": {
+      "policy": {
+        "name": "store-security",
+        "rules": {
+          "access": "\"door forced\" OR \"door held open\"",
+          "camera": "\"camera offline\" OR \"video feed lost\"",
+          "intake": "@access OR @camera",
+          "ready": "@intake AND \"security review approved\" AND NOT (\"drill active\" OR \"alert cleared\")"
+        },
+        "answers": {
+          "may_route": "@ready"
+        },
+        "categories": {
+          "combined_alert": "@access AND @camera",
+          "access_alert": "@access",
+          "camera_alert": "@camera"
+        },
+        "actions": {
+          "review_combined_alert": "@ready AND @access AND @camera",
+          "review_access_alert": "@ready AND @access",
+          "review_camera_alert": "@ready AND @camera"
+        }
+      },
+      "bank_offset": 0,
+      "codebook": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "radix_digits": 8,
+      "pair_fact_order": [
+        4,
+        5,
+        6,
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  "input_shapes": {
+    "features": [
+      128
+    ]
+  },
+  "onnx_sha256": "9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5",
+  "fp16_coefficient_bytes": 32,
+  "learned_parameters": 0
+}

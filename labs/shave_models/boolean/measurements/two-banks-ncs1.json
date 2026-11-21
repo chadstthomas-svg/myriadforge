@@ -1,0 +1,65 @@
+{
+  "model": "magiceightball",
+  "backend": "MYRIAD",
+  "runtime": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "onnx_sha256": "72481bf69d70da97d0d0055c02f555ef2bd6b08625fdbf7c5d10b8995db5f6bb",
+  "capacity": 128,
+  "constants_bytes": 64,
+  "distinct_policy_cases": 256,
+  "full_truth_table_requests": 2,
+  "full_context_cases": 3,
+  "overflow_rejected": true,
+  "full_context_requests": 1,
+  "repeated_trials": 13,
+  "timing_128_documents": {
+    "mixed": {
+      "wall_ms": {
+        "p50": 6.815199999999688,
+        "p95": 11.034960000000009,
+        "max": 13.875000000000082
+      },
+      "calls": 1
+    },
+    "separate": {
+      "wall_ms": {
+        "p50": 8.244799999999941,
+        "p95": 11.64486000000009,
+        "max": 11.710200000000004
+      },
+      "calls": 2
+    }
+  },
+  "physical_usb_preflight": {
+    "stick": "ncs1",
+    "boot_usb_id": "03E7:2150"
+  },
+  "blob": {
+    "bytes": 512,
+    "sha256": "fdbe4ace9b7d936db8da5a2daa11262e44c4ffad35336f0090683d60c7966c34",
+    "version": [
+      5,
+      0
+    ],
+    "inputs": 1,
+    "outputs": 1,
+    "stage_count": 1,
+    "input_bytes": 512,
+    "output_bytes": 256,
+    "sections": {
+      "headers": 192,
+      "input_descriptor": 64,
+      "output_descriptor": 64,
+      "stages": 128,
+      "constants": 64
+    },
+    "sole_stage": {
+      "length": 128,
+      "type": 100,
+      "shaves_field": 12
+    }
+  },
+  "shipped_tokenizer": {
+    "bytes": 23412,
+    "sha256": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+  }
+}

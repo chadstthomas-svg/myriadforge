@@ -1,0 +1,131 @@
+{
+  "model": "magiceightball",
+  "backend": "MYRIAD",
+  "lane": "ncs1",
+  "toolchain": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "capacity": 128,
+  "onnx_sha256": "9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5",
+  "truth_table_cases": 128,
+  "repeats": 13,
+  "timing": {
+    "1": {
+      "ms_per_128_documents": {
+        "p50": 224.57980000000077,
+        "p95": 251.49375999999955,
+        "max": 261.4405
+      },
+      "device_requests": 128
+    },
+    "2": {
+      "ms_per_128_documents": {
+        "p50": 116.44149999999965,
+        "p95": 132.1755999999999,
+        "max": 138.87759999999983
+      },
+      "device_requests": 64
+    },
+    "8": {
+      "ms_per_128_documents": {
+        "p50": 32.472399999999624,
+        "p95": 43.04804000000022,
+        "max": 43.13360000000088
+      },
+      "device_requests": 16
+    },
+    "16": {
+      "ms_per_128_documents": {
+        "p50": 18.588199999999944,
+        "p95": 29.636939999999953,
+        "max": 35.988900000000434
+      },
+      "device_requests": 8
+    },
+    "32": {
+      "ms_per_128_documents": {
+        "p50": 13.821799999998774,
+        "p95": 19.4669000000001,
+        "max": 24.249499999999813
+      },
+      "device_requests": 4
+    },
+    "64": {
+      "ms_per_128_documents": {
+        "p50": 9.075100000000447,
+        "p95": 14.985800000000538,
+        "max": 15.713899999999725
+      },
+      "device_requests": 2
+    },
+    "128": {
+      "ms_per_128_documents": {
+        "p50": 7.594600000000007,
+        "p95": 10.528500000000207,
+        "max": 10.83600000000029
+      },
+      "device_requests": 1
+    }
+  },
+  "mixed_length_device_requests": 1,
+  "mixed_length_results": [
+    {
+      "id": "early",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "billing",
+        "action": "review_billing"
+      },
+      "error": null
+    },
+    {
+      "id": "overflow",
+      "tokens": null,
+      "result": null,
+      "error": "Input has 131073 Needle tokens; maximum is 131072"
+    },
+    {
+      "id": "late",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "delivery",
+        "action": "review_delivery"
+      },
+      "error": null
+    },
+    {
+      "id": "veto",
+      "tokens": 131072,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "delivery",
+        "action": null
+      },
+      "error": null
+    },
+    {
+      "id": "empty",
+      "tokens": 0,
+      "result": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "error": null
+    }
+  ],
+  "physical_usb_preflight": {
+    "stick": "ncs1",
+    "boot_usb_id": "03E7:2150"
+  },
+  "release_archive_bytes": 699,
+  "release_sha256": "1a8c1a021f62d89e236ebea379f9c69c9e4ffebe925c6bca49bb70df07d7cf61"
+}

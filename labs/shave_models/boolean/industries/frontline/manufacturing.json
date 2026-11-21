@@ -1,0 +1,20 @@
+{
+  "name": "manufacturing",
+  "rules": {
+    "mechanical": "\"vibration alert\" OR \"bearing overheat\"",
+    "service": "\"filter differential high\" OR \"lubrication low\"",
+    "intake": "@mechanical OR @service",
+    "ready": "@intake AND \"maintenance review approved\" AND NOT (\"maintenance hold\" OR \"work order blocked\")"
+  },
+  "answers": {"may_route": "@ready"},
+  "categories": {
+    "combined_maintenance": "@mechanical AND @service",
+    "mechanical": "@mechanical",
+    "service": "@service"
+  },
+  "actions": {
+    "review_combined_maintenance": "@ready AND @mechanical AND @service",
+    "review_mechanical_alert": "@ready AND @mechanical",
+    "review_service_alert": "@ready AND @service"
+  }
+}

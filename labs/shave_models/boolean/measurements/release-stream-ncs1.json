@@ -1,0 +1,57 @@
+{
+  "model": "magiceightball",
+  "backend": "MYRIAD",
+  "openvino_version": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "onnx_sha256": "42f0273a56da0e142ffb88f580f931cfbcd5ceeb0beb189ac62c770026270de7",
+  "samples": 24,
+  "initial_tokens": 130432,
+  "initial_ms": 51.83779999999949,
+  "final_tokens": 131072,
+  "final_veto": {
+    "answers": {
+      "may_route": false
+    },
+    "category": "billing",
+    "action": null
+  },
+  "overflow_rejected": true,
+  "timing": {
+    "full_text": {
+      "host_preparation_ms": {
+        "p50": 49.43475000000008,
+        "p95": 57.28821999999995,
+        "max": 59.33309999999992
+      },
+      "total_ms": {
+        "p50": 52.07215000000032,
+        "p95": 59.687849999999585,
+        "max": 62.420099999999756
+      }
+    },
+    "stream": {
+      "host_preparation_ms": {
+        "p50": 0.08650000000010039,
+        "p95": 0.13952999999982113,
+        "max": 0.17919999999982394
+      },
+      "total_ms": {
+        "p50": 1.8972000000001543,
+        "p95": 2.222930000000556,
+        "max": 2.479800000000587
+      }
+    }
+  },
+  "physical_device_verified": true,
+  "physical_usb_preflight": {
+    "stick": "ncs1",
+    "boot_usb_id": "03E7:2150"
+  },
+  "shipped_tokenizer": {
+    "bytes": 23412,
+    "sha256": "97405c9a70aca43a4a3a2604203ff4b4a749eceef69493792f2d81c25abc7fd9"
+  },
+  "shipped_release": {
+    "bytes": 735,
+    "sha256": "6076cc698d9948e5a133ea63b331195aa5c0e2e00c4173310a84614748917850"
+  }
+}

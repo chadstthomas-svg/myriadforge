@@ -1,0 +1,6 @@
+{
+  "logistics-text": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "logistics"},
+  "logistics-record": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "logistics", "evidence_field": "evidence"},
+  "oncall-text": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "oncall"},
+  "oncall-record": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "oncall", "evidence_field": "evidence"}
+}

@@ -1,0 +1,20 @@
+{
+  "name": "logistics",
+  "rules": {
+    "parcel": "\"parcel missing\" OR \"tracking stalled\"",
+    "address": "\"address mismatch\" OR \"postcode rejected\"",
+    "incident": "@parcel OR @address",
+    "ready": "@incident AND \"dispatch approved\" AND NOT (\"do not dispatch\" OR \"fraud review\")"
+  },
+  "answers": {"may_escalate": "@ready"},
+  "categories": {
+    "mixed_exception": "@parcel AND @address",
+    "parcel": "@parcel",
+    "address": "@address"
+  },
+  "actions": {
+    "review_shipment": "@ready AND @parcel AND @address",
+    "trace_parcel": "@ready AND @parcel",
+    "verify_address": "@ready AND @address"
+  }
+}

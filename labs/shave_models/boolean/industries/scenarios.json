@@ -1,0 +1,32 @@
+{
+  "logistics": {
+    "authorization": "dispatch approved",
+    "vetoes": ["do not dispatch", "fraud review"],
+    "cases": [
+      {"id": "carrier-trace", "text": "Carrier event: parcel missing. Dispatch approved.", "expected": {"answers": {"may_escalate": true}, "category": "parcel", "action": "trace_parcel"}},
+      {"id": "address-review", "text": "Postcode rejected by depot. Dispatch approved by shift lead.", "expected": {"answers": {"may_escalate": true}, "category": "address", "action": "verify_address"}},
+      {"id": "two-exceptions", "text": "Tracking stalled, with an address mismatch. Dispatch approved.", "expected": {"answers": {"may_escalate": true}, "category": "mixed_exception", "action": "review_shipment"}},
+      {"id": "await-approval", "text": "Tracking stalled. Awaiting the shift lead.", "expected": {"answers": {"may_escalate": false}, "category": "parcel", "action": null}},
+      {"id": "fraud-hold", "text": "Parcel missing. Dispatch approved. Fraud review opened.", "expected": {"answers": {"may_escalate": false}, "category": "parcel", "action": null}},
+      {"id": "non-exception", "text": "Dispatch approved. Parcel missingness is an unrelated dashboard label.", "expected": {"answers": {"may_escalate": false}, "category": null, "action": null}},
+      {"id": "archived-approval", "record": {"evidence": "Address mismatch. Current approval pending.", "history": "Dispatch approved yesterday."}, "expected": {"answers": {"may_escalate": false}, "category": "address", "action": null}},
+      {"id": "archived-hold", "record": {"evidence": "Parcel missing. Dispatch approved.", "history": "Do not dispatch the prior replacement."}, "expected": {"answers": {"may_escalate": true}, "category": "parcel", "action": "trace_parcel"}},
+      {"id": "late-hold", "context": {"start": "Parcel missing. Dispatch approved.", "end": "Do not dispatch."}, "expected": {"answers": {"may_escalate": false}, "category": "parcel", "action": null}}
+    ]
+  },
+  "oncall": {
+    "authorization": "paging approved",
+    "vetoes": ["maintenance window", "page cancelled"],
+    "cases": [
+      {"id": "network-page", "text": "Gateway unreachable. Paging approved by the duty lead.", "expected": {"answers": {"may_page": true}, "category": "network", "action": "page_network"}},
+      {"id": "capacity-page", "text": "Queue backed up. Workers saturated. Paging approved.", "expected": {"answers": {"may_page": true}, "category": "capacity", "action": "page_capacity"}},
+      {"id": "mixed-page", "text": "Connection reset and queue backed up. Paging approved.", "expected": {"answers": {"may_page": true}, "category": "mixed_incident", "action": "page_incident"}},
+      {"id": "uncorroborated-capacity", "text": "Queue backed up. Paging approved. Workers still have free slots.", "expected": {"answers": {"may_page": false}, "category": "capacity", "action": null}},
+      {"id": "planned-downtime", "text": "Gateway unreachable. Paging approved. Maintenance window in effect.", "expected": {"answers": {"may_page": false}, "category": "network", "action": null}},
+      {"id": "unrelated-event", "text": "Paging approved for a later drill. Service healthy at the moment.", "expected": {"answers": {"may_page": false}, "category": null, "action": null}},
+      {"id": "stale-paging-approval", "record": {"evidence": "Gateway unreachable. Paging awaiting a decision.", "history": "Paging approved for the prior incident."}, "expected": {"answers": {"may_page": false}, "category": "network", "action": null}},
+      {"id": "archived-maintenance", "record": {"evidence": "Connection reset. Paging approved.", "history": "Maintenance window ended two hours ago."}, "expected": {"answers": {"may_page": true}, "category": "network", "action": "page_network"}},
+      {"id": "late-cancel", "context": {"start": "Gateway unreachable. Paging approved.", "end": "Page cancelled."}, "expected": {"answers": {"may_page": false}, "category": "network", "action": null}}
+    ]
+  }
+}

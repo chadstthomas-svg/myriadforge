@@ -1,0 +1,4 @@
+{
+  "logistics": "logistics.json",
+  "oncall": "../oncall.json"
+}

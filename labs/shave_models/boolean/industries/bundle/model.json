@@ -1,0 +1,216 @@
+{
+  "name": "magiceightball",
+  "variant": "gather",
+  "decisions": "v0",
+  "default_bank": "logistics",
+  "banks": {
+    "logistics": {
+      "policy": {
+        "name": "logistics",
+        "rules": {
+          "parcel": "\"parcel missing\" OR \"tracking stalled\"",
+          "address": "\"address mismatch\" OR \"postcode rejected\"",
+          "incident": "@parcel OR @address",
+          "ready": "@incident AND \"dispatch approved\" AND NOT (\"do not dispatch\" OR \"fraud review\")"
+        },
+        "answers": {
+          "may_escalate": "@ready"
+        },
+        "categories": {
+          "mixed_exception": "@parcel AND @address",
+          "parcel": "@parcel",
+          "address": "@address"
+        },
+        "actions": {
+          "review_shipment": "@ready AND @parcel AND @address",
+          "trace_parcel": "@ready AND @parcel",
+          "verify_address": "@ready AND @address"
+        }
+      },
+      "bank_offset": 0,
+      "codebook": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "radix_digits": 8,
+      "pair_fact_order": [
+        4,
+        5,
+        6,
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "oncall": {
+      "policy": {
+        "name": "oncall",
+        "rules": {
+          "network": "\"gateway unreachable\" OR \"connection reset\"",
+          "capacity": "\"queue backed up\" OR \"workers saturated\"",
+          "confirmed": "@network OR (\"queue backed up\" AND \"workers saturated\")",
+          "ready": "@confirmed AND \"paging approved\" AND NOT (\"maintenance window\" OR \"page cancelled\")"
+        },
+        "answers": {
+          "may_page": "@ready"
+        },
+        "categories": {
+          "mixed_incident": "@network AND @capacity",
+          "network": "@network",
+          "capacity": "@capacity"
+        },
+        "actions": {
+          "page_incident": "@ready AND @network AND @capacity",
+          "page_network": "@ready AND @network",
+          "page_capacity": "@ready AND @capacity"
+        }
+      },
+      "bank_offset": 16,
+      "codebook": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "radix_digits": 8,
+      "pair_fact_order": [
+        4,
+        5,
+        6,
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  "input_shapes": {
+    "features": [
+      128
+    ]
+  },
+  "onnx_sha256": "72481bf69d70da97d0d0055c02f555ef2bd6b08625fdbf7c5d10b8995db5f6bb",
+  "fp16_coefficient_bytes": 64,
+  "learned_parameters": 0
+}

@@ -2,6 +2,8 @@
 
 MagicEightBall is an Intel Neural Compute Stick decision model. It accepts one UTF-8 document of up to **131,072 Needle 3 tokens** and returns a yes/no answer, a category and an optional proposed action. It runs the decision lookup on the VPU in one request. The host counts tokens, extracts literal evidence and decodes the result. The proposed action is returned as data. The model identifier is `magiceightball`.
 
+[NCS1 release guide](RELEASE-NCS1.md) · [Frontline starter packs](industries/frontline/README.md) · [Hugging Face model family](https://huggingface.co/chadstthomas/MagicEightBall)
+
 ## Edit the policy
 
 [`support.json`](support.json) combines evidence in successive named rules. JSON-quoted phrases are evidence predicates. A reference such as `@billing` uses an earlier rule. Operators bind in the order `NOT`, `AND`, `OR`. Parentheses override that order. The first matching category and action win in their respective groups. Each named answer returns a Boolean. Absent categories and actions return `null`.
@@ -17,9 +19,11 @@ Evidence may occur anywhere in the document. A phrase matches adjacent lexemes a
 
 ## Model size and latency
 
+The portable CPU exports provide a 192-byte ONNX radix Gather, a 1,832-byte FP32 dense reference, and a 1,024-byte GGUF profile with a 128-byte decision table. All three use the pinned Needle tokenizer and the support policy. The GGUF profile uses the included `magiceightball` reader. Run `export_portable.py <output> --corpus <pinned-corpus>` with NumPy, SentencePiece, ONNX Runtime, and the `gguf` package to build and verify the three bundles. Run `portable_runtime.py <artifact> --text <document>` from a bundle. These exports use the CPU. The NCS1 release uses its native archive. [CPU command examples and matched benchmark](portable_comparison/README.md)
+
 The support policy has seven phrase predicates and seven reachable output vectors. The compiler numbers the output vectors with three-bit codes. Four codes fit in an exactly representable signed FP16 integer in `[-2048, 2047]`. The host uses five raw evidence bits to address a row and two bits to decode the selected word. In the smallest build, one VPU `Gather` reads that word from 32 resident coefficients using one INT32 index. The codebook maps result codes to the Boolean answer, category and action.
 
-The **512-byte Gather** is the smallest artifact measured here for this input and output contract. It matches the offline compiler's size for a two-entry scalar Gather on both device targets. A worldwide claim requires a comparable benchmark. Published fastText.zip classification benchmarks measure accuracy on other tasks and report a different storage boundary. [Offline compiler controls](measurements/offline-compiler-controls.json) · [fastText.zip benchmarks](https://arxiv.org/abs/1612.03651)
+The **480-byte radix Gather** is the smallest artifact physically verified here for this input and output contract. The stock compiler emits the radix graph at **512 bytes**. Removing 32 bytes of terminal zero padding leaves the section starts, executable stage and all policy data intact. NCS1 passed all 128 assignments, both full-context cases and overflow rejection with the compact artifact. It took 5.31 ms median for one 128-document batch, compared with 5.37 ms for the padded radix control. [Physical size and speed comparison](measurements/compact-gather-physical-ncs1.json) · [Competitors](COMPETITORS.md)
 
 | Same policy | ONNX bytes | FP16 IR weight bytes | NCS1 blob bytes | VPU calls | Full-input p50 | Full-input p95 |
 |---|---:|---:|---:|---:|---:|---:|
@@ -43,7 +47,7 @@ Across 60 alternating initializations per archive in one Python 3.7 process, med
 
 ### Native release format
 
-The release restores the manifest and both 512-byte native graphs byte for byte. The runtime checks the graph layout and selects the requested physical target through the 2020.3 plugin. The standard 2022.3 NCS2 lane uses the common IR. The release loader has software tests for both platform selections and exact restoration. Physical replay of the release remains pending.
+The release restores the manifest and both 512-byte native graphs byte for byte. The runtime checks the graph layout and selects the requested physical target through the 2020.3 plugin. The current release and tokenizer passed physical replay on NCS1, including all 128 Boolean assignments and the mixed 131,072-token replay. NCS2 uses the common IR in the standard 2022.3 lane and has software verification. [Current release replay](measurements/release-vector-ncs1.json)
 
 ```powershell
 python "$b/release.py" "$b/bundles/magiceightball-batch" "$b/bundles/magiceightball.m8b"
@@ -54,7 +58,9 @@ On the 2020.3 runtime with an NCS2, use `--release-stick ncs2`. The hardware ben
 
 The [128-slot NCS1 blob](bundles/magiceightball-batch/ncs1-native.blob) also occupies 512 bytes. Both builds use a single rank-one Gather over the same 64-byte table. The 2020.3.2 serializer aligns each section to 64 bytes. These blobs contain 192 bytes of headers, 64 each for input and output descriptors, 128 for the Gather stage and 64 for the table. The compiler emits the same byte count for a two-entry bank. This establishes the size floor for this resident rank-one Gather layout under that compiler. [Intel serializer source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/backend/serialize.cpp#L150-L175) · [Intel Gather stage source](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/stages/gather.cpp#L67-L82) · [Parsed artifact layouts](measurements/batch-head-compatibility.json)
 
-ReLU, Clip and Sigmoid controls compiled to **448 bytes** on both targets with 128-element FP16 vectors. These controls have no resident constants section and measure container overhead for simpler operations. The tested graph that keeps the complete decision table on the VPU remains 512 bytes. [Release and stock-stage controls](measurements/native-release-and-stock-controls.json)
+In a matched release comparison, NCS1 handled 128 short decisions in one request in **6.43 ms median**, down from **223.70 ms** when sent individually. A CPU lookup took **3.82 ms** for the same batch. Fresh 131,072-token requests were dominated by host tokenization and evidence extraction. [NCS1 release and matched CPU results](RELEASE-NCS1.md)
+
+ReLU, Clip and Sigmoid controls compiled to **448 bytes** on both targets with 128-element FP16 vectors. These controls have no resident constants section and measure container overhead for simpler operations. The compact radix graph uses the same 448 bytes before its complete 32-byte resident policy table. [Release and stock-stage controls](measurements/native-release-and-stock-controls.json)
 
 An exact rank-zero Gather with a scalar index and output matched all 16 packed words on the CPU plugin. The 2020.3.2 offline compiler exited with a Windows access violation on both MYRIAD targets. The rank-one vector control rebuilt byte for byte at 512 bytes on each target using the same offline configuration. [Rank-zero experiment](measurements/native-release-and-stock-controls.json) · [Intel descriptor serializer](https://github.com/openvinotoolkit/openvino/blob/2020.3.2/inference-engine/src/vpu/graph_transformer/src/model/data.cpp#L447-L484)
 
@@ -68,7 +74,7 @@ The [128-slot Myriad X blob](bundles/magiceightball-batch/ncs2-2020.3.blob) also
 
 The optional [radix bundle](bundles/magiceightball-radix/model.json) stores the same decisions in **32 bytes of constants**, down from 64. Its compiler groups outcomes by the four category facts and uses the three authorization and veto facts to select among eight lanes. Each row contains no more than two possible results. The stick returns both result codes and the selector bits in one exact FP16 word. All row contents reside in the graph. Host decoding permutes the raw fact bits, selects a slot in the returned word and resolves the output labels.
 
-The 512-byte blob size is unchanged because the compiler reserves a whole 64-byte constants section. For an eight-fact control with three reachable decisions, the same codec used 52 constant bytes and reduced the compiled size from **576 to 512 bytes** on each target. The 2022.3.1 CPU plugin passed all 128 MagicEightBall assignments and all 256 control assignments. It also passed the 131,072-token mixed-length replay. Physical timings for the radix bundle are pending. [Radix compatibility and size evidence](measurements/radix-gather-compatibility.json)
+The stock blob remains 512 bytes because the compiler reserves a whole 64-byte constants section. On NCS1, the compact radix variant preserves the 32 live bytes of that section and stops at 480. For an eight-fact control with three reachable decisions, the same codec used 52 constant bytes and reduced the compiled size from **576 to 512 bytes** on each target. The 2022.3.1 CPU plugin passed all 128 MagicEightBall assignments and all 256 control assignments. It also passed the 131,072-token mixed-length replay. [Radix compatibility and size evidence](measurements/radix-gather-compatibility.json) · [Physical radix results](measurements/compact-gather-physical-ncs1.json)
 
 Rebuild this variant with `--variant gather --codec radix --slots 128`. The default batch bundle has the physical NCS1 benchmark record.
 
@@ -76,7 +82,7 @@ Rebuild this variant with `--variant gather --codec radix --slots 128`. The defa
 
 The [banked bundle](bundles/magiceightball-banks/model.json) holds customer support and on-call triage in a single Gather graph. Each policy contributes a distinct 32-byte table. The combined graph compiled to **512 bytes** for each target. The caller names a bank and the runtime adds that bank's fixed offset to each address. A single request can carry up to 128 documents across both banks. The compiler shares storage for byte-identical tables. [Both compiled layouts and CPU verification](measurements/two-bank-compatibility.json)
 
-The CPU verification passed all 256 decisions, three mixed 131,072-token inputs and overflow rejection. The on-call policy requires both capacity signals before proposing a page for a capacity-only incident. Each policy ignores distractor terms from the other policy. Physical timings for this bundle are pending.
+The physical NCS1 replay passed all 256 decisions, three mixed 131,072-token inputs and overflow rejection. Across 13 warmed trials, one mixed request for 128 short documents took 6.8 ms median. Separate requests for the same two banks took 8.2 ms median. The on-call policy requires both capacity signals before proposing a page for a capacity-only incident. Each policy ignores distractor terms from the other policy. [Physical two-bank replay](measurements/two-banks-ncs1.json)
 
 ```powershell
 python "$b/build.py" "$b/policy-banks.json" "$b/bundles/magiceightball-banks" --variant banks --slots 128
@@ -117,7 +123,7 @@ Use `--stream` when new text arrives over time. Each JSONL request appends its s
 
 The host reuses the exact token count and literal facts for the prefix ending at a stable ASCII-space boundary. It keeps the last unfinished segment and enough preceding lexemes to match phrases across appends. Very long spans without ASCII spaces can require recounting that span. `--explain` retains the full text to include rules that are used only in explanations.
 
-In the OpenVINO 2022.3.1 CPU control, the first 130,432 tokens took 36.4 ms. Across 24 short appends, median host preparation fell from **28.9 ms** for complete-document requests to **0.056 ms** for incremental requests, with p95 of **35.5 ms** and **0.079 ms**, respectively. The final veto cleared the proposed action at exactly 131,072 tokens. An append that would reach 131,073 tokens was rejected. Stick timings for the append path are pending. [CPU append benchmark](measurements/stream-context-cpu.json)
+In the current NCS1 release replay, the first 130,432 tokens took 51.8 ms. Across 24 short appends near the limit, median total time fell from **52.1 ms** for complete-document requests to **1.9 ms** for incremental requests. The final veto cleared the proposed action at exactly 131,072 tokens. An append that would reach 131,073 tokens was rejected. The earlier CPU control measured host preparation falling from **28.9 ms** to **0.056 ms**. [Physical NCS1 append replay](measurements/release-stream-ncs1.json) · [CPU append control](measurements/stream-context-cpu.json)
 
 ## Adaptive batches
 

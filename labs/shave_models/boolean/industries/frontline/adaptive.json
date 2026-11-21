@@ -1,0 +1,8 @@
+{
+  "dealership-text": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "dealership"},
+  "dealership-record": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "dealership", "evidence_field": "evidence"},
+  "manufacturing-text": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "manufacturing"},
+  "manufacturing-record": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "manufacturing", "evidence_field": "evidence"},
+  "store-security-text": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "store_security"},
+  "store-security-record": {"bundle": "bundle", "blob": "bundle/ncs1-native.blob", "bank": "store_security", "evidence_field": "evidence"}
+}

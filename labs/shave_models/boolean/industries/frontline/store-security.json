@@ -1,0 +1,20 @@
+{
+  "name": "store-security",
+  "rules": {
+    "access": "\"door forced\" OR \"door held open\"",
+    "camera": "\"camera offline\" OR \"video feed lost\"",
+    "intake": "@access OR @camera",
+    "ready": "@intake AND \"security review approved\" AND NOT (\"drill active\" OR \"alert cleared\")"
+  },
+  "answers": {"may_route": "@ready"},
+  "categories": {
+    "combined_alert": "@access AND @camera",
+    "access_alert": "@access",
+    "camera_alert": "@camera"
+  },
+  "actions": {
+    "review_combined_alert": "@ready AND @access AND @camera",
+    "review_access_alert": "@ready AND @access",
+    "review_camera_alert": "@ready AND @camera"
+  }
+}
