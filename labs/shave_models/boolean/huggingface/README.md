@@ -30,6 +30,18 @@ MagicEightBall reads up to **131,072 Needle 3 tokens** and returns a Boolean ans
 | [FP32 Base](https://huggingface.co/chadstthomas/MagicEightBall-FP32) | The 1,832-byte dense reference uses FP32 weights and direct Boolean outputs. |
 | [GGUF](https://huggingface.co/chadstthomas/MagicEightBall-GGUF) | The 1,024-byte container runs with the included MagicEightBall CPU reader. |
 
+## Size comparisons
+
+![Six native NCS1 builds of the same policy. MagicEightBall compact 480 bytes, stock radix Gather 512, packed convolution 1,536, lookup 1,728, Boolean gates 3,776, dense reference 4,480.](./assets/size-native-ncs1.webp)
+
+The compact native executable is 32 bytes smaller than its padded radix build. The compact release and shared tokenizer together use **24,111 bytes**. Python, OpenVINO, firmware, and host code have separate sizes. [Full-size chart](./assets/size-native-ncs1.webp) · [Exact chart data](./size-chart-data.json) · [Physical size comparison](./measurements/compact-gather-physical-ncs1.json)
+
+![Portable CPU model files. ONNX radix Gather 192 bytes, GGUF 1,024, FP32 dense reference 1,832. CPU decision data alone occupy 46 bytes for the diagram and 128 for the lookup table.](./assets/size-portable-cpu.webp)
+
+![Reported examples across different workloads. MagicEightBall 480-byte NCS1 executable for support decisions, Bonsai 300-byte search ranking model, FastGRNN 1 KB wake-word model, fastText.zip 16 KiB text classifier.](./assets/size-published-models.webp)
+
+The published examples have different workloads and storage boundaries. The six-build native chart compares the same policy on the same hardware. [Bonsai](https://proceedings.mlr.press/v70/kumar17a/kumar17a.pdf) · [FastGRNN](https://proceedings.neurips.cc/paper_files/paper/2018/file/ab013ca67cf2d50796b0c11d1b8bc95d-Paper.pdf) · [fastText.zip](https://arxiv.org/pdf/1612.03651#page=7)
+
 ## Three decisions at the workbench
 
 ![Eight and Relay show three support cases. An authorized duplicate charge proposes a billing review. A later hold clears the proposal. An unrelated request leaves category and action empty.](./assets/relay-decisions.webp)

@@ -28,7 +28,8 @@ ARTIFACTS = (
     "measurements/streamed-parameters-compatibility.json", "measurements/decision-diagram-native-controls.json",
 )
 CARD_FILES = ("README.md", "assets/workbench.webp", "assets/workbench-motion.webp", "assets/workbench-motion.gif",
-              "assets/relay-decisions.webp", "assets/relay-decisions-still.webp")
+              "assets/relay-decisions.webp", "assets/relay-decisions-still.webp", "size-chart-data.json",
+              "assets/size-native-ncs1.webp", "assets/size-portable-cpu.webp", "assets/size-published-models.webp")
 NOTICE = """MagicEightBall
 MyriadForge source and policy are distributed under the MIT License.
 

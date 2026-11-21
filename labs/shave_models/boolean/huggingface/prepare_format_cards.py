@@ -46,12 +46,18 @@ def prepare(format_name, source, output):
     assets.mkdir()
     poster = "workbench.webp"
     motion = "workbench-motion.webp"
-    for name in (poster, motion):
+    for name in (poster, motion, "size-portable-cpu.webp"):
         candidate = CARD / "assets" / name
         if candidate.is_file():
             copyfile(candidate, assets / name)
     hero = motion if (assets / motion).is_file() else poster
     still_link = " · [Still banner](./assets/workbench.webp)" if hero == motion else ""
+    size_chart = ""
+    if (assets / "size-portable-cpu.webp").is_file():
+        size_chart = ("## File size comparison\n\n"
+                      "![Portable CPU model files. ONNX 192 bytes, GGUF 1,024, FP32 dense 1,832.]"
+                      "(./assets/size-portable-cpu.webp)\n\n"
+                      f"[Native and published size comparisons]({FAMILY}#size-comparisons)\n\n")
     neighbors = " · ".join(f"[{FORMATS[key][0]}]({FAMILY}-{suffix})"
                            for key, suffix in (("onnx", "ONNX"), ("fp32", "FP32"), ("gguf", "GGUF"))
                            if key != format_name)
@@ -91,7 +97,7 @@ Expect `may_route=true`, `category=billing`, and `action=review_billing`. Try ap
 
 The model finds the policy's declared phrases. The caller receives the proposed action as data for review. For physical Intel NCS1 execution and industry starter packs, use the native model page. [Native NCS1 and industry packs]({FAMILY}) · {neighbors}{still_link}
 
-## License
+{size_chart}## License
 
 The decision rules and runner are MIT-licensed. The losslessly repackaged Cactus Compute Needle 3 tokenizer is Apache-2.0. [License](./LICENSE) · [Tokenizer provenance](./NOTICE.txt) · [Checksums](./SHA256SUMS.txt)
 '''

@@ -1,0 +1,88 @@
+{
+  "native_executables": [
+    [
+      "MagicEightBall compact",
+      480,
+      "compact-gather-physical-ncs1.json"
+    ],
+    [
+      "Stock radix Gather",
+      512,
+      "compact-gather-physical-ncs1.json"
+    ],
+    [
+      "Packed convolution",
+      1536,
+      "fast-packed-1.json"
+    ],
+    [
+      "Lookup",
+      1728,
+      "fast-lookup-1.json"
+    ],
+    [
+      "Boolean gates",
+      3776,
+      "fast-gates-1.json"
+    ],
+    [
+      "Dense reference",
+      4480,
+      "fast-dense-1.json"
+    ]
+  ],
+  "portable_files": [
+    [
+      "ONNX radix Gather",
+      192,
+      "https://huggingface.co/chadstthomas/MagicEightBall-ONNX/blob/main/verification.json"
+    ],
+    [
+      "GGUF",
+      1024,
+      "https://huggingface.co/chadstthomas/MagicEightBall-GGUF/blob/main/verification.json"
+    ],
+    [
+      "FP32 dense reference",
+      1832,
+      "https://huggingface.co/chadstthomas/MagicEightBall-FP32/blob/main/verification.json"
+    ]
+  ],
+  "decision_data": [
+    [
+      "CPU decision diagram",
+      46
+    ],
+    [
+      "CPU lookup table",
+      128
+    ]
+  ],
+  "deployment": {
+    "compact_archive": 699,
+    "shared_tokenizer": 23412
+  },
+  "published_examples": [
+    [
+      "Bonsai",
+      "300 B",
+      "Search ranking",
+      "Bing ranking example",
+      "https://proceedings.mlr.press/v70/kumar17a/kumar17a.pdf"
+    ],
+    [
+      "FastGRNN",
+      "1 KB",
+      "Wake-word recognition",
+      "Wakeword-2, Table 3",
+      "https://proceedings.neurips.cc/paper_files/paper/2018/file/ab013ca67cf2d50796b0c11d1b8bc95d-Paper.pdf"
+    ],
+    [
+      "fastText.zip",
+      "16 KiB",
+      "Text classification",
+      "Pruned model, Table 2",
+      "https://arxiv.org/pdf/1612.03651"
+    ]
+  ]
+}
