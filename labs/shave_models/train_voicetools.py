@@ -117,6 +117,9 @@ class HeadedNet(nn.Module):
         if arch == "v1":
             self.block2 = nn.Conv2d(24, 32, (1, 9), padding=(0, 4))
             self.heads = nn.ModuleDict({n: nn.Linear(32, c) for n, c in HEADS.items()})
+        elif arch == "v3":
+            self.block2 = nn.Conv2d(24, 64, (1, 9), padding=(0, 4))  # v5 capacity lane
+            self.heads = nn.ModuleDict({n: nn.Linear(64 * 50, c) for n, c in HEADS.items()})
         else:
             self.block2 = nn.Conv2d(24, 48, (1, 9), padding=(0, 4))
             self.heads = nn.ModuleDict({n: nn.Linear(48 * 50, c) for n, c in HEADS.items()})
@@ -192,7 +195,7 @@ def main():
     ap.add_argument("--lr", type=float, default=3e-3)
     ap.add_argument("--neg-weight", type=float, default=0.25,
                     help="loss weight of all-none (negative/silence) windows")
-    ap.add_argument("--arch", choices=["v1", "v2"], default="v2")
+    ap.add_argument("--arch", choices=["v1", "v2", "v3"], default="v2")
     ap.add_argument("--extra-negatives", type=Path, nargs="*",
                     default=[Path("D:/models/ncs-shave-research/vad")],
                     help="fixture dirs whose train noise/silence/OOD clips become extra "

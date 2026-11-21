@@ -36,8 +36,8 @@
       "capability": "voice -> ordered typed tool calls (acoustic Needle)",
       "reference": "Whistle -> Needle 3",
       "artifact": "multi-head conv on [1,1,40,200] windows, 6 heads",
-      "status": "trained-v4-slot-abstention-sealed-evaluated",
-      "evidence": "slot-level abstention (v4 rule, thresholds 0.8/0.8 frozen from dev sweep): SEALED 16.9% -> 11.88% false on MYRIAD (unknown-slot 47%, OOD 35%, unsupported 25%, noise 2.7%); diagnostic 74.0% exact / 5.4% false / p95 9.7 ms; remaining: model-capacity/training iterations for the 1% gate",
+      "status": "trained-v4b-shipped-sealed-evaluated",
+      "evidence": "v5 capacity iteration FALSIFIED (64-ch wider head + 30 epochs: sealed 12.11% vs v4b 11.88%, diagnostic 76.7%/5.4% - identical quality, worse latency 31-43 ms; v4b restored as shipped, deterministic repro): the ~75% exact / ~12% sealed-false plateau is DATA-scale (1,834 utterances, 134 call groups, 30 TTS cells), not capacity - remaining lever = real-speaker/corpus expansion (the research plan's FLEURS-style lane); slot abstention (0.8/0.8) delivered sealed 19.0 -> 11.88%",
       "gates": ">=90% exact, <=1% false, p95<=300ms, >=300 held-out negatives",
       "lanes": {
         "ncs1": "measured",
