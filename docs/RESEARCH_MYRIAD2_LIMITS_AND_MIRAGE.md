@@ -424,14 +424,19 @@ Cactus host stack as reference-to-beat) is underway. Results so far:
   decomposition (223 positives): call-count wrong **65%** (per-window rule fires spuriously / misses
   — utterance-level aggregation is the fix), slots-wrong-but-tools-right 30%, tool confusion only
   **6%**.
-- **Architecture v2 (time-preserving heads) rewrites the accuracy picture.** Validation: tool acc on
-  firing windows 0.51 → **0.73**, device 0.82, room 0.57. **Same-student CPU control** (v2 FP16 IR on
-  the OpenVINO 2020.3 CPU plugin, identical fixture IDs): exact match **74.9%**, false actions 6.8%,
-  p95 end-to-end **13.7 ms** — the student now beats the corrected host reference on every axis
-  (accuracy +31 pts, false actions −6.7 pts, latency 31× faster) even before the stick run. Device
-  eval of digest `ebc7ba2ce98e…` is the next physical-slot item, replaying the same IDs for a
-  device/CPU agreement check; the ≥300-negative sealed acceptance set is separate from the current
-  74-negative diagnostic split.
+- **Architecture v2 (time-preserving heads) rewrites the accuracy picture — confirmed on hardware.**
+  Three-way matched comparison on identical fixture IDs: v1 device **22.4%** → v2 device **74.9%**
+  exact (+52.5 pts), false actions 8.1% → 6.8%, p95 27.8 ms (gate ≤300 ms — PASS, 10.8×); v2 CPU
+  control 74.9% / 6.8% / 13.7 ms. **Device/CPU agreement 297/297 fixtures** — the MYRIAD FP16 graph
+  is decision-identical to the CPU control (the strict-stick validation the unified plan asks for).
+  The student beats the corrected host reference on every axis ON DEVICE. Remaining gates (exact
+  ≥90%, false ≤1%) are the utterance-level-aggregation + abstention-calibration lanes; the
+  ≥300-negative sealed acceptance set is separate from the current 74-negative diagnostic split.
+- **VAD suite device v0** (first from-scratch suite): quality gates PASS on MYRIAD with FP16
+  agreement to CPU (96.9% window accuracy, 99.6% speech recall, 0.0 false wakes/hour at the frozen
+  threshold 0.8) — but the **latency gate FAILS**: p95 9.8 ms vs the 2.5 ms budget (the tiny graph's
+  GAP+flatten head layout runs slower on the stick than its MAC count suggests). Iteration lane:
+  restructure the head to the handoff-graph pattern or overlap via async pipelining.
 
 Honest scope notes: fixtures are TTS (condition-matched for every comparison; real-speaker expansion
 is future work with mini_speech_commands as the real-audio anchor); ordered calls come from the
