@@ -40,6 +40,8 @@ def main():
     ap.add_argument("--toolchain", type=Path, default=Path("D:/NTVStudy/tools/ncs1"))
     ap.add_argument("--device", choices=["myriad", "cpu"], default="myriad")
     ap.add_argument("--run-dir", type=Path, default="")
+    ap.add_argument("--manifest", default="manifest.jsonl",
+                    help="manifest file name (manifest-sealed.jsonl for the sealed set)")
     args = ap.parse_args()
 
     sys.path.insert(0, str(args.toolchain.resolve()))
@@ -69,9 +71,10 @@ def main():
                                     num_requests=1)
     load_ms = (time.perf_counter() - start) * 1000
 
-    rows = [json.loads(line) for line
-            in (args.fixtures / "manifest.jsonl").read_text(encoding="utf-8").splitlines()
-            if json.loads(line)["split"] == "test"]
+    all_rows = [json.loads(line) for line
+                in (args.fixtures / args.manifest).read_text(encoding="utf-8").splitlines()]
+    rows = [r for r in all_rows if r["split"] == ("sealed" if args.manifest != "manifest.jsonl"
+                                                 else "test")]
     print(f"{len(rows)} held-out frames, device {args.device}", flush=True)
 
     elapsed, results = [], []

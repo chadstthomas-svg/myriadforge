@@ -57,7 +57,7 @@ Cactus analog** (novel). Statuses: `spec` → `fixtures` → `trained` →
 |---|---|---|---|
 | forms | UI control localization from pixels | evidence complete | 89.2% @ p95 45.49 ms |
 | retrieval | Encoder student + kNN-as-MatMul search on-stick | **trained v2** (contrastive, 1 MB FP16 encoder) | **beats the hashed-gram baseline +23 pts** (0.68 vs 0.45 Recall@10); 0.90 absolute gate = richer inputs/capacity/corpus iteration; engine measured 285 qps |
-| vision-gate | Task-specific image gate — fixes the measured cascade failure | **trained v0 — ALL GATES PASS on device** | COCO (CC) vs BBB: 100% accuracy, **0.0% fire on non-trigger** (ImageNet fired 59/60), p50 8.1 ms; sealed unseen-animation set is the generalization gate |
+| vision-gate | Task-specific image gate — fixes the measured cascade failure | v0 sealed **FAIL** → v1 task corrected | diagnostic (BBB vs COCO) all PASS; sealed ToS unseen animations fire 100% — the gate keys on cartoon-ness, not semantics. v1: trigger = ALL footage, non-trigger = desktop UI (forms renders); matches the real triage need |
 | docqa | Span reader over retrieval spans + unanswerable rejection | spec (after retrieval) | gates: EM/F1 on held-out docs |
 
 ### Speech (Cactus row 4)

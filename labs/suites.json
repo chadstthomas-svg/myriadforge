@@ -112,8 +112,8 @@
       "capability": "task-specific image gate (cascade fix)",
       "reference": "ImageNet MobileNetV2 (mismatched - fires 59/60 on cartoons)",
       "artifact": "trained conv gate, compute-dense design (35.8 GFLOPS ceiling)",
-      "status": "trained-v0-device-evaluated-all-gates-pass",
-      "evidence": "MYRIAD diagnostic: 100% accuracy, trigger recall 100%, fire-rate on non-trigger 0.0% (the measured ImageNet failure mode was 59/60 fired), p50 8.1 ms <= 60 (362 MFLOPs compute-dense stack rides the 35.8-GFLOPS ceiling). Caveat recorded: sealed set must add unseen animations before generalization claims",
+      "status": "v0-sealed-generalization-FAIL-v1-task-corrected",
+      "evidence": "diagnostic (BBB vs COCO) all gates PASS; SEALED 370 unseen frames on MYRIAD: ToS unseen animations fire at 100% (accuracy 40%), trigger recall 98.7% on untouched COCO, p50 8.2 ms - the gate keys on \"cartoon-ness\", not task semantics (the ImageNet failure mode at a higher level). SPEC CORRECTION for v1: trigger = ALL footage (COCO + BBB + ToS), non-trigger = desktop UI/screenshots (the forms renders are the data) - matches the actual footage-triage product need",
       "gates": "planned: task-relevant fire rate <10% on non-trigger content (the measured MobileNetV2 failure mode)",
       "lanes": {
         "ncs1": "measured",
