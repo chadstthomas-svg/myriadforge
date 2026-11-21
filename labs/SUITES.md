@@ -46,7 +46,7 @@ Cactus analog** (novel). Statuses: `spec` → `fixtures` → `trained` →
 | Suite | Capability | Status | Evidence |
 |---|---|---|---|
 | **boolean (MagicEightBall)** | Staged Boolean policy → yes/no + category + action, up to 131,072 tokens | **release-lane evidence complete** | 128/128 physical, 30-min soak (107,104 requests), 7-backend matched comparison, cold identity recorded |
-| **voicetools** | Voice → ordered typed tool calls (acoustic Needle) | **sealed-evaluated v3** | diagnostic 78.9% / 1.4% false (reject-head iteration fixed noise rejection); **sealed 421 unseen negatives: 19.0% false** — noise 1.0% PASS, unseen in-domain text 50-87% FAIL → broad-OOD-text fix lane; p95 PASS |
+| **voicetools** | Voice → ordered typed tool calls (acoustic Needle) | **sealed-evaluated v4b** | two negative-expansion iterations (vad + 624-clip OOD corpus): sealed 19.0 → 16.9% false; noise 1-2.7% PASS; unknown-slot 83% hallucinate valid slots (host validation falsified) → slot-level abstention is the remaining lane; diagnostic exact 75.3%; p95 PASS |
 | voice | Isolated command classification (wake/kws primitive) | evidence complete | 90.7% @ p95 3.89 ms |
 | intent | Text intent routing (91 SLURP labels) | evidence complete | 80.1% @ p95 3.08 ms |
 | grounding | Browser control ranking | experimental | 7.4% — first bottleneck named (32-candidate retrieval limit) |
@@ -56,7 +56,7 @@ Cactus analog** (novel). Statuses: `spec` → `fixtures` → `trained` →
 | Suite | Capability | Status | Evidence |
 |---|---|---|---|
 | forms | UI control localization from pixels | evidence complete | 89.2% @ p95 45.49 ms |
-| retrieval | Encoder student + kNN-as-MatMul search on-stick | spec (engine measured: 285 qps @ 10k rows) | gates: Recall@10 within 2 pts of host encoder |
+| retrieval | Encoder student + kNN-as-MatMul search on-stick | **trained v0** (contrastive, 1 MB FP16 encoder) | in-corpus Recall@10 0.68 vs 0.90 gate — metric alignment fixed, iteration lane: harder negatives + capacity; engine measured 285 qps |
 | vision-gate | Task-specific image gate — fixes the measured cascade failure | spec | the ImageNet gate fires 59/60 on cartoons; a trained gate must fire <10% on non-trigger content |
 | docqa | Span reader over retrieval spans + unanswerable rejection | spec (after retrieval) | gates: EM/F1 on held-out docs |
 
