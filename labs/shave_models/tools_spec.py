@@ -162,6 +162,13 @@ SILENCE_NEGATIVES = 40     # appended programmatically, not synthesized
 # iteration (confidently-wrong-on-negatives is a model issue, not a threshold).
 FIRE_THRESHOLD = 0.8
 
+# Slot-level abstention (v4 decision rule): a fired call whose ANY fired slot's
+# softmax confidence is below this is dropped. Frozen 2026-11-20 from the dev
+# (valid) sweep: 10% -> 2.5% false actions at zero exact cost (0.8); 0.9 adds
+# nothing. Hallucinated-valid slots carry lower slot confidence than grounded
+# ones - the filter exploits that gap.
+SLOT_FIRE_THRESHOLD = 0.8
+
 # --- acceptance gate (declare BEFORE opening the sealed set) ----------------
 ACCEPTANCE = {
     "exact_match_min": 0.90,     # full-call exact match on the held-out cells

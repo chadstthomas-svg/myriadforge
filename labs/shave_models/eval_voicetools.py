@@ -27,6 +27,7 @@ import numpy as np
 LAB = Path(__file__).resolve().parent
 sys.path.insert(0, str(LAB))
 
+import tools_spec as SPEC_MOD  # noqa: E402
 from tools_spec import (ACCEPTANCE, FIRE_THRESHOLD, TASK_SPEC_VERSION,  # noqa: E402
                         WINDOW_SECONDS, WINDOW_STRIDE)
 
@@ -78,15 +79,21 @@ SLOT_OF = {"room": "room", "device": "device", "scene": "scene",
 
 
 def call_from_window(window_out, info):
-    """Slot heads of one window -> call dict (no tool decision here)."""
+    """Slot heads of one window -> (call dict, {slot: confidence}).
+
+    The confidence is the fired slot's softmax value - hallucinated values
+    (unknown room/device names) tend to carry lower confidence than grounded
+    ones, which is what slot-level abstention filters on."""
     labels = info["labels"]
-    call = {}
+    call, slot_conf = {}, {}
     for head, key in SLOT_OF.items():
-        idx = int(np.argmax(window_out[head]))
+        probs = softmax(window_out[head])
+        idx = int(np.argmax(probs))
         if idx != labels["none_idx"][head]:
             value = labels["enums"][head][idx]
             call[key] = int(value) if head in ("level", "seconds") else str(value)
-    return call
+            slot_conf[key] = float(probs[idx])
+    return call, slot_conf
 
 
 def decide(window_out, info):
@@ -102,10 +109,14 @@ def decide(window_out, info):
     return tool, call, conf
 
 
-def decide_utterance(window_outs, info, threshold):
+def decide_utterance(window_outs, info, threshold, slot_threshold=None):
     """Utterance-level rule: a tool fires at its BEST window (max tool confidence
     across the utterance, above the frozen threshold); calls are ordered by the
-    window position of that best confidence, capped at 2 (the spec's max)."""
+    window position of that best confidence, capped at 2 (the spec's max).
+
+    Slot-level abstention (v4): a fired call whose ANY fired slot's confidence
+    is below slot_threshold is dropped entirely (the utterance-level false
+    actions on unseen slot values come from hallucinated-valid slots)."""
     labels = info["labels"]
     best = {}
     for wi, out in enumerate(window_outs):
@@ -116,8 +127,15 @@ def decide_utterance(window_outs, info, threshold):
         tool = labels["tools"][tool_idx]
         conf = float(probs[tool_idx])
         if tool not in best or conf > best[tool][0]:
-            best[tool] = (conf, wi, {"tool": tool, **call_from_window(out, info)})
-    fired = [(wi, -conf, call) for tool, (conf, wi, call) in best.items() if conf >= threshold]
+            call, slot_conf = call_from_window(out, info)
+            best[tool] = (conf, wi, {"tool": tool, **call}, slot_conf)
+    fired = []
+    for tool, (conf, wi, call, slot_conf) in best.items():
+        if conf < threshold:
+            continue
+        if slot_threshold is not None and slot_conf and min(slot_conf.values()) < slot_threshold:
+            continue  # slot abstention: any weak slot drops the whole call
+        fired.append((wi, -conf, call))
     fired.sort(key=lambda x: (x[0], x[1]))
     return [call for _, _, call in fired[:2]]
 
@@ -162,6 +180,10 @@ def main():
                     help="speech-tool fire threshold; default = tools_spec FIRE_THRESHOLD")
     ap.add_argument("--sweep", action="store_true",
                     help="calibration sweep over thresholds on this split (no freeze)")
+    ap.add_argument("--slot-threshold", type=float, default=None,
+                    help="min slot confidence per fired slot (utterance rule)")
+    ap.add_argument("--slot-sweep", action="store_true",
+                    help="slot-threshold calibration sweep on this split (no freeze)")
     args = ap.parse_args()
 
     sys.path.insert(0, str(args.toolchain.resolve()))
@@ -232,11 +254,11 @@ def main():
     negatives = sum(1 for row, _ in zip(rows, results) if row["kind"].startswith("neg"))
     positives = len(rows) - negatives
 
-    def score(threshold):
+    def score(threshold, slot_threshold=None):
         hits = false_on_neg = 0
         scored = []
         for row, res in zip(rows, results):
-            got_calls = (decide_utterance(res["window_outs"], info, threshold)
+            got_calls = (decide_utterance(res["window_outs"], info, threshold, slot_threshold)
                          if args.rule == "utterance"
                          else [c for c in _window_rule_calls(res["window_outs"], info)])
             got = [normalize(c) for c in got_calls]
@@ -247,7 +269,7 @@ def main():
                 hits += int(exact)
             scored.append({"id": row["id"], "kind": row["kind"], "got": got,
                            "want": res["want"], "exact": exact})
-        m = {"rule": args.rule, "threshold": threshold,
+        m = {"rule": args.rule, "threshold": threshold, "slot_threshold": slot_threshold,
              "exact_match": round(hits / max(1, positives), 4),
              "exact_hits": hits, "positives": positives,
              "false_action_rate": round(false_on_neg / max(1, negatives), 4),
@@ -294,7 +316,23 @@ def main():
                           encoding="utf-8")
         print(f"written -> {report}")
         return
-    m, scored = score(args.threshold if args.threshold is not None else FIRE_THRESHOLD)
+    if args.slot_sweep:
+        sweep = []
+        base_t = args.threshold if args.threshold is not None else FIRE_THRESHOLD
+        for st in (None, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95):
+            m, _ = score(base_t, st)
+            sweep.append({k: m[k] for k in ("slot_threshold", "exact_match", "false_action_rate",
+                                            "p95_end_to_end_ms")})
+            print(sweep[-1], flush=True)
+        report = run_dir / f"slot-calibration-{args.device}-{args.split}.json"
+        report.write_text(json.dumps({"rule": args.rule, "slot_sweep": sweep}, indent=2) + "\n",
+                          encoding="utf-8")
+        print(f"written -> {report}")
+        return
+    slot_t = args.slot_threshold
+    if slot_t is None and hasattr(SPEC_MOD, "SLOT_FIRE_THRESHOLD"):
+        slot_t = SPEC_MOD.SLOT_FIRE_THRESHOLD
+    m, scored = score(args.threshold if args.threshold is not None else FIRE_THRESHOLD, slot_t)
     report = run_dir / f"device-evaluation-{args.device}-{args.rule}.json"
     report.write_text(json.dumps({"metrics": m, "results": scored}, indent=2) + "\n",
                       encoding="utf-8")

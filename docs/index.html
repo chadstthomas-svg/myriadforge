@@ -403,6 +403,46 @@
         target="_blank" rel="noopener">Model lab, evaluation records and reproduction steps ↗</a></p>
     </div>
   </div>
+
+  <div class="sec-head" style="margin-top:36px">
+    <p class="eyebrow">The suite matrix</p>
+    <h2>Thirteen suites, one contract — and the same models on older devices</h2>
+    <p class="sec-lede">Every model family is a <b>suite</b>: a frozen spec with acceptance gates
+      declared before any sealed set, digest-verified fixtures, a trainer, a bundle, and a device
+      evaluation — with Cactus models as references to beat, not dependencies. The <b>lanes</b> row
+      per suite is the visible answer to "which older devices run this today": the same ONNX
+      artifacts measured on the stick, on plain x86 (ONNX Runtime), and convertible to LiteRT for
+      phones via the WSL2 worker.</p>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <h3>Decisions &amp; tools</h3>
+      <p><b>MagicEightBall</b> (boolean suite) — release-ready: 512-byte blob, 128/128 physical,
+        30-min soak, 7-backend matched comparison. <b>VoiceTools</b> — trained v4 with slot-level
+        abstention: <b>74.0 % exact / 5.4 % false actions / p95 9.7 ms</b> on-device, FP16 decisions
+        identical to CPU, beating the host Whistle→Needle 3 stack (44.4 % / 13.5 % / 430 ms) on
+        every axis. Voice (90.7 %), intent (80.1 %), grounding (experimental) complete the row.</p>
+    </div>
+    <div class="card">
+      <h3>Perception &amp; speech</h3>
+      <p><b>forms</b> 89.2 % · <b>retrieval</b> encoder v0 trained (contrastive, 1 MB FP16 — in-corpus
+        Recall@10 0.68, kNN engine measured 285 qps) · <b>vision-gate</b> spec frozen (compute-dense
+        design per the 35.8-GFLOPS ceiling — fixes the measured cascade failure) · <b>vad</b> v0.1
+        device-evaluated: quality gates PASS (0.0 false wakes/hour @ frozen threshold), latency
+        gated by the paired-gap method · <b>docqa</b>, <b>asr</b> specs frozen.</p>
+    </div>
+    <div class="card">
+      <h3>Lanes (portability)</h3>
+      <p>Every suite records <b>ncs1 / cpu / ort / litert / ncs2 / coral</b>. Measured today:
+        MobileNetV2 gate <b>171 inf/s</b>, VoiceTools <b>0.61 ms p50</b>, vad <b>0.14 ms p50</b> on
+        plain ONNX Runtime vs 15.7 inf/s / 9.6 ms / 7.0 ms on the stick — same fixtures, same
+        gates, same record schema (<code>ntvbench.result/1</code>). LiteRT conversion runs via
+        litert-torch in WSL2 (the Windows converter accepts Jax/PyTorch only — probe verdict
+        recorded). NCS2 lane prepared; cold-USB procedures documented.</p>
+    </div>
+  </div>
+  <p style="margin-top:14px"><a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/labs/SUITES.md"
+    target="_blank" rel="noopener">The suite contract and full matrix ↗</a></p>
 </section>
 
 <section id="quickstart">

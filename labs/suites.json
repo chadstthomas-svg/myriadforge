@@ -36,8 +36,8 @@
       "capability": "voice -> ordered typed tool calls (acoustic Needle)",
       "reference": "Whistle -> Needle 3",
       "artifact": "multi-head conv on [1,1,40,200] windows, 6 heads",
-      "status": "trained-v4b-sealed-evaluated",
-      "evidence": "SEALED 421 unseen negatives on MYRIAD: v3 19.0% -> v4b 16.9% false (vad+OOD negatives: OOD 61->47%, unsupported 50->35%, noise 1-2.7%); unknown-slot 83% hallucinate VALID slots (host validation cannot catch - slot-level abstention is the remaining lane); diagnostic exact 75.3% (slot dilution trade); host-validation lever falsified; p95 PASS throughout",
+      "status": "trained-v4-slot-abstention-sealed-evaluated",
+      "evidence": "slot-level abstention (v4 rule, thresholds 0.8/0.8 frozen from dev sweep): SEALED 16.9% -> 11.88% false on MYRIAD (unknown-slot 47%, OOD 35%, unsupported 25%, noise 2.7%); diagnostic 74.0% exact / 5.4% false / p95 9.7 ms; remaining: model-capacity/training iterations for the 1% gate",
       "gates": ">=90% exact, <=1% false, p95<=300ms, >=300 held-out negatives",
       "lanes": {
         "ncs1": "measured",
