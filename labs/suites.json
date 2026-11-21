@@ -103,8 +103,8 @@
       "capability": "embeddings + kNN search on-stick",
       "reference": "nomic-embed / HNSW (host)",
       "artifact": "encoder student -> kNN-as-MatMul engine (285 qps @ 10k rows measured)",
-      "status": "spec",
-      "evidence": "engine measured; encoder student untrained",
+      "status": "trained-v2-encoder-evaluated",
+      "evidence": "learned encoder beats the hashed-gram baseline +23 pts (0.68 vs 0.45 Recall@10, same metric); group-aware batching + 60 epochs plateaued at 0.63-0.68 - the 0.90 absolute gate needs richer inputs/capacity/corpus; on-stick: ~1 MB FP16 encoder + the measured 285 qps engine",
       "gates": "planned: Recall@10 within 2 pts of host encoder at <=64ms p95 per batch"
     },
     {

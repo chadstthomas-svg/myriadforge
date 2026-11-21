@@ -95,13 +95,24 @@ def main():
 
     net = Encoder()
     opt = torch.optim.Adam(net.parameters(), lr=args.lr, weight_decay=1e-4)
+    # group-aware batching: half of every batch is same-call pairs, so every
+    # anchor has an in-batch positive and InfoNCE always has real signal
+    import random as _random
+    _sampler = _random.Random(SEED + 1)
+    group_ids = list(groups.values())
     history = []
     for epoch in range(args.epochs):
         net.train()
-        perm = torch.randperm(len(xt))
         total = 0.0
-        for b in range(0, len(xt), args.batch):
-            sel = perm[b:b + args.batch]
+        n_batches = len(xt) // args.batch
+        for b in range(n_batches):
+            sel_list = []
+            for _ in range(args.batch // 2):
+                g = group_ids[_sampler.randrange(len(group_ids))]
+                sel_list.extend(_sampler.sample(g, min(2, len(g))))
+            while len(sel_list) < args.batch:
+                sel_list.append(rng.integers(len(xt)))
+            sel = torch.tensor(sel_list[:args.batch])
             z = net(xt[sel])                                   # [B, 128] normalized
             sims = z @ z.T                                     # in-batch similarity
             same = (kt[sel][:, None] == kt[sel][None, :])
