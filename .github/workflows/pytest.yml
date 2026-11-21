@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install Boolean suite deps
-        run: pip install numpy pytest sentencepiece
+        run: pip install numpy pytest sentencepiece protobuf
       - name: Run the Boolean differential suite (device parts skip off-hardware)
         working-directory: labs/shave_models/boolean
         run: python -m pytest test_boolean.py -q
