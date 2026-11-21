@@ -27,7 +27,8 @@ ARTIFACTS = (
     "measurements/constant-free-pooling.json", "measurements/native-release-and-stock-controls.json",
     "measurements/streamed-parameters-compatibility.json", "measurements/decision-diagram-native-controls.json",
 )
-CARD_FILES = ("README.md", "assets/workbench.webp", "assets/relay-decisions.webp", "assets/relay-decisions-still.webp")
+CARD_FILES = ("README.md", "assets/workbench.webp", "assets/workbench-motion.webp", "assets/workbench-motion.gif",
+              "assets/relay-decisions.webp", "assets/relay-decisions-still.webp")
 NOTICE = """MagicEightBall
 MyriadForge source and policy are distributed under the MIT License.
 
