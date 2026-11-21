@@ -1,0 +1,47 @@
+{
+  "dealership": {
+    "authorization": "intake approved",
+    "vetoes": ["do not queue", "customer declined"],
+    "cases": [
+      {"id": "dealership-service-intake", "text": "Service desk ticket: service requested for the vehicle. Intake approved by the advisor.", "expected": {"answers": {"may_route": true}, "category": "service", "action": "review_service_intake"}},
+      {"id": "dealership-inspection-intake", "text": "Inspection referral received at the service desk. Intake approved.", "expected": {"answers": {"may_route": true}, "category": "inspection", "action": "review_inspection_intake"}},
+      {"id": "dealership-combined-intake", "text": "Maintenance enquiry with a separate inspection requested. Intake approved.", "expected": {"answers": {"may_route": true}, "category": "combined_intake", "action": "review_combined_intake"}},
+      {"id": "dealership-missing-approval", "text": "Maintenance enquiry logged. The advisor decision is pending.", "expected": {"answers": {"may_route": false}, "category": "service", "action": null}},
+      {"id": "dealership-customer-withdrew", "text": "Inspection referral. Intake approved earlier. Customer declined this morning.", "expected": {"answers": {"may_route": false}, "category": "inspection", "action": null}},
+      {"id": "dealership-boundary-guard", "text": "Administrative task only. A preinspection requested status appears in a training label. Intake approved.", "expected": {"answers": {"may_route": false}, "category": null, "action": null}},
+      {"id": "dealership-history-approval", "record": {"evidence": "Service requested. Current approval is pending.", "history": "Intake approved on the previous visit."}, "expected": {"answers": {"may_route": false}, "category": "service", "action": null}},
+      {"id": "dealership-history-hold", "record": {"evidence": "Inspection requested. Intake approved on this ticket.", "history": "Do not queue a closed prior ticket."}, "expected": {"answers": {"may_route": true}, "category": "inspection", "action": "review_inspection_intake"}},
+      {"id": "dealership-late-veto", "context": {"start": "Service requested. Intake approved.", "end": "Do not queue."}, "expected": {"answers": {"may_route": false}, "category": "service", "action": null}}
+    ]
+  },
+  "manufacturing": {
+    "authorization": "maintenance review approved",
+    "vetoes": ["maintenance hold", "work order blocked"],
+    "cases": [
+      {"id": "manufacturing-vibration", "text": "Condition monitor reported a vibration alert. Maintenance review approved during shift handover.", "expected": {"answers": {"may_route": true}, "category": "mechanical", "action": "review_mechanical_alert"}},
+      {"id": "manufacturing-filter", "text": "Filter differential high on the line monitor. Maintenance review approved.", "expected": {"answers": {"may_route": true}, "category": "service", "action": "review_service_alert"}},
+      {"id": "manufacturing-combined", "text": "Bearing overheat and lubrication low on the work cell. Maintenance review approved.", "expected": {"answers": {"may_route": true}, "category": "combined_maintenance", "action": "review_combined_maintenance"}},
+      {"id": "manufacturing-missing-approval", "text": "Bearing overheat flag was raised. The maintenance supervisor has yet to review it.", "expected": {"answers": {"may_route": false}, "category": "mechanical", "action": null}},
+      {"id": "manufacturing-work-order-blocked", "text": "Lubrication low. Maintenance review approved before the isolation check. Work order blocked by the shift lead.", "expected": {"answers": {"may_route": false}, "category": "service", "action": null}},
+      {"id": "manufacturing-boundary-guard", "text": "No configured condition alert. The training glossary mentions a bearing overheated test label. Maintenance review approved for training.", "expected": {"answers": {"may_route": false}, "category": null, "action": null}},
+      {"id": "manufacturing-history-approval", "record": {"evidence": "Vibration alert. Approval has yet to be given for this event.", "history": "Maintenance review approved for a different asset."}, "expected": {"answers": {"may_route": false}, "category": "mechanical", "action": null}},
+      {"id": "manufacturing-history-hold", "record": {"evidence": "Lubrication low. Maintenance review approved for this event.", "history": "Maintenance hold on a separate line."}, "expected": {"answers": {"may_route": true}, "category": "service", "action": "review_service_alert"}},
+      {"id": "manufacturing-late-veto", "context": {"start": "Filter differential high. Maintenance review approved.", "end": "Maintenance hold."}, "expected": {"answers": {"may_route": false}, "category": "service", "action": null}}
+    ]
+  },
+  "store_security": {
+    "authorization": "security review approved",
+    "vetoes": ["drill active", "alert cleared"],
+    "cases": [
+      {"id": "retail-door-event", "text": "Store sensor event lists door forced at the receiving door. Security review approved by the duty operator.", "expected": {"answers": {"may_route": true}, "category": "access_alert", "action": "review_access_alert"}},
+      {"id": "retail-camera-event", "text": "Camera offline at the receiving zone. Security review approved for the equipment alert.", "expected": {"answers": {"may_route": true}, "category": "camera_alert", "action": "review_camera_alert"}},
+      {"id": "retail-combined-event", "text": "Door held open and video feed lost at the loading bay. Security review approved.", "expected": {"answers": {"may_route": true}, "category": "combined_alert", "action": "review_combined_alert"}},
+      {"id": "retail-missing-approval", "text": "Door held open event received. Maintenance review approved for a separate work order. This alert is pending.", "expected": {"answers": {"may_route": false}, "category": "access_alert", "action": null}},
+      {"id": "retail-drill-hold", "text": "Door forced training event. Security review approved earlier. Drill active at this store.", "expected": {"answers": {"may_route": false}, "category": "access_alert", "action": null}},
+      {"id": "retail-boundary-guard", "text": "Routine equipment check. A camera offliner demo label appears on the dashboard. Security review approved for the check.", "expected": {"answers": {"may_route": false}, "category": null, "action": null}},
+      {"id": "retail-history-approval", "record": {"evidence": "Video feed lost. Review decision pending for this event.", "history": "Security review approved for the previous incident."}, "expected": {"answers": {"may_route": false}, "category": "camera_alert", "action": null}},
+      {"id": "retail-history-clear", "record": {"evidence": "Door held open. Security review approved for this event.", "history": "Alert cleared for a different door."}, "expected": {"answers": {"may_route": true}, "category": "access_alert", "action": "review_access_alert"}},
+      {"id": "retail-late-veto", "context": {"start": "Camera offline. Security review approved.", "end": "Alert cleared."}, "expected": {"answers": {"may_route": false}, "category": "camera_alert", "action": null}}
+    ]
+  }
+}

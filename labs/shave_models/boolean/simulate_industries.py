@@ -2,6 +2,7 @@
 
 import argparse
 import hashlib
+from itertools import islice, product
 import json
 from pathlib import Path
 import time
@@ -93,6 +94,24 @@ def evaluate(engine, corpus, scenarios, repeats):
             "cases": results}
 
 
+
+def verify_assignments(engine, banks):
+    counts = {}
+    for bank in banks:
+        view = engine.policy_view(bank)
+        assignments = product((0, 1), repeat=len(view.policy.literals))
+        counts[bank] = 0
+        while True:
+            batch = list(islice(assignments, view.batch_capacity))
+            if not batch:
+                break
+            expected = [list(view.policy.reference(facts)) for facts in batch]
+            if [list(bits) for bits in view.gather_heads(batch)] != expected:
+                raise AssertionError("Compiled Boolean assignments diverged for " + bank)
+            counts[bank] += len(batch)
+    return counts
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("bundle", type=Path)
@@ -103,13 +122,18 @@ def main():
     parser.add_argument("--corpus", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--repeats", type=int, default=15)
+    parser.add_argument("--verify-assignments", action="store_true",
+                        help="Also check every prepared Boolean assignment for each policy bank")
     args = parser.parse_args()
     if args.repeats < 1 or (args.backend == "cpu" and args.blob):
         parser.error("Repeats must be positive and a native blob requires --backend ncs1")
     physical = windows_usb_identity("ncs1") if args.backend == "ncs1" else None
     engine = Runtime(args.bundle, args.toolchain, blob=args.blob) if physical else cpu_control(args.bundle)
     cases = args.scenarios.read_bytes()
-    report = evaluate(engine, args.corpus, json.loads(cases), args.repeats)
+    scenarios = json.loads(cases)
+    report = evaluate(engine, args.corpus, scenarios, args.repeats)
+    if args.verify_assignments:
+        report["verified_assignments_by_bank"] = verify_assignments(engine, scenarios)
     report.update(backend=engine.target, physical_usb_preflight=physical, runtime=engine.openvino_version,
                   onnx_sha256=engine.info["onnx_sha256"], scenario_sha256=hashlib.sha256(cases).hexdigest(),
                   manifest_sha256=hashlib.sha256((args.bundle / "model.json").read_bytes()).hexdigest(),

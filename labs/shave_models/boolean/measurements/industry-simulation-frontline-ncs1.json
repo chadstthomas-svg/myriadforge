@@ -1,0 +1,806 @@
+{
+  "simulated_cases": 27,
+  "matched_cases": 27,
+  "ungated_matched_cases": 15,
+  "expected_no_action_cases": 15,
+  "wrong_proposals": {
+    "magiceightball": 0,
+    "ungated": 12
+  },
+  "repeats": 15,
+  "workload_ms": {
+    "dealership-text": {
+      "p50": 2.1158999999997263,
+      "p95": 2.378500000000727,
+      "max": 2.5647000000006415
+    },
+    "dealership-structured": {
+      "p50": 1.9605000000000317,
+      "p95": 2.4609499999996833,
+      "max": 3.018499999999591
+    },
+    "dealership-full_context": {
+      "p50": 21.537300000000315,
+      "p95": 40.13065000000004,
+      "max": 45.79399999999989
+    },
+    "manufacturing-text": {
+      "p50": 2.277700000000493,
+      "p95": 2.711070000000504,
+      "max": 2.7487999999999957
+    },
+    "manufacturing-structured": {
+      "p50": 2.0281999999998135,
+      "p95": 2.151579999999864,
+      "max": 2.1772000000002123
+    },
+    "manufacturing-full_context": {
+      "p50": 23.204400000000014,
+      "p95": 45.545480000000005,
+      "max": 46.47760000000023
+    },
+    "store_security-text": {
+      "p50": 2.3222999999994443,
+      "p95": 2.6809699999997605,
+      "max": 2.729200000000098
+    },
+    "store_security-structured": {
+      "p50": 2.229899999999674,
+      "p95": 3.072680000000005,
+      "max": 3.2193999999998724
+    },
+    "store_security-full_context": {
+      "p50": 22.888599999999926,
+      "p95": 46.27350999999996,
+      "max": 53.08709999999994
+    }
+  },
+  "cases": [
+    {
+      "vertical": "dealership",
+      "workload": "text",
+      "id": "dealership-service-intake",
+      "tokens": 22,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_intake"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_intake"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_intake"
+      }
+    },
+    {
+      "vertical": "dealership",
+      "workload": "text",
+      "id": "dealership-inspection-intake",
+      "tokens": 16,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "inspection",
+        "action": "review_inspection_intake"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "inspection",
+        "action": "review_inspection_intake"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "inspection",
+        "action": "review_inspection_intake"
+      }
+    },
+    {
+      "vertical": "dealership",
+      "workload": "text",
+      "id": "dealership-combined-intake",
+      "tokens": 19,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "combined_intake",
+        "action": "review_combined_intake"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "combined_intake",
+        "action": "review_combined_intake"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "combined_intake",
+        "action": "review_combined_intake"
+      }
+    },
+    {
+      "vertical": "dealership",
+      "workload": "text",
+      "id": "dealership-missing-approval",
+      "tokens": 18,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_intake"
+      }
+    },
+    {
+      "vertical": "dealership",
+      "workload": "text",
+      "id": "dealership-customer-withdrew",
+      "tokens": 20,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "inspection",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "inspection",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "inspection",
+        "action": "review_inspection_intake"
+      }
+    },
+    {
+      "vertical": "dealership",
+      "workload": "text",
+      "id": "dealership-boundary-guard",
+      "tokens": 27,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      }
+    },
+    {
+      "vertical": "dealership",
+      "workload": "structured",
+      "id": "dealership-history-approval",
+      "tokens": 33,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_intake"
+      }
+    },
+    {
+      "vertical": "dealership",
+      "workload": "structured",
+      "id": "dealership-history-hold",
+      "tokens": 35,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "inspection",
+        "action": "review_inspection_intake"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "inspection",
+        "action": "review_inspection_intake"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "inspection",
+        "action": "review_inspection_intake"
+      }
+    },
+    {
+      "vertical": "dealership",
+      "workload": "full_context",
+      "id": "dealership-late-veto",
+      "tokens": 131072,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_intake"
+      }
+    },
+    {
+      "vertical": "manufacturing",
+      "workload": "text",
+      "id": "manufacturing-vibration",
+      "tokens": 20,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "mechanical",
+        "action": "review_mechanical_alert"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "mechanical",
+        "action": "review_mechanical_alert"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "mechanical",
+        "action": "review_mechanical_alert"
+      }
+    },
+    {
+      "vertical": "manufacturing",
+      "workload": "text",
+      "id": "manufacturing-filter",
+      "tokens": 17,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_alert"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_alert"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_alert"
+      }
+    },
+    {
+      "vertical": "manufacturing",
+      "workload": "text",
+      "id": "manufacturing-combined",
+      "tokens": 23,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "combined_maintenance",
+        "action": "review_combined_maintenance"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "combined_maintenance",
+        "action": "review_combined_maintenance"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "combined_maintenance",
+        "action": "review_combined_maintenance"
+      }
+    },
+    {
+      "vertical": "manufacturing",
+      "workload": "text",
+      "id": "manufacturing-missing-approval",
+      "tokens": 23,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "mechanical",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "mechanical",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "mechanical",
+        "action": "review_mechanical_alert"
+      }
+    },
+    {
+      "vertical": "manufacturing",
+      "workload": "text",
+      "id": "manufacturing-work-order-blocked",
+      "tokens": 28,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_alert"
+      }
+    },
+    {
+      "vertical": "manufacturing",
+      "workload": "text",
+      "id": "manufacturing-boundary-guard",
+      "tokens": 31,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      }
+    },
+    {
+      "vertical": "manufacturing",
+      "workload": "structured",
+      "id": "manufacturing-history-approval",
+      "tokens": 39,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "mechanical",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "mechanical",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "mechanical",
+        "action": "review_mechanical_alert"
+      }
+    },
+    {
+      "vertical": "manufacturing",
+      "workload": "structured",
+      "id": "manufacturing-history-hold",
+      "tokens": 36,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_alert"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_alert"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_alert"
+      }
+    },
+    {
+      "vertical": "manufacturing",
+      "workload": "full_context",
+      "id": "manufacturing-late-veto",
+      "tokens": 131072,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "service",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "service",
+        "action": "review_service_alert"
+      }
+    },
+    {
+      "vertical": "store_security",
+      "workload": "text",
+      "id": "retail-door-event",
+      "tokens": 29,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "access_alert",
+        "action": "review_access_alert"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "access_alert",
+        "action": "review_access_alert"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "access_alert",
+        "action": "review_access_alert"
+      }
+    },
+    {
+      "vertical": "store_security",
+      "workload": "text",
+      "id": "retail-camera-event",
+      "tokens": 21,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "camera_alert",
+        "action": "review_camera_alert"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "camera_alert",
+        "action": "review_camera_alert"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "camera_alert",
+        "action": "review_camera_alert"
+      }
+    },
+    {
+      "vertical": "store_security",
+      "workload": "text",
+      "id": "retail-combined-event",
+      "tokens": 21,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "combined_alert",
+        "action": "review_combined_alert"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "combined_alert",
+        "action": "review_combined_alert"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "combined_alert",
+        "action": "review_combined_alert"
+      }
+    },
+    {
+      "vertical": "store_security",
+      "workload": "text",
+      "id": "retail-missing-approval",
+      "tokens": 24,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "access_alert",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "access_alert",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "access_alert",
+        "action": "review_access_alert"
+      }
+    },
+    {
+      "vertical": "store_security",
+      "workload": "text",
+      "id": "retail-drill-hold",
+      "tokens": 21,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "access_alert",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "access_alert",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "access_alert",
+        "action": "review_access_alert"
+      }
+    },
+    {
+      "vertical": "store_security",
+      "workload": "text",
+      "id": "retail-boundary-guard",
+      "tokens": 32,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": false
+        },
+        "category": null,
+        "action": null
+      }
+    },
+    {
+      "vertical": "store_security",
+      "workload": "structured",
+      "id": "retail-history-approval",
+      "tokens": 36,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "camera_alert",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "camera_alert",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "camera_alert",
+        "action": "review_camera_alert"
+      }
+    },
+    {
+      "vertical": "store_security",
+      "workload": "structured",
+      "id": "retail-history-clear",
+      "tokens": 35,
+      "expected": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "access_alert",
+        "action": "review_access_alert"
+      },
+      "actual": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "access_alert",
+        "action": "review_access_alert"
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "access_alert",
+        "action": "review_access_alert"
+      }
+    },
+    {
+      "vertical": "store_security",
+      "workload": "full_context",
+      "id": "retail-late-veto",
+      "tokens": 131072,
+      "expected": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "camera_alert",
+        "action": null
+      },
+      "actual": {
+        "answers": {
+          "may_route": false
+        },
+        "category": "camera_alert",
+        "action": null
+      },
+      "ungated": {
+        "answers": {
+          "may_route": true
+        },
+        "category": "camera_alert",
+        "action": "review_camera_alert"
+      }
+    }
+  ],
+  "verified_assignments_by_bank": {
+    "dealership": 128,
+    "manufacturing": 128,
+    "store_security": 128
+  },
+  "backend": "MYRIAD",
+  "physical_usb_preflight": {
+    "stick": "ncs1",
+    "boot_usb_id": "03E7:2150"
+  },
+  "runtime": "2.1.2020.3.2-3506-c35b42b1d89-releases/2020/3",
+  "onnx_sha256": "9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5",
+  "scenario_sha256": "6968e61c30c05244e6566836744f1c8fba6fbb91627430daeeb7f0d6e9b1d4b9",
+  "manifest_sha256": "d6456efe29b4ad80214c667d8d213f372464ef8afe6abc49b1db0df7a33ba0ec",
+  "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+  "evidence_type": "hand-authored simulation",
+  "native_blob_sha256": "812c8f393db056c68cbca7f42fe7ac72ec9570d18f4e15f8e6eac2460ca04e46"
+}

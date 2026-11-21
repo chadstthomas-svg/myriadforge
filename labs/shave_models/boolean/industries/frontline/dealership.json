@@ -1,0 +1,20 @@
+{
+  "name": "dealership",
+  "rules": {
+    "service": "\"service requested\" OR \"maintenance enquiry\"",
+    "inspection": "\"inspection requested\" OR \"inspection referral\"",
+    "intake": "@service OR @inspection",
+    "ready": "@intake AND \"intake approved\" AND NOT (\"do not queue\" OR \"customer declined\")"
+  },
+  "answers": {"may_route": "@ready"},
+  "categories": {
+    "combined_intake": "@service AND @inspection",
+    "service": "@service",
+    "inspection": "@inspection"
+  },
+  "actions": {
+    "review_combined_intake": "@ready AND @service AND @inspection",
+    "review_service_intake": "@ready AND @service",
+    "review_inspection_intake": "@ready AND @inspection"
+  }
+}

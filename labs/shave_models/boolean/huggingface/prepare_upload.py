@@ -18,6 +18,13 @@ ARTIFACTS = (
     "industries/README.md", "industries/adaptive.json", "industries/logistics.json", "industries/policies.json",
     "industries/scenarios.json", "industries/bundle/model.json", "industries/bundle/model.onnx",
     "industries/bundle/ncs1-native.blob",
+    "industries/frontline/README.md", "industries/frontline/adaptive.json", "industries/frontline/policies.json",
+    "industries/frontline/dealership.json", "industries/frontline/manufacturing.json",
+    "industries/frontline/store-security.json", "industries/frontline/scenarios.json",
+    "industries/frontline/bundle/model.json", "industries/frontline/bundle/model.onnx",
+    "industries/frontline/bundle/ncs1-native.blob",
+    "measurements/industry-simulation-frontline-cpu.json", "measurements/industry-simulation-frontline-ncs1.json",
+    "measurements/portable-cpu-comparison.json", "measurements/soak-compact-30m-ncs1.json",
     "measurements/release-vector-ncs1.json", "measurements/release-stream-ncs1.json",
     "measurements/ncs1-cpu-comparison.json", "measurements/two-banks-ncs1.json",
     "measurements/compare-compiled-table-cpu.json", "measurements/compare-openvino-2020-cpu.json",
@@ -29,7 +36,8 @@ ARTIFACTS = (
 )
 CARD_FILES = ("README.md", "assets/workbench.webp", "assets/workbench-motion.webp", "assets/workbench-motion.gif",
               "assets/relay-decisions.webp", "assets/relay-decisions-still.webp", "size-chart-data.json",
-              "assets/size-native-ncs1.webp", "assets/size-portable-cpu.webp", "assets/size-published-models.webp")
+              "assets/size-native-ncs1.webp", "assets/size-portable-cpu.webp", "assets/size-published-models.webp",
+              "assets/runtime-comparison.webp")
 NOTICE = """MagicEightBall
 MyriadForge source and policy are distributed under the MIT License.
 

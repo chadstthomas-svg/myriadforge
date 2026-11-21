@@ -78,7 +78,7 @@ tags:
 
 ![Eight, a black billiards 8-ball, and Relay, a floating chip, light routes across their workbench.](./assets/{hero})
 
-MagicEightBall evaluates a fixed support policy and returns a Boolean answer, a category, and a proposed action. This private CPU preview accepts up to **131,072 Needle 3 tokens** through its included runtime. The [{format_title} model](./{model}) is **{size:,} bytes**. The shared tokenizer, runner, and artwork have separate sizes.
+MagicEightBall evaluates a fixed support policy and returns a Boolean answer, a category, and a proposed action. The included CPU runner accepts up to **131,072 Needle 3 tokens**. The [{format_title} model](./{model}) is **{size:,} bytes**. The shared tokenizer, runner, and artwork have separate sizes.
 
 {summary}
 
@@ -95,7 +95,7 @@ python portable_runtime.py {model} --text "Duplicate charge. Review authorized."
 
 Expect `may_route=true`, `category=billing`, and `action=review_billing`. Try appending `Do not route.` to the same input. The answer becomes false and the action becomes empty. The category remains `billing`. An unrelated request has no category or action.
 
-The model finds the policy's declared phrases. The caller receives the proposed action as data for review. For physical Intel NCS1 execution and industry starter packs, use the native model page. [Native NCS1 and industry packs]({FAMILY}) · {neighbors}{still_link}
+The model finds the policy's declared phrases. The caller receives the proposed action as data for review. [Measured CPU and NCS1 runtimes]({FAMILY}#runtime-comparison) For physical Intel NCS1 execution and industry starter packs, use the native model page. [Native NCS1 and industry packs]({FAMILY}) · {neighbors}{still_link}
 
 {size_chart}## License
 

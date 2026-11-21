@@ -2,6 +2,8 @@
 
 MagicEightBall is an Intel Neural Compute Stick decision model. It accepts one UTF-8 document of up to **131,072 Needle 3 tokens** and returns a yes/no answer, a category and an optional proposed action. It runs the decision lookup on the VPU in one request. The host counts tokens, extracts literal evidence and decodes the result. The proposed action is returned as data. The model identifier is `magiceightball`.
 
+[NCS1 release guide](RELEASE-NCS1.md) · [Frontline starter packs](industries/frontline/README.md) · [Hugging Face model family](https://huggingface.co/chadstthomas/MagicEightBall)
+
 ## Edit the policy
 
 [`support.json`](support.json) combines evidence in successive named rules. JSON-quoted phrases are evidence predicates. A reference such as `@billing` uses an earlier rule. Operators bind in the order `NOT`, `AND`, `OR`. Parentheses override that order. The first matching category and action win in their respective groups. Each named answer returns a Boolean. Absent categories and actions return `null`.
@@ -17,7 +19,7 @@ Evidence may occur anywhere in the document. A phrase matches adjacent lexemes a
 
 ## Model size and latency
 
-The portable CPU exports provide a 192-byte ONNX radix Gather, a 1,832-byte FP32 dense reference, and a 1,024-byte GGUF profile with a 128-byte decision table. All three use the pinned Needle tokenizer and the support policy. The GGUF profile uses the included `magiceightball` reader. Run `export_portable.py <output> --corpus <pinned-corpus>` with NumPy, SentencePiece, ONNX Runtime, and the `gguf` package to build and verify the three bundles. Run `portable_runtime.py <artifact> --text <document>` from a bundle. These exports use the CPU. The NCS1 release uses its native archive.
+The portable CPU exports provide a 192-byte ONNX radix Gather, a 1,832-byte FP32 dense reference, and a 1,024-byte GGUF profile with a 128-byte decision table. All three use the pinned Needle tokenizer and the support policy. The GGUF profile uses the included `magiceightball` reader. Run `export_portable.py <output> --corpus <pinned-corpus>` with NumPy, SentencePiece, ONNX Runtime, and the `gguf` package to build and verify the three bundles. Run `portable_runtime.py <artifact> --text <document>` from a bundle. These exports use the CPU. The NCS1 release uses its native archive. [CPU command examples and matched benchmark](portable_comparison/README.md)
 
 The support policy has seven phrase predicates and seven reachable output vectors. The compiler numbers the output vectors with three-bit codes. Four codes fit in an exactly representable signed FP16 integer in `[-2048, 2047]`. The host uses five raw evidence bits to address a row and two bits to decode the selected word. In the smallest build, one VPU `Gather` reads that word from 32 resident coefficients using one INT32 index. The codebook maps result codes to the Boolean answer, category and action.
 
