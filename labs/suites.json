@@ -36,8 +36,8 @@
       "capability": "voice -> ordered typed tool calls (acoustic Needle)",
       "reference": "Whistle -> Needle 3",
       "artifact": "multi-head conv on [1,1,40,200] windows, 6 heads",
-      "status": "trained-v6-librispeech-sealed-evaluated",
-      "evidence": "v6 adds 2,703 LibriSpeech dev-clean real-speaker clips (CC BY 4.0) as all-none windows (4,827 total negatives): SEALED 11.40% false on MYRIAD (best; 16.9 -> 11.88 -> 11.40 across iterations), diagnostic exact 77.6% + false 2.7% (both improved together - real-speaker data is the productive lever). Gates 90/1 remain FAIL = data-scale; p95 20.2 ms PASS. Shipped bundle: v6.",
+      "status": "trained-v6-shipped-sealed-evaluated",
+      "evidence": "SHIPPED: v6 (vad + OOD + LibriSpeech dev-clean 2,703 real-speaker negatives). v7 capacity/dilution FALSIFIED: 5x more LibriSpeech-100 negatives (9,827 total) measured WORSE everywhere (sealed 11.88% vs 11.40%, diagnostic 74.0%/8.1% vs 77.6%/2.7%) - negative:positive BALANCE has an optimum, more volume dilutes. v6 restored (deterministic repro). Best numbers: sealed 11.40% false, diagnostic 77.6% exact / 2.7% false, p95 20.2 ms. Remaining lever: positive oversampling / two-stage reject head / more POSITIVE utterance diversity",
       "gates": ">=90% exact, <=1% false, p95<=300ms, >=300 held-out negatives",
       "lanes": {
         "ncs1": "measured",
