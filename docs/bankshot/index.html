@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#19111b">
+<title>BankShot Search · Rack Lab</title>
+<link rel="icon" href="../assets/rack-lab-avatar.png" type="image/png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="./preview.css">
+<script defer src="./preview.js"></script>
+</head>
+<body>
+<header class="wrap masthead lab-head">
+  <a class="brand" href="../index.html"><img src="../assets/rack-lab-avatar.png" alt="" width="32" height="32">The Break Room</a>
+  <nav aria-label="Model links"><a href="./field-notes/index.html">Field Notes</a><a href="https://huggingface.co/racklab/BankShot-Search">Model package</a></nav>
+</header>
+<main class="wrap">
+  <section class="bank-hero" aria-labelledby="title">
+    <div><p class="label">Research preview · v0.1.0</p><h1 id="title">BankShot Search</h1><p>Find recall, workplace safety, and recorder references from a short note.</p>
+    <div class="hero-links"><a href="#search">Try a search</a><a href="./field-notes/index.html">Watch Field Notes</a></div></div>
+  </section>
+  <section class="search-panel" id="search" aria-labelledby="search-title">
+    <form id="search-form">
+      <h2 id="search-title">Live browser search</h2>
+      <label for="example">Labeled example</label><select id="example"><option value="">Write a custom note</option></select>
+      <label for="domain">Catalog</label>
+      <select id="domain"><option value="manufacturing">Manufacturing safety</option><option value="dealership">Dealership recalls</option><option value="store_security">Store security</option></select>
+      <fieldset id="vehicle" hidden><legend>Vehicle details (optional)</legend>
+        <input id="year" aria-label="Year" type="number" min="1900" max="2100" placeholder="Year">
+        <input id="make" aria-label="Make" maxlength="80" placeholder="Make">
+        <input id="model" aria-label="Model" maxlength="80" placeholder="Model">
+      </fieldset>
+      <label for="query">Case note</label>
+      <textarea id="query" maxlength="4096" rows="4" placeholder="Describe what happened or enter a reference number."></textarea>
+      <button type="submit" id="submit">Search references</button>
+    </form>
+    <div class="results" aria-live="polite" aria-atomic="false">
+      <h2>Ranked references</h2>
+      <p id="expectation" hidden></p>
+      <p>BankShot’s learned scorer and lexical fusion run in your browser. Field Notes uses the full local rerankers.</p><p id="status" role="status">Choose an example or type a note.</p>
+      <ol id="results"></ol>
+    </div>
+  </section>
+  <section class="demo-evidence" aria-label="Measured examples">
+    <div><h2>Physical NCS1 replay</h2><p>Five labeled examples with footage cues, expected references, and recorded device rankings.</p></div>
+    <a href="./field-notes/index.html">Open Field Notes</a>
+    <a href="../workflows/index.html">Browse industry retrieval examples</a>
+  </section>
+</main>
+</body>
+</html>

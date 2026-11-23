@@ -1,0 +1,30 @@
+.lab-head .brand img {border-radius:50%}
+.lab-head nav {display:flex;gap:20px;flex-wrap:wrap;justify-content:flex-end}
+.bank-hero {border:1px solid #506451;min-height:350px;border-radius:22px;display:flex;align-items:flex-end;background:linear-gradient(90deg,#19151e 46%,#19151ec0 54%,transparent 73%),url('../assets/models/bankshot-search/hero.png') center/cover}
+.bank-hero>div {padding:clamp(20px,5vw,64px);max-width:650px}
+h1 {font-size:clamp(46px,7vw,92px);line-height:.95;letter-spacing:-.075em;margin:12px 0 16px}
+h2 {margin:0 0 14px;line-height:1.12;letter-spacing:-.04em}
+p {line-height:1.55}
+.label,.results a {color:var(--mint)}
+.hero-links {display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:20px}
+.hero-links a,.demo-evidence a {color:var(--mint);text-decoration:underline;text-underline-offset:4px}
+.search-panel {display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1fr);gap:14px;margin:22px 0 18px}
+form,.results,.demo-evidence {border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:clamp(16px,3vw,26px)}
+form label {display:block;margin:12px 0 5px;font-size:.88rem;font-weight:650}
+form :is(select,textarea,input) {width:100%;padding:9px;border:1px solid #5f4e59;border-radius:8px;background:#181219;color:var(--ink);font:inherit}
+form textarea {resize:vertical}
+form button {display:block;margin-top:12px;padding:10px 15px;border:0;border-radius:8px;background:var(--mint);color:#11251a;font-weight:750}
+form button:disabled {opacity:.65}
+fieldset {border:0;padding:0;margin:12px 0 0;display:grid;grid-template-columns:1fr 1.35fr 1.35fr;gap:6px}
+fieldset[hidden],p[hidden] {display:none}
+legend {margin-bottom:5px}
+.results li {padding:7px 0;overflow-wrap:anywhere}
+.results li+li {border-top:1px solid var(--line)}
+.results li[data-target] {font-weight:750;color:var(--mint)}
+#expectation {color:var(--gold)}
+.demo-evidence {margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.demo-evidence p {margin:0}
+.embed .bank-hero,.embed .lab-head,.embed .demo-evidence {display:none}
+.embed .wrap {width:calc(100% - 18px)}
+.embed .search-panel {margin:9px 0}
+@media(max-width:720px){.search-panel{grid-template-columns:1fr}.bank-hero{min-height:320px;background-position:right center}.lab-head nav{gap:8px 12px}.lab-head .brand{white-space:nowrap}}

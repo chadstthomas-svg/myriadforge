@@ -129,7 +129,8 @@ fall back to the host CPU automatically — a graph pure MYRIAD rejects runs on
 - [docs/NCS1_ROADMAP.md](docs/NCS1_ROADMAP.md) — the Myriad 2 revival: hardware reality,
   bring-up gotchas, measured envelope, throughput shim, what fits/doesn't.
 - [docs/NCS2_ROADMAP.md](docs/NCS2_ROADMAP.md) — the Myriad X lane (workstreams WS0–WS6).
-- [Project site](https://chadstthomas-svg.github.io/myriadforge/) — the dynamic GitHub Pages site.
+- [Rack Lab Break Room](https://chadstthomas-svg.github.io/myriadforge/) — the model lineup, live demos, and industry examples.
+- [MyriadForge hardware site](https://chadstthomas-svg.github.io/myriadforge/hardware/) — architecture, benchmarks, and stick setup.
 
 ## Development
 

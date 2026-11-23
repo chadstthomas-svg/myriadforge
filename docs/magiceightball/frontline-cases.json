@@ -1,0 +1,236 @@
+[
+  {
+    "id": "dealership-service-intake",
+    "title": "Dealership • approved service intake",
+    "text": "Service desk ticket: service requested for the vehicle. Intake approved by the advisor.",
+    "expected": {
+      "answers": {
+        "may_route": true
+      },
+      "category": "service",
+      "action": "review_service_intake"
+    },
+    "cpu": {
+      "answers": {
+        "may_route": true
+      },
+      "category": "service",
+      "action": "review_service_intake"
+    },
+    "ncs1": {
+      "answers": {
+        "may_route": true
+      },
+      "category": "service",
+      "action": "review_service_intake"
+    }
+  },
+  {
+    "id": "dealership-missing-approval",
+    "title": "Dealership • approval pending",
+    "text": "Maintenance enquiry logged. The advisor decision is pending.",
+    "expected": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "service",
+      "action": null
+    },
+    "cpu": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "service",
+      "action": null
+    },
+    "ncs1": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "service",
+      "action": null
+    }
+  },
+  {
+    "id": "dealership-customer-withdrew",
+    "title": "Dealership • customer withdrew",
+    "text": "Inspection referral. Intake approved earlier. Customer declined this morning.",
+    "expected": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "inspection",
+      "action": null
+    },
+    "cpu": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "inspection",
+      "action": null
+    },
+    "ncs1": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "inspection",
+      "action": null
+    }
+  },
+  {
+    "id": "manufacturing-vibration",
+    "title": "Manufacturing • approved vibration alert",
+    "text": "Condition monitor reported a vibration alert. Maintenance review approved during shift handover.",
+    "expected": {
+      "answers": {
+        "may_route": true
+      },
+      "category": "mechanical",
+      "action": "review_mechanical_alert"
+    },
+    "cpu": {
+      "answers": {
+        "may_route": true
+      },
+      "category": "mechanical",
+      "action": "review_mechanical_alert"
+    },
+    "ncs1": {
+      "answers": {
+        "may_route": true
+      },
+      "category": "mechanical",
+      "action": "review_mechanical_alert"
+    }
+  },
+  {
+    "id": "manufacturing-work-order-blocked",
+    "title": "Manufacturing • blocked work order",
+    "text": "Lubrication low. Maintenance review approved before the isolation check. Work order blocked by the shift lead.",
+    "expected": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "service",
+      "action": null
+    },
+    "cpu": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "service",
+      "action": null
+    },
+    "ncs1": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "service",
+      "action": null
+    }
+  },
+  {
+    "id": "manufacturing-boundary-guard",
+    "title": "Manufacturing • no configured alert",
+    "text": "No configured condition alert. The training glossary mentions a bearing overheated test label. Maintenance review approved for training.",
+    "expected": {
+      "answers": {
+        "may_route": false
+      },
+      "category": null,
+      "action": null
+    },
+    "cpu": {
+      "answers": {
+        "may_route": false
+      },
+      "category": null,
+      "action": null
+    },
+    "ncs1": {
+      "answers": {
+        "may_route": false
+      },
+      "category": null,
+      "action": null
+    }
+  },
+  {
+    "id": "retail-camera-event",
+    "title": "Store security • approved camera alert",
+    "text": "Camera offline at the receiving zone. Security review approved for the equipment alert.",
+    "expected": {
+      "answers": {
+        "may_route": true
+      },
+      "category": "camera_alert",
+      "action": "review_camera_alert"
+    },
+    "cpu": {
+      "answers": {
+        "may_route": true
+      },
+      "category": "camera_alert",
+      "action": "review_camera_alert"
+    },
+    "ncs1": {
+      "answers": {
+        "may_route": true
+      },
+      "category": "camera_alert",
+      "action": "review_camera_alert"
+    }
+  },
+  {
+    "id": "retail-drill-hold",
+    "title": "Store security • drill in progress",
+    "text": "Door forced training event. Security review approved earlier. Drill active at this store.",
+    "expected": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "access_alert",
+      "action": null
+    },
+    "cpu": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "access_alert",
+      "action": null
+    },
+    "ncs1": {
+      "answers": {
+        "may_route": false
+      },
+      "category": "access_alert",
+      "action": null
+    }
+  },
+  {
+    "id": "retail-boundary-guard",
+    "title": "Store security • unrelated equipment check",
+    "text": "Routine equipment check. A camera offliner demo label appears on the dashboard. Security review approved for the check.",
+    "expected": {
+      "answers": {
+        "may_route": false
+      },
+      "category": null,
+      "action": null
+    },
+    "cpu": {
+      "answers": {
+        "may_route": false
+      },
+      "category": null,
+      "action": null
+    },
+    "ncs1": {
+      "answers": {
+        "may_route": false
+      },
+      "category": null,
+      "action": null
+    }
+  }
+]

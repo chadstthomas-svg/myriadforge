@@ -1,520 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MyriadForge — reviving the Intel Neural Compute Stick</title>
-<meta name="description" content="Reviving the Intel Neural Compute Stick (Movidius Myriad 2): a dual-backend OpenVINO shim, async-pipelined throughput, and 2026 edge-AI apps on discontinued silicon." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b7cf6'/%3E%3Cstop offset='.5' stop-color='%232bbd8e'/%3E%3Cstop offset='1' stop-color='%23f472b6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3C/svg%3E" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-<style>
-  :root{
-    --bg:#f6f4ff; --bg2:#eefbf4;
-    --ink:#37324f; --muted:#6c6685; --faint:#9a93b3;
-    --lav:#c4b5fd; --mint:#a7f3d0; --pink:#fbcfe8; --peach:#fde68a; --sky:#bae6fd;
-    --accent:#8b7cf6; --accent2:#2bbd8e; --accent3:#f472b6;
-    --card:rgba(255,255,255,.62); --card-brd:rgba(255,255,255,.85);
-    --shadow:0 20px 60px -20px rgba(90,70,160,.28);
-    --r:22px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Inter',system-ui,-apple-system,sans-serif;
-    color:var(--ink); background:var(--bg); line-height:1.6;
-    overflow-x:hidden; -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3,.display{font-family:'Space Grotesk','Inter',sans-serif;line-height:1.1}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-
-  /* ---- floating soft blobs ---- */
-  .blobs{position:fixed;inset:0;z-index:-1;overflow:hidden;
-    background:linear-gradient(160deg,var(--bg) 0%,var(--bg2) 55%,#fdf2f8 100%)}
-  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;
-    will-change:transform;animation:float 22s ease-in-out infinite}
-  .b1{width:520px;height:520px;background:var(--lav);top:-140px;left:-120px}
-  .b2{width:460px;height:460px;background:var(--mint);top:18%;right:-140px;animation-delay:-6s}
-  .b3{width:420px;height:420px;background:var(--pink);bottom:-120px;left:22%;animation-delay:-12s}
-  .b4{width:360px;height:360px;background:var(--peach);top:46%;left:40%;opacity:.4;animation-delay:-3s}
-  .b5{width:300px;height:300px;background:var(--sky);bottom:8%;right:14%;opacity:.45;animation-delay:-9s}
-  @keyframes float{
-    0%,100%{transform:translate(0,0) scale(1)}
-    33%{transform:translate(40px,-30px) scale(1.08)}
-    66%{transform:translate(-30px,25px) scale(.95)}
-  }
-
-  /* ---- nav ---- */
-  nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
-    background:rgba(246,244,255,.7);border-bottom:1px solid rgba(255,255,255,.6)}
-  .nav-in{display:flex;align-items:center;justify-content:space-between;height:66px}
-  .logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:1.18rem}
-  .logo .dot{width:26px;height:26px;border-radius:8px;
-    background:conic-gradient(from 210deg,var(--accent),var(--accent2),var(--accent3),var(--accent));
-    box-shadow:0 4px 14px -2px rgba(139,124,246,.6)}
-  .nav-links{display:flex;gap:26px;align-items:center;font-size:.93rem;font-weight:500;color:var(--muted)}
-  .nav-links a:hover{color:var(--accent)}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;
-    font-weight:600;font-size:.93rem;transition:.25s;border:1px solid transparent;cursor:pointer}
-  .btn-primary{background:linear-gradient(120deg,var(--accent),#a78bfa);color:#fff;
-    box-shadow:0 12px 28px -10px rgba(139,124,246,.7)}
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px -10px rgba(139,124,246,.8)}
-  .btn-ghost{background:var(--card);border-color:var(--card-brd);color:var(--ink);backdrop-filter:blur(8px)}
-  .btn-ghost:hover{transform:translateY(-2px);border-color:var(--accent)}
-
-  /* ---- hero ---- */
-  header{padding:90px 0 40px;text-align:center}
-  .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;
-    background:var(--card);border:1px solid var(--card-brd);backdrop-filter:blur(8px);
-    font-size:.82rem;font-weight:600;color:var(--muted);box-shadow:var(--shadow)}
-  .pill .live{width:8px;height:8px;border-radius:50%;background:var(--accent2);
-    box-shadow:0 0 0 0 rgba(43,189,142,.6);animation:pulse 2.4s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(43,189,142,.5)}70%{box-shadow:0 0 0 10px rgba(43,189,142,0)}100%{box-shadow:0 0 0 0 rgba(43,189,142,0)}}
-  h1{font-size:clamp(2.8rem,7vw,5rem);font-weight:700;letter-spacing:-.03em;margin:26px 0 18px}
-  h1 .grad{background:linear-gradient(115deg,var(--accent) 10%,var(--accent3) 50%,var(--accent2) 90%);
-    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .lede{font-size:clamp(1.05rem,2.2vw,1.3rem);color:var(--muted);max-width:660px;margin:0 auto 32px}
-  .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-
-  /* ---- stat strip ---- */
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:64px 0 0}
-  .stat{background:var(--card);border:1px solid var(--card-brd);border-radius:var(--r);
-    padding:26px 20px;backdrop-filter:blur(12px);box-shadow:var(--shadow);text-align:center}
-  .stat .num{font-family:'Space Grotesk';font-size:2.3rem;font-weight:700;letter-spacing:-.02em;
-    background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .stat .lbl{font-size:.84rem;color:var(--muted);font-weight:500;margin-top:6px}
-  .stat .sub{font-size:.74rem;color:var(--faint);margin-top:2px}
-
-  /* ---- sections ---- */
-  section{padding:78px 0}
-  .eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
-  h2{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:700;letter-spacing:-.02em;margin:12px 0 16px}
-  .sec-lede{color:var(--muted);max-width:620px;font-size:1.06rem}
-
-  /* ---- device showcase ---- */
-  .showcase{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
-  .stick-card{background:var(--card);border:1px solid var(--card-brd);border-radius:28px;
-    padding:40px;backdrop-filter:blur(14px);box-shadow:var(--shadow);display:flex;justify-content:center}
-  .stick-svg{width:100%;max-width:340px;filter:drop-shadow(0 24px 40px rgba(90,70,160,.25))}
-  .spec-list{list-style:none;margin-top:24px;display:grid;gap:14px}
-  .spec-list li{display:flex;gap:14px;align-items:flex-start;background:var(--card);
-    border:1px solid var(--card-brd);border-radius:16px;padding:16px 18px;backdrop-filter:blur(8px)}
-  .spec-list .ic{flex:0 0 38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:1.1rem;
-    background:linear-gradient(135deg,var(--lav),var(--mint))}
-  .spec-list b{display:block;font-family:'Space Grotesk';font-size:1rem}
-  .spec-list span{font-size:.88rem;color:var(--muted)}
-
-  /* ---- architecture ---- */
-  .layers{display:grid;gap:14px;margin-top:36px;max-width:760px}
-  .layer{display:flex;align-items:center;gap:20px;padding:20px 24px;border-radius:18px;
-    border:1px solid var(--card-brd);backdrop-filter:blur(10px);box-shadow:var(--shadow);transition:.3s}
-  .layer:hover{transform:translateX(8px)}
-  .layer .tag{flex:0 0 130px;font-family:'Space Grotesk';font-weight:600;font-size:.95rem}
-  .layer .desc{color:var(--muted);font-size:.92rem}
-  .l1{background:linear-gradient(120deg,rgba(196,181,253,.4),rgba(255,255,255,.5))}
-  .l2{background:linear-gradient(120deg,rgba(167,243,208,.4),rgba(255,255,255,.5))}
-  .l3{background:linear-gradient(120deg,rgba(251,207,232,.35),rgba(255,255,255,.5))}
-  .l4{background:linear-gradient(120deg,rgba(253,230,138,.35),rgba(255,255,255,.5))}
-  .layer .lock{margin-left:auto;font-size:.78rem;color:var(--faint);font-weight:600}
-
-  /* ---- apps grid ---- */
-  .apps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
-  .app{background:var(--card);border:1px solid var(--card-brd);border-radius:var(--r);
-    padding:28px;backdrop-filter:blur(12px);box-shadow:var(--shadow);transition:.3s;position:relative;overflow:hidden}
-  .app:hover{transform:translateY(-6px)}
-  .app::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;
-    background:linear-gradient(90deg,var(--accent),var(--accent2))}
-  .app .emoji{font-size:1.7rem}
-  .app h3{font-size:1.18rem;margin:14px 0 8px}
-  .app code{font-size:.78rem;color:var(--accent);background:rgba(139,124,246,.1);padding:2px 8px;border-radius:6px}
-  .app p{color:var(--muted);font-size:.92rem;margin-top:10px}
-
-  /* ---- code ---- */
-  .code-card{background:#2e2a44;border-radius:var(--r);padding:28px 30px;margin-top:34px;
-    box-shadow:var(--shadow);overflow-x:auto}
-  .code-card pre{font-family:'SF Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
-    font-size:.86rem;line-height:1.75;color:#e6e1f5}
-  .code-card .c{color:#8b84a8}
-  .code-card .k{color:#a7f3d0}
-  .code-card .s{color:#fbcfe8}
-  .code-head{display:flex;gap:8px;margin-bottom:18px}
-  .code-head i{width:12px;height:12px;border-radius:50%;display:block}
-  .code-head i:nth-child(1){background:#fbcfe8}.code-head i:nth-child(2){background:#fde68a}.code-head i:nth-child(3){background:#a7f3d0}
-
-  /* ---- callout ---- */
-  .callout{background:linear-gradient(120deg,rgba(196,181,253,.35),rgba(167,243,208,.3));
-    border:1px solid var(--card-brd);border-radius:var(--r);padding:30px 34px;margin-top:34px;backdrop-filter:blur(10px)}
-  .callout b{font-family:'Space Grotesk'}
-  .callout p{color:var(--muted);margin-top:8px}
-
-  /* ---- measured ceiling bars ---- */
-  .bars{margin-top:34px;display:grid;gap:16px;max-width:720px}
-  .bar-row{display:grid;grid-template-columns:210px 1fr 92px;gap:14px;align-items:center}
-  .bar-row .bl{font-family:'Space Grotesk';font-size:.95rem;font-weight:600;text-align:right}
-  .bar-track{height:26px;border-radius:999px;background:rgba(255,255,255,.55);
-    border:1px solid var(--card-brd);overflow:hidden}
-  .bar-fill{height:100%;width:0;border-radius:999px;transition:width 1.3s cubic-bezier(.2,.7,.2,1);
-    background:linear-gradient(90deg,var(--accent),var(--accent2))}
-  .bar-fill.mv2{background:linear-gradient(90deg,var(--accent3),#c084fc)}
-  .bar-fill.fc{background:linear-gradient(90deg,#fbbf24,#fb923c)}
-  .bar-row .bv{font-family:'Space Grotesk';font-weight:700;font-size:1rem;color:var(--ink)}
-  .bar-note{font-size:.78rem;color:var(--faint);margin-top:10px}
-  body.js .bars .bar-fill{width:0}
-  body.js .bars.in .bar-fill{width:var(--w)}
-  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
-  .chip{padding:9px 16px;border-radius:999px;font-size:.85rem;font-weight:600;
-    background:var(--card);border:1px solid var(--card-brd);backdrop-filter:blur(8px)}
-  .chip b{font-family:'Space Grotesk'}
-  .chip.ok{border-color:rgba(43,189,142,.5);color:#1f8f6b}
-  .chip.re{border-color:rgba(244,114,182,.5);color:#c0508f}
-  .chip.mo{border-color:rgba(148,163,184,.6);color:#64748b}
-  .chip.pe{border-color:rgba(251,191,36,.6);color:#b45309}
-
-  /* ---- footer ---- */
-  footer{padding:50px 0;border-top:1px solid rgba(255,255,255,.7);text-align:center;color:var(--muted);font-size:.9rem}
-  footer .logo{justify-content:center;margin-bottom:14px}
-  footer a{color:var(--accent);font-weight:600}
-
-  /* ---- reveal (progressive enhancement: visible without JS) ---- */
-  body.js .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
-  body.js .reveal.in{opacity:1;transform:none}
-  @media (prefers-reduced-motion: reduce){
-    body.js .reveal{opacity:1;transform:none;transition:none}
-    .blob{animation:none}
-  }
-
-  @media(max-width:860px){
-    .stats{grid-template-columns:repeat(2,1fr)}
-    .showcase{grid-template-columns:1fr}
-    .apps{grid-template-columns:1fr}
-    .nav-links a:not(.btn){display:none}
-    .layer{flex-wrap:wrap}.layer .tag{flex-basis:100%}
-  }
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#19111b">
+<meta name="description" content="Try Rack Lab's edge models, explore measured industry workflows, and see the results from Intel NCS1 and CPU runtimes.">
+<title>The Break Room · Rack Lab</title>
+<link rel="icon" href="./assets/rack-lab-avatar.png" type="image/png">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./group.css">
+<script defer src="./group.js"></script>
 </head>
 <body>
-<div class="blobs" aria-hidden="true">
-  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-  <div class="blob b4"></div><div class="blob b5"></div>
-</div>
-
-<nav>
-  <div class="wrap nav-in">
-    <a class="logo" href="#top"><span class="dot"></span>MyriadForge</a>
-    <div class="nav-links">
-      <a href="#device">Device</a>
-      <a href="#architecture">Shim</a>
-      <a href="#apps">Apps</a>
-      <a href="#quickstart">Quickstart</a>
-      <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/RESEARCH_MYRIAD2_LIMITS_AND_MIRAGE.md" target="_blank" rel="noopener">Research</a>
-      <a class="btn btn-ghost" href="https://github.com/chadstthomas-svg/myriadforge" target="_blank" rel="noopener">GitHub ↗</a>
-    </div>
-  </div>
-</nav>
-
-<header id="top">
-  <div class="wrap">
-    <span class="pill"><span class="live"></span> Open source · MIT · running on real silicon</span>
-    <h1>Forging new life into<br><span class="grad">discontinued silicon</span></h1>
-    <p class="lede">MyriadForge revives the <b>Intel Neural Compute Stick (Movidius&nbsp;Myriad&nbsp;2)</b>
-      as a modern edge accelerator — a dual-backend OpenVINO shim, async-pipelined throughput,
-      and five real AI apps, all on the actual stick.</p>
-    <div class="cta">
-      <a class="btn btn-primary" href="#quickstart">Get started →</a>
-      <a class="btn btn-ghost" href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/NCS1_ROADMAP.md" target="_blank" rel="noopener">Read the engineering story</a>
-    </div>
-
-    <div class="stats">
-      <div class="stat reveal"><div class="num"><span data-count="48" data-prefix="+" data-suffix="%">+0%</span></div>
-        <div class="lbl">throughput gain</div><div class="sub">async pipelining vs sync</div></div>
-      <div class="stat reveal"><div class="num"><span data-count="23.2" data-dec="1">0</span></div>
-        <div class="lbl">inferences / sec</div><div class="sub">MobileNetV2 gate on-stick</div></div>
-      <div class="stat reveal"><div class="num"><span data-count="285">0</span></div>
-        <div class="lbl">kNN queries / sec</div><div class="sub">10k×256 vector table</div></div>
-      <div class="stat reveal"><div class="num"><span data-count="68">0</span></div>
-        <div class="lbl">ops mapped on silicon</div><div class="sub">42 supported · 7 firmware-rejected</div></div>
-    </div>
-  </div>
+<header class="wrap masthead rack-header">
+  <a class="brand" href="./index.html"><img src="./assets/rack-lab-avatar.png" alt="" width="35" height="35">Rack Lab</a>
+  <nav aria-label="Main"><a href="#models">Models</a><a href="#live">Live search</a><a href="./workflows/index.html">Industry examples</a><a href="./hardware/index.html">Hardware</a></nav>
 </header>
-
-<section id="device">
-  <div class="wrap showcase">
-    <div class="reveal">
-      <div class="stick-card">
-        <svg class="stick-svg" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#ede9fe"/><stop offset="1" stop-color="#dbeafe"/>
-            </linearGradient>
-            <linearGradient id="chip" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#8b7cf6"/><stop offset="1" stop-color="#2bbd8e"/>
-            </linearGradient>
-          </defs>
-          <rect x="70" y="55" width="180" height="90" rx="18" fill="url(#body)" stroke="#c4b5fd" stroke-width="2"/>
-          <rect x="38" y="78" width="40" height="44" rx="6" fill="#cbd5e1"/>
-          <rect x="44" y="86" width="28" height="28" rx="3" fill="#94a3b8"/>
-          <rect x="120" y="78" width="80" height="44" rx="10" fill="url(#chip)"/>
-          <text x="160" y="105" font-family="Space Grotesk,sans-serif" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">MA2450</text>
-          <circle cx="232" cy="100" r="6" fill="#2bbd8e"><animate attributeName="opacity" values="1;.3;1" dur="2s" repeatCount="indefinite"/></circle>
-          <g stroke="#c4b5fd" stroke-width="2" opacity=".7">
-            <line x1="120" y1="128" x2="120" y2="140"/><line x1="140" y1="128" x2="140" y2="140"/>
-            <line x1="160" y1="128" x2="160" y2="140"/><line x1="180" y1="128" x2="180" y2="140"/>
-          </g>
-          <text x="160" y="172" font-family="Inter,sans-serif" font-size="12" fill="#6c6685" text-anchor="middle">Intel Neural Compute Stick · Myriad 2</text>
-        </svg>
-      </div>
+<main class="wrap">
+  <section class="lineup" aria-labelledby="title">
+    <h1 id="title">The Break Room</h1>
+    <p>Compact edge models for decisions, retrieval, speech, and streaming.</p>
+    <picture><source media="(prefers-reduced-motion: no-preference)" srcset="./assets/lineup-motion.webp"><img src="./assets/lineup.png" width="1914" height="822" alt="Five pool-ball characters gather around the Rack Lab workbench" fetchpriority="high"></picture>
+  </section>
+  <section class="launch" id="live" aria-labelledby="live-title">
+    <div class="launch-copy">
+      <div><p class="label">Research preview</p><h2 id="live-title">BankShot Search</h2><p>Look up recalls, safety standards, and recorder guides from a short note. Choose a labeled example or write your own.</p></div>
+      <div class="actions"><a href="./bankshot/index.html">Open live search</a><a href="./bankshot/field-notes/index.html">Physical NCS1 Field Notes</a><a href="https://huggingface.co/racklab/BankShot-Search">Model package</a></div>
     </div>
-    <div class="reveal">
-      <span class="eyebrow">The device</span>
-      <h2>A 12-core vector DSP, rescued from the drawer</h2>
-      <p class="sec-lede">The Myriad 2 (MA2450) is a USB accelerator Intel discontinued and dropped
-        from OpenVINO after 2020.3. It can't run LLMs — but it's a genuinely capable, ~1&nbsp;W
-        always-on decision engine for static-shape FP16 workloads.</p>
-      <ul class="spec-list">
-        <li><span class="ic">🧠</span><div><b>12 SHAVE VLIW DSPs</b><span>Fixed allocation on Myriad 2 — FP16, static shapes</span></div></li>
-        <li><span class="ic">🔌</span><div><b>USB3 · WinUSB</b><span>~60 ms per-inference round trip; firmware-bound latency</span></div></li>
-        <li><span class="ic">📦</span><div><b>OpenVINO 2020.3.2</b><span>The last release whose MYRIAD plugin accepts PID 0x2150</span></div></li>
-      </ul>
+    <iframe title="BankShot live browser search" src="./bankshot/index.html?embed=1" loading="lazy"></iframe>
+  </section>
+  <section class="launch" id="industry" aria-labelledby="industry-title">
+    <div class="launch-copy">
+      <div><h2 id="industry-title">Industry workflows</h2>
+      <p>Explore eleven workflows across automotive, facilities, and retail with labeled decisions, source references, and audio.</p></div>
+      <div class="actions"><a href="./workflows/index.html">Explore industry cases</a><a href="https://github.com/chadstthomas-svg/myriadforge/pull/3">Fine-tuning and delivery plan</a></div>
     </div>
-  </div>
-</section>
-
-<section id="ceiling">
-  <div class="wrap">
-    <span class="eyebrow reveal">The measured ceiling</span>
-    <h2 class="reveal">The ceiling is the model, not the chip</h2>
-    <p class="sec-lede reveal">Paired-gap probes — each workload benched against a zero-compute twin with
-      the identical input — isolate pure compute time on real silicon. The same chip that gives
-      MobileNetV2 <b>14.4 GFLOPS</b> gives a dense 3×3 Conv stack <b>35.8 GFLOPS</b>: the bottleneck is
-      model structure, not the SHAVEs.</p>
-    <div class="bars reveal">
-      <div class="bar-row"><span class="bl">Dense Conv 3×3</span>
-        <div class="bar-track"><div class="bar-fill" style="--w:60%"></div></div>
-        <span class="bv">35.8 GFLOPS</span></div>
-      <div class="bar-row"><span class="bl">MobileNetV2-7 gate</span>
-        <div class="bar-track"><div class="bar-fill mv2" style="--w:24%"></div></div>
-        <span class="bv">14.4 GFLOPS</span></div>
-      <div class="bar-row"><span class="bl">FC / 1×1 stack</span>
-        <div class="bar-track"><div class="bar-fill fc" style="--w:5%"></div></div>
-        <span class="bv">2.9 GFLOPS</span></div>
+  </section>
+  <section id="models" class="model-roster" aria-labelledby="models-title">
+    <h2 id="models-title">Model lineup</h2>
+    <div>
+      <article><h3><span>8</span> MagicEightBall</h3><p>Structured decisions</p><a href="./magiceightball/index.html">Examples and downloads</a></article>
+      <article><h3><span>6</span> BankShot Search</h3><p>Source retrieval</p><a href="./bankshot/index.html">Run a search</a></article>
+      <article><h3><span>1</span> BreakShot Listen</h3><p>Voice activity detection</p><a href="https://tablinum-the-break-room.static.hf.space/index.html#model-breakshot-listen">Project notes ↗</a></article>
+      <article><h3><span>●</span> CueBall Voice</h3><p>Compact speech</p><a href="https://tablinum-the-break-room.static.hf.space/index.html#model-cueball-voice">Hear the sample ↗</a></article>
+      <article><h3><span>10</span> RailShot Stream</h3><p>Restartable text streams</p><a href="https://huggingface.co/tablinum/RailShot-Stream">Model preview ↗</a></article>
     </div>
-    <p class="bar-note reveal">Silicon peak: 80–150 GFLOPS [secondary] — dense convs reach ~25–45 % of it;
-      depthwise/1×1 paths are memory-bound at ~2–3 GFLOPS. Paired-gap probes, real ma2450, 2026-11-20.</p>
-    <div class="chips reveal">
-      <span class="chip ok"><b>42</b> ops supported</span>
-      <span class="chip re"><b>7</b> rejected by firmware</span>
-      <span class="chip mo"><b>15</b> MO-2020.3 limited</span>
-      <span class="chip pe"><b>3</b> probe pending</span>
-      <span class="chip"><b>1</b> no onnx schema</span>
-    </div>
-  </div>
-</section>
-
-<section id="architecture">
-  <div class="wrap">
-    <span class="eyebrow reveal">The shim</span>
-    <h2 class="reveal">Old driver, modern surface</h2>
-    <p class="sec-lede reveal">The legacy library becomes a thin device-access shim; modern orchestration
-      plugs in above it. The same five apps run unchanged on either the NCS1 (Myriad&nbsp;2) or an NCS2 (Myriad&nbsp;X).</p>
-    <div class="layers">
-      <div class="layer l1 reveal"><span class="tag">Apps &amp; libs</span><span class="desc">async orchestration · batching · modern preprocessing</span><span class="lock">evolves</span></div>
-      <div class="layer l2 reveal"><span class="tag">The shim</span><span class="desc">apps/common/ov.py — dual-backend compat layer + bridges</span><span class="lock">evolves</span></div>
-      <div class="layer l3 reveal"><span class="tag">Device access</span><span class="desc">IECore 2020.3 (NCS1) · openvino.runtime 2022.3 (NCS2), isolated venvs</span><span class="lock">wrapped</span></div>
-      <div class="layer l4 reveal"><span class="tag">Hardware</span><span class="desc">WinUSB · Myriad firmware · XLink USB protocol</span><span class="lock">fixed</span></div>
-    </div>
-    <div class="callout reveal">
-      <b>Where the speed comes from.</b>
-      <p>A newer host library can't make the firmware compute faster — single-inference latency is
-        firmware-bound. The <b>+48%</b> comes from overlapping USB transfer with on-stick compute via
-        multiple in-flight async requests. Model batching does <i>not</i> help on Myriad 2; pipelining does.
-        Every number is measured on real silicon, with the limits documented.</p>
-    </div>
-    <div class="callout reveal">
-      <b>And a capability shim.</b>
-      <p>Speed isn't the only gain. With <code>--device hetero</code> (<code>HETERO:MYRIAD,CPU</code>),
-        ops the Myriad 2 can't compile — like the MobileNetV3-style <code>HardSigmoid</code> — fall back
-        to the host CPU automatically. A graph pure MYRIAD rejects runs on the heterogeneous pipeline,
-        widening the set of models the stick can accelerate.</p>
-    </div>
-
-    <div class="callout reveal" style="margin-top:20px">
-      <b>Where the 58&nbsp;ms actually goes.</b>
-      <p>Measured black-box (the plugin's own profiler crashes): <b>1.5&nbsp;ms</b> fixed dispatch,
-        <b>14.8&nbsp;ms</b> input transfer (~40&nbsp;MB/s), and <b>41.7&nbsp;ms</b> compute — running at just
-        <b>~14&nbsp;GFLOPS</b>, about <b>10–18&nbsp;% of the 80–150&nbsp;GFLOPS peak</b>. The device is
-        compute-execution-bound, not USB-bound; the transfer share is precisely what pipelining hides
-        (58.0&nbsp;−&nbsp;14.8&nbsp;=&nbsp;43.2&nbsp;ms, the measured pipelined p50 to 0.01&nbsp;ms).
-        Bonus: <b>FP16 input tensors are accepted and 4× faster</b> (16.3 → 4.1&nbsp;ms on the same graph) —
-        the shim exposes that to every app.</p>
-      <div style="display:flex;gap:6px;margin-top:16px;height:14px;border-radius:99px;overflow:hidden">
-        <span title="fixed dispatch 2.6%" style="flex:2.6;background:linear-gradient(90deg,#c4b5fd,#a78bfa)"></span>
-        <span title="input transfer 25.5%" style="flex:25.5;background:linear-gradient(90deg,#a7f3d0,#2bbd8e)"></span>
-        <span title="compute 71.9%" style="flex:71.9;background:linear-gradient(90deg,#fbcfe8,#f472b6)"></span>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-top:6px">
-        <span>dispatch 2.6&nbsp;%</span><span>transfer 25.5&nbsp;%</span><span>compute 71.9&nbsp;%</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="apps">
-  <div class="wrap">
-    <span class="eyebrow reveal">The pilots</span>
-    <h2 class="reveal">Five 2026 applications, on the stick</h2>
-    <p class="sec-lede reveal">A cheap always-on gate flags interesting ranges; an expensive host brain
-      only wakes when needed. Each pilot speaks the same versioned event &amp; index contracts.</p>
-    <div class="apps">
-      <div class="app reveal"><div class="emoji">🚦</div><h3>Decision gate</h3><code>apps/gate</code>
-        <p>Classifier + threshold → a versioned trigger event. The always-on first stage of every app.</p></div>
-      <div class="app reveal"><div class="emoji">🎬</div><h3>Footage triage</h3><code>apps/footage</code>
-        <p>Video → sampled frames → gate → a timestamp/label/confidence index for search &amp; editing.</p></div>
-      <div class="app reveal"><div class="emoji">🎙️</div><h3>Podcast triage</h3><code>apps/podcast</code>
-        <p>WAV → windows → gate → speech-event index. ASR stays on the host; the stick gates.</p></div>
-      <div class="app reveal"><div class="emoji">🔎</div><h3>kNN-as-MatMul</h3><code>apps/knn_engine</code>
-        <p>Vector table as constant GEMM weights; ~285 queries/sec. Capacity calculator included.</p></div>
-      <div class="app reveal"><div class="emoji">🧩</div><h3>Cascade</h3><code>apps/cascade</code>
-        <p>Gate fires → host Mirage describes the frame. Full latency chain, end to end.</p></div>
-      <div class="app reveal"><div class="emoji">📊</div><h3>Bench &amp; report</h3><code>myriadforge</code>
-        <p>Versioned result records, percentile metrics, and a self-contained HTML dashboard.</p></div>
-    </div>
-
-    <div class="callout reveal">
-      <b>The cascade, measured against Mirage.</b>
-      <p>The brain is expensive: <b>Mirage costs 1.59&nbsp;s per frame</b> on the host CPU (720p) — 60 frames
-        unguarded is <b>95&nbsp;s</b>. The stick screens all 60 in <b>~4.5&nbsp;s at ~1&nbsp;W</b>. On our
-        cartoon sample the gate fires on everything (an ImageNet top-1 gate is confidently wrong on abstract
-        content) — the honest lesson: <i>the gate needs task-specific semantics</i>, and the harness now
-        measures exactly that trade. On real footage where 1–5&nbsp;% of frames fire, the same cascade cuts
-        Mirage invocations 20–100×.</p>
-    </div>
-
-    <div class="callout reveal">
-      <b>Trained for the job: four custom gates, physically evaluated.</b>
-      <p>The missing piece has been built — task-specific FP16 gates trained, deployed and scored on the
-        real stick: <b>voice commands</b> (90.7 %, p95 <b>3.89&nbsp;ms</b>), <b>text intent routing</b>
-        (80.1 %, p95 <b>3.08&nbsp;ms</b>), <b>desktop control localization</b> (89.2 %), and an experimental
-        browser ranker — plus a rank-4 LoRA adapter for Cactus's own Needle&nbsp;3. Datasets are CC&nbsp;BY
-        4.0 with full provenance. And <b>MagicEightBall</b>: a 131,072-token Boolean decision model whose
-        smallest physically tested NCS1 build uses <b>480 bytes</b>, with its Boolean policy retained on the stick.</p>
-      <p style="margin-top:10px"><a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/labs/shave_models/README.md"
-        target="_blank" rel="noopener">Model lab, evaluation records and reproduction steps ↗</a></p>
-    </div>
-  </div>
-
-  <div class="sec-head" style="margin-top:36px">
-    <p class="eyebrow">The suite matrix</p>
-    <h2>Thirteen suites, one contract — and the same models on older devices</h2>
-    <p class="sec-lede">Every model family is a <b>suite</b>: a frozen spec with acceptance gates
-      declared before any sealed set, digest-verified fixtures, a trainer, a bundle, and a device
-      evaluation — with Cactus models as references to beat, not dependencies. The <b>lanes</b> row
-      per suite is the visible answer to "which older devices run this today": the same ONNX
-      artifacts measured on the stick, on plain x86 (ONNX Runtime), and convertible to LiteRT for
-      phones via the WSL2 worker.</p>
-  </div>
-  <div class="cards">
-    <div class="card">
-      <h3>Decisions &amp; tools</h3>
-      <p><b>MagicEightBall</b> (boolean suite) — release-ready: 512-byte blob, 128/128 physical,
-        30-min soak, 7-backend matched comparison. <b>VoiceTools</b> — trained v4 with slot-level
-        abstention: <b>74.0 % exact / 5.4 % false actions / p95 9.7 ms</b> on-device, FP16 decisions
-        identical to CPU, beating the host Whistle→Needle 3 stack (44.4 % / 13.5 % / 430 ms) on
-        every axis. Voice (90.7 %), intent (80.1 %), grounding (experimental) complete the row.</p>
-    </div>
-    <div class="card">
-      <h3>Perception &amp; speech</h3>
-      <p><b>forms</b> 89.2 % · <b>retrieval</b> encoder v0 trained (contrastive, 1 MB FP16 — in-corpus
-        Recall@10 0.68, kNN engine measured 285 qps) · <b>vision-gate</b> spec frozen (compute-dense
-        design per the 35.8-GFLOPS ceiling — fixes the measured cascade failure) · <b>vad</b> v0.1
-        device-evaluated: quality gates PASS (0.0 false wakes/hour @ frozen threshold), latency
-        gated by the paired-gap method · <b>docqa</b>, <b>asr</b> specs frozen.</p>
-    </div>
-    <div class="card">
-      <h3>Lanes (portability)</h3>
-      <p>Every suite records <b>ncs1 / cpu / ort / litert / ncs2 / coral</b>. Measured today:
-        MobileNetV2 gate <b>171 inf/s</b>, VoiceTools <b>0.61 ms p50</b>, vad <b>0.14 ms p50</b> on
-        plain ONNX Runtime vs 15.7 inf/s / 9.6 ms / 7.0 ms on the stick — same fixtures, same
-        gates, same record schema (<code>ntvbench.result/1</code>). LiteRT conversion runs via
-        litert-torch in WSL2 (the Windows converter accepts Jax/PyTorch only — probe verdict
-        recorded). NCS2 lane prepared; cold-USB procedures documented.</p>
-    </div>
-  </div>
-  <p style="margin-top:14px"><a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/labs/SUITES.md"
-    target="_blank" rel="noopener">The suite contract and full matrix ↗</a></p>
-</section>
-
-<section id="quickstart">
-  <div class="wrap">
-    <span class="eyebrow reveal">Quickstart</span>
-    <h2 class="reveal">Running in a few minutes</h2>
-    <p class="sec-lede reveal">Native Windows only — the MYRIAD driver story is Windows-native, not WSL2.</p>
-    <div class="code-card reveal">
-      <div class="code-head"><i></i><i></i><i></i></div>
-<pre><span class="c"># 1. Isolated OpenVINO 2020.3.2 venv for the NCS1 (idempotent)</span>
-powershell -ExecutionPolicy Bypass -File tools\ncs1\<span class="k">setup_env.ps1</span>
-
-<span class="c"># 2. WinUSB driver for the stick (one elevated run; approve UAC)</span>
-powershell -ExecutionPolicy Bypass -File tools\ncs2\<span class="k">install_driver.ps1</span>
-
-<span class="c"># 3. Functional smoke test (ONNX → FP16 IR → CPU vs onnxruntime)</span>
-tools\ncs1\.venv\Scripts\python.exe tools\ncs1\<span class="k">smoke_cpu.py</span>
-
-<span class="c"># 4. Discover lanes + a real benchmark on the stick</span>
-uv sync
-uv run myriadforge <span class="k">devices</span>
-uv run myriadforge <span class="k">bench</span> onnx-models/mobilenetv2-7 <span class="s">--device ncs1-myriad</span>
-
-<span class="c"># 5. Every pilot on the stick, one summary report</span>
-tools\ncs2\.venv\Scripts\python.exe tools\ncs2\<span class="k">demo_mvp.py</span> <span class="s">--lane ncs1 --device myriad --full</span></pre>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <a class="logo" href="#top"><span class="dot"></span>MyriadForge</a>
-    <p>Reviving the Intel Neural Compute Stick · Myriad 2 · MIT License</p>
-    <p style="margin-top:8px"><a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/NCS1_ROADMAP.md" target="_blank" rel="noopener">NCS1 roadmap</a> · <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/NCS2_ROADMAP.md" target="_blank" rel="noopener">NCS2 roadmap</a> · <a href="https://github.com/chadstthomas-svg/myriadforge" target="_blank" rel="noopener">GitHub</a></p>
-  </div>
+  </section>
+</main>
+<footer class="wrap rack-footer">
+  <a href="https://huggingface.co/spaces/racklab/The-Break-Room">Hugging Face Space</a>
+  <a href="https://huggingface.co/collections/racklab/rack-lab-the-break-room-6b025f3111bad297ae9133b2">Model collection</a>
+  <a href="https://github.com/chadstthomas-svg/myriadforge">GitHub source</a>
 </footer>
-
-<script>
-  // Progressive enhancement: only hide-for-reveal when JS is running.
-  document.body.classList.add('js');
-
-  // Scroll reveal
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
-  },{threshold:.15});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-  // Animated count-up
-  function animateCount(el){
-    const target=parseFloat(el.dataset.count), dec=parseInt(el.dataset.dec||'0');
-    const prefix=el.dataset.prefix||'', suffix=el.dataset.suffix||'';
-    const dur=1400; let start=null;
-    function step(ts){
-      if(!start)start=ts;
-      const p=Math.min((ts-start)/dur,1);
-      const eased=1-Math.pow(1-p,3);
-      el.textContent=prefix+(target*eased).toFixed(dec)+suffix;
-      if(p<1)requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-  const cio=new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ animateCount(e.target); cio.unobserve(e.target);} });
-  },{threshold:.6});
-  document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
-
-  // Gentle blob parallax on pointer move
-  const blobs=document.querySelectorAll('.blob');
-  window.addEventListener('pointermove',(e)=>{
-    const cx=(e.clientX/window.innerWidth-.5), cy=(e.clientY/window.innerHeight-.5);
-    blobs.forEach((b,i)=>{ const f=(i+1)*6; b.style.marginLeft=(cx*f)+'px'; b.style.marginTop=(cy*f)+'px'; });
-  },{passive:true});
-</script>
 </body>
 </html>

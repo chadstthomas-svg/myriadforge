@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Industry workflows · Rack Lab</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#19111b;color:#fff1dd;--mint:#a3e8b9;--muted:#cbb9c7;--line:#4a3549}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at center top,#342033,#19111b 63%)}
+main{max-width:1140px;margin:auto;padding:34px 18px 48px}
+a{color:var(--mint);text-underline-offset:3px}
+h1{font-size:clamp(42px,8vw,88px);line-height:.98;letter-spacing:-.075em;margin:14px 0}
+h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.045em;margin:24px 0 12px}
+h3{margin:0 0 10px}p,li{line-height:1.55;overflow-wrap:anywhere}
+header p,.muted{color:var(--muted)}
+nav{display:flex;gap:7px;flex-wrap:wrap;margin:20px 0 14px}
+nav button,select{color:inherit;font:inherit;border:1px solid var(--line);background:#2b202c;border-radius:8px;padding:8px 12px}
+nav button{cursor:pointer}
+nav button[aria-pressed=true]{background:var(--mint);color:#142a1d}
+select{max-width:100%}
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+article{min-width:0;background:#241924;border:1px solid var(--line);border-radius:13px;padding:14px}
+.ok{color:var(--mint)}.miss{color:#ffc997}
+article ul{padding-left:1.3rem}
+audio{width:min(100%,350px);height:36px;display:block;margin-top:6px}
+footer{margin-top:20px}
+@media(max-width:660px){.cases{grid-template-columns:1fr}}
+</style>
+<script defer src="./industry-data.js"></script>
+</head><body>
+<main>
+<header><a href="../index.html">The Break Room</a>
+<h1>Industry workflows</h1><p>Compare expected decisions, observed outputs, and source references across 66 authored cases. The recorded CPU replay covers eleven workflows.</p></header>
+<nav id="markets" aria-label="Industries"></nav>
+<p id="summary" class="muted" aria-live="polite"></p>
+<label for="workflow">Workflow</label>
+<select id="workflow"></select>
+<section aria-labelledby="title"><h2 id="title"></h2><div id="capture"></div><div class="cases" id="cases"></div></section>
+<footer><p><a href="./industry-results.json">Download measured results</a> · <a href="https://github.com/chadstthomas-svg/myriadforge/blob/7bc4b897a08137d791edd83014670942d0727d75/docs/RACKLAB_FINE_TUNING.md">Train an adapter</a> · <a href="https://github.com/chadstthomas-svg/myriadforge/blob/7bc4b897a08137d791edd83014670942d0727d75/docs/RACKLAB_INDUSTRY_PLAN.md">Read the delivery plan</a></p></footer>
+</main>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const data = window.industryReplay;
+  const get = id => document.getElementById(id);
+  const element = (tag,text) => {
+    const node = document.createElement(tag);
+    if (text !== undefined) node.textContent = text;
+    return node;
+  };
+  const names = {automotive:"Automotive",facilities:"Facilities and hospitality",retail:"Retail and distribution"};
+  const stages = {ready:"Approved",hold:"Held",pending:"Pending",missing:"Missing identifier"};
+  let market;
+  function row(label,value,style) {
+    const node = element("p",label + " · " + String(value));
+    if (style) node.className = style;
+    return node;
+  }
+  function render() {
+    const id = get("workflow").value;
+    const items = data.cases.filter(item => item.policy_id === id);
+    get("title").textContent = items[0].title;
+    const rail = data.railshot[id];
+    const captured = get("capture");
+    captured.replaceChildren(row("RailShot restart", rail.decisions_match && rail.exact_retry && rail.gap_rejected ? "Decision, retry, and sequence checks passed" : "Replay mismatch"));
+    const replay = data.audio?.[id];
+    if (replay) {
+      const audio = element("audio");
+      audio.src = replay.cueball.audio;
+      audio.controls = true;
+      audio.preload = "none";
+      audio.setAttribute("aria-label","CueBall synthesized readout");
+      const gate = element("ul");
+      for (const condition of replay.breakshot.conditions) {
+        const observed = condition.observed_wake ? "wake" : "quiet";
+        const expected = condition.expected_wake ? "wake" : "quiet";
+        const label = element("li", condition.condition + ": expected " + expected + ", observed " + observed);
+        if (observed !== expected) label.className = "miss";
+        gate.append(label);
+      }
+      captured.append(row("CueBall synthesized readout",replay.cueball.input),audio,
+                      element("h3","BreakShot audio gate"),gate);
+    }
+    const grid = get("cases");
+    grid.replaceChildren();
+    for (const item of items) {
+      const card = element("article");
+      const links = element("ul");
+      for (const evidence of item.observed.evidence) {
+        const part = element("li"), link = element("a",evidence.title);
+        link.href = evidence.url; link.target = "_blank"; link.rel = "noopener";
+        part.append(link); links.append(part);
+      }
+      card.append(element("h3",stages[item.state]),element("p",item.note),
+                  row("Expected action",item.expected_action || "No proposal"),
+                  row("Observed action",item.observed.action || "No proposal",item.decision_match ? "ok" : "miss"),
+                  row("Handoff",item.observed.reason),
+                  row("Expected route",item.expected_route),
+                  row("Keyword route",item.routing.rules || "Abstained",item.routing.rules === item.expected_route ? "ok" : "miss"),
+                  row("Learned route",item.routing.learned || "Abstained",item.routing.learned === item.expected_route ? "ok" : "miss"),
+                  row("Lexical top three",item.targets.every(id => item.lexical_top3.includes(id)) ? "All references found" : "Missing a required reference"),
+                  row("Fitted top three",item.targets.every(id => item.fitted_top3.includes(id)) ? "All references found" : "Missing a required reference"),
+                  element("h4","References returned by the pipeline"),links);
+      grid.append(card);
+    }
+  }
+  function select(next) {
+    market = next;
+    for (const tab of get("markets").children) tab.setAttribute("aria-pressed",String(tab.dataset.market === market));
+    const report = data.summary[market];
+    get("summary").textContent = "Frozen cases " + report.cases + " · Learned routes matched "
+      + report.routing.learned + " · Selected policy decisions matched " + report.decisions_match;
+    const names = new Map(data.cases.filter(item => item.market === market).map(item => [item.policy_id,item.title]));
+    get("workflow").replaceChildren(...Array.from(names,([key,title]) => new Option(title,key)));
+    render();
+  }
+  for (const [id,name] of Object.entries(names)) {
+    const control = element("button",name);
+    control.type = "button";
+    control.dataset.market = id;
+    control.addEventListener("click",() => select(id));
+    get("markets").append(control);
+  }
+  get("workflow").addEventListener("change",render);
+  select("automotive");
+});
+</script>
+</body></html>

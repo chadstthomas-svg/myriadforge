@@ -1,0 +1,130 @@
+[
+  {
+    "id": "lockout",
+    "tab": "Lockout",
+    "sector": "Manufacturing",
+    "title": "Lockout during equipment servicing",
+    "note": "A worker was servicing a machine without lockout devices secured to all energy isolation points. Which general-industry standard covers that?",
+    "domain": "manufacturing",
+    "expected": "cfr/1910.147",
+    "reference": "29 CFR 1910.147",
+    "record": {
+      "label": "OSHA citation as issued",
+      "summary": "OSHA cited the employer under § 1910.147(d)(4)(i) for failing to affix a lockout or tagout device to each energy-isolating device. Inspection 1048428.",
+      "url": "https://www.osha.gov/sites/default/files/citations/Wahlco-DWToolInc_1048428.pdf"
+    },
+    "media": {
+      "kind": "video",
+      "id": 727461,
+      "label": "Filmed training · separate site",
+      "title": "Lockout/tagout training",
+      "credit": "Airman Mario Calabro · Joint Base Elmendorf-Richardson · DVIDS",
+      "url": "https://www.dvidshub.net/video/727461/tmo-lockout-tag-out-program",
+      "poster": "https://d1ldvf68ux039x.cloudfront.net/thumbs/frames/video/1911/727461/1000w_q95.jpg",
+      "stream": "https://d34w7g4gy10iej.cloudfront.net/video/1911/DOD_107509287/DOD_107509287-1024x576-1769k.mp4"
+    }
+  },
+  {
+    "id": "lathe",
+    "tab": "Lathe guarding",
+    "sector": "Manufacturing",
+    "title": "Exposed rotating lathe chuck",
+    "note": "A lathe's rotating chuck was exposed while the machine was in use. Find the standard on guarding operators from rotating machine parts.",
+    "domain": "manufacturing",
+    "expected": "cfr/1910.212",
+    "reference": "29 CFR 1910.212",
+    "record": {
+      "label": "OSHA citation · abatement completed",
+      "summary": "OSHA cited an unguarded lathe chuck under § 1910.212(a)(1). The record lists a final order dated April 4, 2012. Inspection 191510.015, citation 01001.",
+      "url": "https://www.osha.gov/ords/imis/establishment.violation_detail?citation_id=01001&id=191510.015"
+    },
+    "media": {
+      "kind": "video",
+      "id": 702029,
+      "label": "Machine-shop footage · separate site",
+      "title": "Machinist operating a lathe",
+      "credit": "Kegan Kay · U.S. Navy · DVIDS",
+      "url": "https://www.dvidshub.net/video/702029/machinery-repairman",
+      "poster": "https://d1ldvf68ux039x.cloudfront.net/thumbs/frames/video/1908/702029/1000w_q95.jpg",
+      "stream": "https://d34w7g4gy10iej.cloudfront.net/video/1908/DOD_107107253/DOD_107107253-1024x576-1769k.mp4"
+    }
+  },
+  {
+    "id": "exit",
+    "tab": "Blocked exit",
+    "sector": "Retail operations",
+    "title": "Stockroom exit blocked by merchandise",
+    "note": "Merchandise and rolling carts blocked a stockroom emergency exit. Find the OSHA standard on keeping exit routes clear.",
+    "domain": "manufacturing",
+    "expected": "cfr/1910.37",
+    "reference": "29 CFR 1910.37",
+    "record": {
+      "label": "OSHA citation · abatement completed",
+      "summary": "OSHA cited a blocked stockroom exit and obstructed panic hardware under § 1910.37(a)(3). The record lists a formal settlement in August 2024. Inspection 1635689.015, citation 01001.",
+      "url": "https://www.osha.gov/ords/imis/establishment.violation_detail?citation_id=01001&id=1635689.015"
+    },
+    "media": {
+      "kind": "video",
+      "id": 851044,
+      "label": "Retail footage · separate site",
+      "title": "Inside the Quantico commissary",
+      "credit": "Patrick Moore · Marine Corps Base Quantico · DVIDS",
+      "url": "https://www.dvidshub.net/video/851044/marine-corps-base-quantico-commissary-broll",
+      "poster": "https://d1ldvf68ux039x.cloudfront.net/thumbs/frames/video/2207/851044/DOD_109119771.0000396/1000w_q95.jpg",
+      "stream": "https://d34w7g4gy10iej.cloudfront.net/video/2207/DOD_109119771/DOD_109119771.mp4"
+    }
+  },
+  {
+    "id": "recall",
+    "tab": "Vehicle recall",
+    "sector": "Dealership",
+    "title": "Blower wiring under the passenger dash",
+    "note": "The blower motor wiring connector under the passenger dash can be struck by a passenger's foot and overheat. Which recall covers the connector?",
+    "domain": "dealership",
+    "vehicle": [
+      2006,
+      "Honda",
+      "Ridgeline"
+    ],
+    "expected": "nhtsa/10V001000",
+    "reference": "NHTSA campaign 10V001000",
+    "record": {
+      "label": "NHTSA recall record",
+      "summary": "NHTSA campaign 10V001000 covers certain 2006 and 2007 Honda Ridgelines with a blower motor wiring connector that can overheat after being struck.",
+      "url": "https://api.nhtsa.gov/recalls/campaignNumber?campaignNumber=10V001000"
+    },
+    "media": {
+      "kind": "video",
+      "id": 915430,
+      "label": "Mechanic training footage · separate vehicle",
+      "title": "Vehicle maintenance training at Fort McCoy",
+      "credit": "Claudia Neve · Fort McCoy Public Affairs · DVIDS",
+      "url": "https://www.dvidshub.net/video/915430/91b10-wheeled-vehicle-mechanic-course-training-footage-march-2024",
+      "poster": "https://d1ldvf68ux039x.cloudfront.net/thumbs/frames/video/2403/915430/DOD_110172392.0000001/1000w_q95.jpg",
+      "stream": "https://d34w7g4gy10iej.cloudfront.net/video/2403/DOD_110172392/DOD_110172392.mp4"
+    }
+  },
+  {
+    "id": "recorder",
+    "tab": "Missing recordings",
+    "sector": "Store security",
+    "title": "Live camera feed with missing recordings",
+    "note": "The store camera's live view works, but the recorder saves no clips. Which Frigate guide helps troubleshoot missing recordings?",
+    "domain": "store_security",
+    "expected": "troubleshooting/recordings",
+    "reference": "Frigate recording troubleshooting",
+    "record": {
+      "label": "Official Frigate troubleshooting guide",
+      "summary": "Frigate documents a missing-recordings workflow. The typed note is an authored operator scenario paired with that guide.",
+      "url": "https://docs.frigate.video/troubleshooting/recordings/"
+    },
+    "media": {
+      "kind": "image",
+      "label": "Retail monitoring photo · separate site",
+      "title": "Store camera monitoring at Camp Lejeune",
+      "credit": "Sgt. Miranda DeKorte · U.S. Marine Corps · DVIDS",
+      "url": "https://www.dvidshub.net/image/4916874/holiday-shoplifters-beware-mcx-security-watching",
+      "poster": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1811/4916874/1000w_q95.jpg"
+    }
+  }
+]

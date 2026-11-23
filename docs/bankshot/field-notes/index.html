@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1a121c">
+  <meta name="description" content="BankShot Search field examples with real workplace media, public records and recorded retrieval results.">
+  <title>BankShot Field Notes · Rack Lab</title>
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="./field-notes.css">
+  <script defer src="./replay-data.js"></script>
+  <script defer src="./field-notes.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#case-view">Skip to field cases</a>
+  <header class="wrap masthead field-mast">
+    <a class="brand" href="../index.html"><span class="ball ball-green" aria-hidden="true">6</span>Rack Lab</a>
+    <nav aria-label="Navigation"><a href="../index.html">Back to live search</a></nav>
+  </header>
+  <main class="wrap">
+    <section class="field-cover" aria-labelledby="title">
+      <img src="../../assets/models/bankshot-search/hero.png" alt="" fetchpriority="high">
+      <div class="field-cover-copy">
+        <p class="field-model">BankShot Search</p>
+        <h1 id="title">Field Notes</h1>
+        <p>Workplace footage, public records, and the results BankShot returned from typed case notes.</p>
+      </div>
+    </section>
+
+    <section class="field-cases" aria-label="Industry case replays">
+      <nav class="case-selector" id="case-selector" aria-label="Choose a case"></nav>
+      <article id="case-view" aria-labelledby="case-title" tabindex="-1">
+        <header class="case-heading">
+          <div>
+            <p id="case-sector" class="sector"></p>
+            <h2 id="case-title"></h2>
+          </div>
+          <div class="case-outcome">
+            <p>BankShot text search</p>
+            <div class="target-rank" id="target-rank" aria-live="polite"></div>
+          </div>
+        </header>
+        <div class="case-grid">
+          <div class="case-source">
+            <figure>
+              <div class="field-media" id="field-media"></div>
+              <figcaption>
+                <div class="watch-moment" id="watch-moment" hidden>
+                  <p id="watch-copy"></p>
+                  <button id="watch-jump" type="button" aria-controls="field-media"></button>
+                </div>
+                <span id="media-context" class="media-context"></span>
+                <div id="media-credit" class="media-credit"></div>
+                <div id="media-status" role="status"></div>
+                <a id="media-source" rel="noopener" target="_blank">Open original media <span aria-hidden="true">↗</span></a>
+              </figcaption>
+            </figure>
+            <aside class="record-card" aria-label="Public source record">
+              <h3 id="record-type"></h3>
+              <p id="record-text"></p>
+              <a id="record-link" rel="noopener" target="_blank">Read the source record <span aria-hidden="true">↗</span></a>
+            </aside>
+          </div>
+
+          <div class="replay-panel">
+            <section class="query-card" aria-label="Text given to BankShot">
+              <h3>Typed case note</h3>
+              <blockquote id="case-query"></blockquote>
+              <p id="vehicle-note" hidden></p>
+            </section>
+            <section class="return-card" aria-labelledby="return-title">
+              <div class="return-top">
+                <h3 id="return-title">Recorded results</h3>
+                <div class="runtime-controls" role="group" aria-label="Select recorded runtime">
+                  <button type="button" data-runtime="ncs1" aria-pressed="true">NCS1</button>
+                  <button type="button" data-runtime="cpu" aria-pressed="false">CPU</button>
+                </div>
+              </div>
+              <ol class="hit-list" id="hits"></ol>
+              <p class="run-meta" id="run-meta"></p>
+              <p class="run-meta">Timing covers text search through ranked results on the local host.</p>
+            </section>
+          </div>
+        </div>
+      </article>
+      <noscript>Enable JavaScript to view the recorded rankings. <a href="./cases.json">Read the case manifest.</a></noscript>
+    </section>
+    <footer class="field-footer">
+      <div><a href="./ncs1-results.json">NCS1 replay data</a> · <a href="./cpu-results.json">CPU replay data</a> · <a href="./cases.json">Case sources</a></div>
+      <p>The appearance of U.S. Department of War (DoW) visual information does not imply or constitute DoW endorsement. <a href="https://www.dvidshub.net/about/copyright" target="_blank" rel="noopener">Media use terms</a></p>
+    </footer>
+  </main>
+</body>
+</html>
