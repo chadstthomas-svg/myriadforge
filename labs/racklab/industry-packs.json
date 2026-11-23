@@ -1,0 +1,98 @@
+{
+  "schema": "racklab.industry-packs/1",
+  "sources": {
+    "vpic": ["Vehicle specifications and identification", "https://vpic.nhtsa.dot.gov/api/Home", "VIN decoding for vehicle year make model equipment body and manufacturer fields."],
+    "buyers_guide": ["FTC Buyers Guide", "https://www.ftc.gov/business-guidance/resources/dealers-guide-used-car-rule", "Used vehicle sales disclosures, Buyers Guide and the written warranty information supplied by the dealer."],
+    "door_campaign": ["Ford door latch campaign 17V652", "https://static.nhtsa.gov/odi/rcl/2017/RCAK-17V652-7166.pdf", "Certain Ford F-150 door latches may freeze and appear closed before opening. Retrieve the recall for review."],
+    "bulletins": ["NHTSA manufacturer communications", "https://www.nhtsa.gov/resources-investigations-recalls", "Search technical service bulletins and manufacturer communications separately from open recalls."],
+    "station_fields": ["DOE charging station record", "https://afdc.energy.gov/data_download/alt_fuel_stations_format", "Connector type, charging ports, station network, public access, and record date."],
+    "rtu": ["Berkeley Lab rooftop-unit fault cases", "https://fdddata.lbl.gov/data/Simulated_LBNL_FDD_Data_Sets_RTU/LBNL_FDD_Data_Sets_RTU.pdf", "Labeled rooftop unit supply air temperature sensor bias, damper faults, and fault-free runs."],
+    "lift": ["OSHA powered industrial trucks", "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.178", "Powered industrial truck inspections and reporting defects found on lift trucks and forklifts."],
+    "hvac_check": ["ENERGY STAR commercial building checklists", "https://www.energystar.gov/buildings/save-energy-commercial-buildings/ways-save/checklists", "Commercial building operating schedules and maintenance checklist for facility work handoffs."],
+    "anker_011": ["CPSC notice 25-011", "https://www.cpsc.gov/zh-CN/Recalls/2025/Anker-Power-Banks-Recalled-Due-to-Fire-and-Burn-Hazards-Manufactured-by-Anker-Innovations", "Anker power bank models A1642, A1647, A1652. Confirm unit identifiers against this notice."],
+    "anker_466": ["CPSC notice 25-466", "https://www.cpsc.gov/Recalls/2025/Anker-Power-Banks-Recalled-Due-to-Fire-and-Burn-Hazards-Manufactured-by-Anker-Innovations-1", "Anker power bank models A1647, A1652, A1257, A1681, A1689. Verify the serial number."],
+    "printer": ["Epson TM-m30III technical reference", "https://files.support.epson.com/pdf/pos/bulk/tm-m30iii_trg_en_revb.pdf", "Receipt printer paper LED status, low or absent paper roll, device identifiers and panel indicator reference."],
+    "frigate": ["Frigate recordings troubleshooting", "https://docs.frigate.video/troubleshooting/recordings/", "Camera live view remains available while recordings or saved clips are missing."],
+    "gtin": ["GS1 Global Trade Item Number", "https://www.gs1.org/standards/id-keys/gtin", "Identify trade items with a GTIN and validate which product identifier belongs on the receiving discrepancy."]
+  },
+  "workflows": [
+    {
+      "id": "vehicle_sales", "market": "automotive", "title": "Vehicle identity and sales intake",
+      "target": ["vpic", "buyers_guide"], "required": "vehicle_identity", "example": "stock unit A41",
+      "keywords": ["vin", "buyers guide", "window sticker", "sales listing"],
+      "speech": "Check the vehicle identity and the Buyers Guide.",
+      "notes": ["VIN decode and Buyers Guide needed for a sales listing", "Used sales intake with a missing window sticker", "Check VIN and guide before adding a used car listing", "Sales desk needs model year from the vehicle number and a disclosure sheet", "Buyers Guide requested for the trade-in listing", "Confirm the stock vehicle identifier and disclosure for the showroom listing", "The document on the side glass disagrees with the sales record", "Validate the model and the used car disclosure for an online sale"]
+    },
+    {
+      "id": "service_bulletin", "market": "automotive", "title": "Recall and service bulletin intake",
+      "target": ["door_campaign", "bulletins"], "required": "vehicle_identity", "example": "2016 Ford F-150",
+      "keywords": ["latch", "recall", "bulletin", "campaign"],
+      "speech": "Check the door latch campaign and the service bulletin.",
+      "notes": ["Find the recall and bulletin for a freezing door latch", "A door latch sticks after rain and freezing weather; pull the campaign", "Service desk needs the bulletin and recall for a door that appears closed", "Look up the latch complaint matching Ford's campaign", "The door opens while rolling after the latch freezes; find service references", "Which manufacturer communication and recall cover a side door closure fault", "Search safety campaign and bulletin history for a cold-weather door closure complaint", "A frozen side door catch lets the door release even when shut; find the official filings"]
+    },
+    {
+      "id": "parts_warranty", "market": "automotive", "title": "Parts fitment and warranty intake",
+      "target": ["buyers_guide", "vpic"], "required": "part_or_claim_id", "example": "claim W27",
+      "keywords": ["fitment", "warranty", "warranty claim", "part number"],
+      "speech": "Send the part number and the written warranty for review.",
+      "notes": ["Warranty claim and part number need fitment review", "Check supply part fitment against the vehicle and the written warranty", "A replacement ordered under warranty does not fit the listed trim", "Review part number revision and claimed coverage before accepting the claim", "Parts counter needs warranty and vehicle details", "An incorrect component arrived for a covered repair; compare the order identifier", "Service contract item and installed replacement have inconsistent model flags", "The supplier sent a substitute assembly; check its match and the written coverage record"]
+    },
+    {
+      "id": "fleet_handoff", "market": "automotive", "title": "Fleet and rental handoff",
+      "target": ["door_campaign"], "required": "unit_id", "example": "depot unit 42",
+      "keywords": ["depot", "rental", "turnover", "fleet"],
+      "speech": "Log the depot return for the next shift.",
+      "notes": ["Fleet depot handoff for cold weather door issue", "Rental turnover record notes frozen F-150 door latch", "Depot shift asks for the history of the pool truck and its latch recall", "Fleet driver returned a truck with a side door that would not stay closed", "Log rental return for review of cold weather door issue", "The next crew needs the keys and the open Ford door ticket in its handoff", "Pool vehicle came off a route with a frozen latch; add it to the dispatcher queue", "End of booking: cold door problem on the Ford truck needs to follow the unit"]
+    },
+    {
+      "id": "ev_support", "market": "automotive", "title": "EV charging support",
+      "target": ["station_fields"], "required": "vehicle_connector", "example": "CCS",
+      "keywords": ["connector", "charger", "station", "charging"],
+      "speech": "Confirm the charging connector and the station record date.",
+      "notes": ["Charging station record lists CCS connector; compare vehicle", "Find the EV connector type and station record date", "A driver asks whether the charging station has the right plug", "Check public access and charging port type", "The charger connector differs from what the driver expected", "Look up which plug the mobility point is recorded with and when the record was updated", "The electric car cannot use the cable at the refuel location; check the listing", "A driver asks if the listed connector is available for their electric car"]
+    },
+    {
+      "id": "hvac_work_order", "market": "facilities", "title": "HVAC work-order intake",
+      "target": ["rtu"], "required": "equipment_id", "example": "roof unit R12",
+      "keywords": ["sensor", "damper", "rtu", "hvac"],
+      "speech": "Review the rooftop unit supply air reading.",
+      "notes": ["RTU sensor bias in supply air needs a work order", "Pull records for the stuck rooftop air damper", "HVAC roof unit reports an offset on supply temperature", "Sensor reads too high compared with the reference", "Work order requested for rooftop unit damper drift", "The roof pack sends a high supply reading while the reference stays steady", "An air flap stays at the same setting on the packaged unit; check evaluation record", "The air handling supply probe stays shifted relative to an independent readout"]
+    },
+    {
+      "id": "equipment_receiving", "market": "facilities", "title": "Equipment and receiving checks",
+      "target": ["lift"], "required": "equipment_id", "example": "lift L17",
+      "keywords": ["forklift", "lift truck", "pre-shift", "receiving dock"],
+      "speech": "Record the lift inspection for supervisor review.",
+      "notes": ["Forklift pre-shift check flagged a defect at the receiving dock", "Lift truck inspection record is missing before unloading", "Forklift at the warehouse receiving dock has a fault", "Route powered industrial truck inspection finding", "Receiving dock lift truck needs review on the pre-use checklist", "The pallet mover had an inspection defect when the warehouse opened", "An industrial truck at the bay is waiting for an inspection finding to clear", "The fork carrier's daily exam saw a defect during unloading intake"]
+    },
+    {
+      "id": "guest_maintenance", "market": "facilities", "title": "Guest request and contractor handoff",
+      "target": ["hvac_check"], "required": "location", "example": "hotel east wing",
+      "keywords": ["guest", "contractor", "room", "comfort"],
+      "speech": "Pass the east wing comfort request to the next shift.",
+      "notes": ["Hotel guest room too warm; add to contractor handoff", "Guest requests a room comfort check at shift change", "Contractor handoff needs the occupied room and time", "Guest maintenance desk notes a warm room after hours", "Please log the hotel room comfort request for the incoming shift", "A visitor reports their accommodation is warm and reception needs a work note", "The front desk passes on an occupied suite that is not cooling", "The overnight team wants the building comfort ticket and arrival window for the technician"]
+    },
+    {
+      "id": "receiving_discrepancy", "market": "retail", "title": "Receiving discrepancies and returns",
+      "target": ["gtin"], "required": "item_id", "example": "item R41",
+      "keywords": ["barcode", "gtin", "receiving", "wrong carton"],
+      "speech": "Verify the returned item identifier against the carton.",
+      "notes": ["Receiving carton barcode shows the wrong GTIN", "Return item GTIN differs from the order barcode", "Wrong carton arrived and receiving needs the product identifier", "Two item barcode labels disagree at receiving", "Compare GTIN on the returned pack with the order", "The warehouse scanned the outer pack and it identifies a different trade item", "The ordered product identifier and the inbound package number disagree", "A customer return has a different trade item number than the order record"]
+    },
+    {
+      "id": "product_recall", "market": "retail", "title": "Product recall review",
+      "target": ["anker_011", "anker_466"], "required": "serial_number", "example": "masked test serial",
+      "keywords": ["anker", "a1647", "power bank", "recall"],
+      "speech": "Confirm the unit serial number before recall review.",
+      "notes": ["Anker A1647 power bank returned; retrieve both recall notices", "Check a power bank model A1647 against the two recall notices", "The Anker return needs serial verification against CPSC notices", "The customer brought model A1652 for recall review", "Retail hold request for Anker A1647 pending unit serial check", "Portable battery model A1647 appears in more than one CPSC listing", "Safety notice review for a returned portable charger with the shared model number", "Identify the two product safety notices for a returned A1652 portable battery"]
+    },
+    {
+      "id": "store_equipment", "market": "retail", "title": "POS and recorder support",
+      "target": ["printer"], "required": "device_id", "example": "TM-m30III",
+      "keywords": ["receipt", "printer", "paper led", "pos", "frigate", "recordings"],
+      "speech": "Verify the device on the register support ticket.",
+      "notes": ["Receipt printer TM-m30III paper LED on", "POS printer stopped printing receipts with paper indicator on", "TM-m30III register printer status lookup", "The checkout receipt roll indicator is lit", "Open the Epson paper light reference for the receipt printer", "Register needs printer help after the roll symbol lights", "Checkout device will not issue a slip and the roll icon is glowing", "Store camera live feed works but Frigate saves no recordings"],
+      "target_by_group": {"8": ["frigate"]}
+    }
+  ]
+}

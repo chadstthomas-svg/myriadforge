@@ -1,0 +1,14 @@
+{
+  "opening": [
+    {"stream_id": "recall-1", "seq": 1, "event": "append", "text": "2016 Ford F-150 door latch freezes. Please find the recall 17V652."},
+    {"stream_id": "recall-1", "seq": 2, "event": "approve"}
+  ],
+  "resumed": [
+    {"stream_id": "recall-1", "seq": 2, "event": "approve"},
+    {"stream_id": "recall-1", "seq": 3, "event": "hold"},
+    {"stream_id": "bulletin-1", "seq": 1, "event": "append", "text": "2019 Ford F-150 freezing doors. Look up service bulletin 19-2081."},
+    {"stream_id": "bulletin-1", "seq": 2, "event": "approve"}
+  ],
+  "expected_statuses": ["needs_approval", "proposed", "proposed", "held", "needs_approval", "proposed"],
+  "expected_references": ["17V652", "17V652", "17V652", "17V652", "19-2081", "19-2081"]
+}

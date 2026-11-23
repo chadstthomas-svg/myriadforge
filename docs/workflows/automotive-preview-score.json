@@ -1,0 +1,142 @@
+{
+  "pack_version": "automotive-service-preview.1",
+  "counts": {
+    "cases": 10,
+    "eligible": 4,
+    "eligible_exact": 3,
+    "blocked": 6,
+    "blocked_proposals": 0,
+    "answerable": 6,
+    "all_targets_top3": 5,
+    "route_matches": 9,
+    "subject_matches": 10
+  },
+  "by_route": {
+    "recall_lookup": {
+      "cases": 6,
+      "eligible": 3,
+      "eligible_exact": 2,
+      "blocked": 3,
+      "blocked_proposals": 0,
+      "answerable": 4,
+      "all_targets_top3": 3,
+      "route_matches": 5,
+      "subject_matches": 6
+    },
+    "bulletin_lookup": {
+      "cases": 2,
+      "eligible": 1,
+      "eligible_exact": 1,
+      "blocked": 1,
+      "blocked_proposals": 0,
+      "answerable": 2,
+      "all_targets_top3": 2,
+      "route_matches": 2,
+      "subject_matches": 2
+    },
+    "abstention": {
+      "cases": 2,
+      "eligible": 0,
+      "eligible_exact": 0,
+      "blocked": 2,
+      "blocked_proposals": 0,
+      "answerable": 0,
+      "all_targets_top3": 0,
+      "route_matches": 2,
+      "subject_matches": 2
+    }
+  },
+  "gates": {
+    "reviewed_operators": false,
+    "sample_floors": false,
+    "document_types": true,
+    "eligible_accuracy": false,
+    "reference_coverage": false,
+    "no_blocked_proposals": true,
+    "independent_splits": false
+  },
+  "field_data_gates_passed": false,
+  "cases": [
+    {
+      "id": "ford-campaign",
+      "status": "proposed",
+      "route_match": true,
+      "subject_match": true,
+      "covered": true,
+      "proposal_match": true
+    },
+    {
+      "id": "honda-campaign",
+      "status": "proposed",
+      "route_match": true,
+      "subject_match": true,
+      "covered": true,
+      "proposal_match": true
+    },
+    {
+      "id": "ford-bulletin",
+      "status": "proposed",
+      "route_match": true,
+      "subject_match": true,
+      "covered": true,
+      "proposal_match": true
+    },
+    {
+      "id": "honda-paraphrase",
+      "status": "needs_route",
+      "route_match": false,
+      "subject_match": true,
+      "covered": false,
+      "proposal_match": false
+    },
+    {
+      "id": "quoted-approval",
+      "status": "needs_approval",
+      "route_match": true,
+      "subject_match": true,
+      "covered": true,
+      "proposal_match": true
+    },
+    {
+      "id": "late-hold",
+      "status": "held",
+      "route_match": true,
+      "subject_match": true,
+      "covered": true,
+      "proposal_match": true
+    },
+    {
+      "id": "missing-vehicle",
+      "status": "needs_vehicle",
+      "route_match": true,
+      "subject_match": true,
+      "covered": true,
+      "proposal_match": true
+    },
+    {
+      "id": "conflicting-types",
+      "status": "needs_route",
+      "route_match": true,
+      "subject_match": true,
+      "covered": true,
+      "proposal_match": true
+    },
+    {
+      "id": "wrong-model-year",
+      "status": "needs_reference",
+      "route_match": true,
+      "subject_match": true,
+      "covered": true,
+      "proposal_match": true
+    },
+    {
+      "id": "unrelated-note",
+      "status": "needs_route",
+      "route_match": true,
+      "subject_match": true,
+      "covered": true,
+      "proposal_match": true
+    }
+  ],
+  "cases_sha256": "d25f73ec39e35ee9af45a19fcbf23609244e4d7c4ddc951b43c736feb882db80"
+}

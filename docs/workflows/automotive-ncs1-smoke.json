@@ -1,0 +1,22 @@
+{
+  "scope": "development smoke, Boolean head only",
+  "device": {
+    "stick": "ncs1",
+    "boot_usb_id": "03E7:2150"
+  },
+  "placement": {
+    "policy": "ncs1",
+    "routing_and_evidence": "host"
+  },
+  "assignments_passed": 32,
+  "warm_batch_p50_ms": 2.3986000000011387,
+  "samples_ms": [
+    3.076699999999377,
+    2.3937000000007203,
+    2.3986000000011387,
+    2.264300000000219,
+    3.594700000000728,
+    3.0610000000006465
+  ],
+  "onnx_sha256": "de21322e67b36c2ab053f8ed329e166abd339a2810970b515ced46b3622d803b"
+}

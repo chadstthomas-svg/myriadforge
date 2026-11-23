@@ -160,6 +160,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--out", default="report.html")
     p.set_defaults(fn=cmd_report)
 
+    from myriadforge.racklab.commands import configure
+
+    configure(sub.add_parser("racklab", help="Run or evaluate the Rack Lab automotive workflow"))
+
     return parser
 
 

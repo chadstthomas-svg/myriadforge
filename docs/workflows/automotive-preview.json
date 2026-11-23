@@ -1,0 +1,179 @@
+{
+  "scope": "authored CPU preview",
+  "pack_version": "automotive-service-preview.1",
+  "opening": [
+    {
+      "schema": "racklab.result/1",
+      "ok": true,
+      "stream_id": "recall-1",
+      "seq": 1,
+      "decision": {
+        "pack_version": "automotive-service-preview.1",
+        "backend": "cpu",
+        "route": "recall_lookup",
+        "subject": {
+          "year": 2016,
+          "make": "Ford",
+          "model": "F-150"
+        },
+        "references": [
+          {
+            "id": "17V652",
+            "title": "NHTSA campaign 17V652",
+            "url": "https://static.nhtsa.gov/odi/rcl/2017/RCAK-17V652-7166.pdf",
+            "kind": "recall_lookup"
+          }
+        ],
+        "status": "needs_approval",
+        "reason": "Explicit approval of this case is required",
+        "proposal": null,
+        "needle_tokens": 22
+      }
+    },
+    {
+      "schema": "racklab.result/1",
+      "ok": true,
+      "stream_id": "recall-1",
+      "seq": 2,
+      "decision": {
+        "pack_version": "automotive-service-preview.1",
+        "backend": "cpu",
+        "route": "recall_lookup",
+        "subject": {
+          "year": 2016,
+          "make": "Ford",
+          "model": "F-150"
+        },
+        "references": [
+          {
+            "id": "17V652",
+            "title": "NHTSA campaign 17V652",
+            "url": "https://static.nhtsa.gov/odi/rcl/2017/RCAK-17V652-7166.pdf",
+            "kind": "recall_lookup"
+          }
+        ],
+        "status": "proposed",
+        "reason": "Reference and approval verified for staff review",
+        "proposal": "review_service_reference",
+        "needle_tokens": 22
+      }
+    }
+  ],
+  "after_restart": [
+    {
+      "decision": {
+        "backend": "cpu",
+        "needle_tokens": 22,
+        "pack_version": "automotive-service-preview.1",
+        "proposal": "review_service_reference",
+        "reason": "Reference and approval verified for staff review",
+        "references": [
+          {
+            "id": "17V652",
+            "kind": "recall_lookup",
+            "title": "NHTSA campaign 17V652",
+            "url": "https://static.nhtsa.gov/odi/rcl/2017/RCAK-17V652-7166.pdf"
+          }
+        ],
+        "route": "recall_lookup",
+        "status": "proposed",
+        "subject": {
+          "make": "Ford",
+          "model": "F-150",
+          "year": 2016
+        }
+      },
+      "ok": true,
+      "schema": "racklab.result/1",
+      "seq": 2,
+      "stream_id": "recall-1"
+    },
+    {
+      "schema": "racklab.result/1",
+      "ok": true,
+      "stream_id": "recall-1",
+      "seq": 3,
+      "decision": {
+        "pack_version": "automotive-service-preview.1",
+        "backend": "cpu",
+        "route": "recall_lookup",
+        "subject": {
+          "year": 2016,
+          "make": "Ford",
+          "model": "F-150"
+        },
+        "references": [
+          {
+            "id": "17V652",
+            "title": "NHTSA campaign 17V652",
+            "url": "https://static.nhtsa.gov/odi/rcl/2017/RCAK-17V652-7166.pdf",
+            "kind": "recall_lookup"
+          }
+        ],
+        "status": "held",
+        "reason": "Operator hold",
+        "proposal": null,
+        "needle_tokens": 22
+      }
+    },
+    {
+      "schema": "racklab.result/1",
+      "ok": true,
+      "stream_id": "bulletin-1",
+      "seq": 1,
+      "decision": {
+        "pack_version": "automotive-service-preview.1",
+        "backend": "cpu",
+        "route": "bulletin_lookup",
+        "subject": {
+          "year": 2019,
+          "make": "Ford",
+          "model": "F-150"
+        },
+        "references": [
+          {
+            "id": "19-2081",
+            "title": "Ford technical service bulletin 19-2081",
+            "url": "https://static.nhtsa.gov/odi/tsbs/2019/MC-10156511-0001.pdf",
+            "kind": "bulletin_lookup",
+            "review_note": "Confirm build date and assembly plant against the bulletin."
+          }
+        ],
+        "status": "needs_approval",
+        "reason": "Explicit approval of this case is required",
+        "proposal": null,
+        "needle_tokens": 23
+      }
+    },
+    {
+      "schema": "racklab.result/1",
+      "ok": true,
+      "stream_id": "bulletin-1",
+      "seq": 2,
+      "decision": {
+        "pack_version": "automotive-service-preview.1",
+        "backend": "cpu",
+        "route": "bulletin_lookup",
+        "subject": {
+          "year": 2019,
+          "make": "Ford",
+          "model": "F-150"
+        },
+        "references": [
+          {
+            "id": "19-2081",
+            "title": "Ford technical service bulletin 19-2081",
+            "url": "https://static.nhtsa.gov/odi/tsbs/2019/MC-10156511-0001.pdf",
+            "kind": "bulletin_lookup",
+            "review_note": "Confirm build date and assembly plant against the bulletin."
+          }
+        ],
+        "status": "proposed",
+        "reason": "Reference and approval verified for staff review",
+        "proposal": "review_service_reference",
+        "needle_tokens": 23
+      }
+    }
+  ],
+  "exact_retry": true
+}

@@ -12,6 +12,10 @@ dependencies = [
     "huggingface-hub>=0.34",
 ]
 
+[project.optional-dependencies]
+racklab-tuning = ["scikit-learn>=1.5,<2"]
+racklab = ["sentencepiece>=0.2.1,<1"]
+
 [dependency-groups]
 dev = ["pytest>=8.0"]
 boolean-tests = [
@@ -22,6 +26,7 @@ boolean-tests = [
 
 [project.scripts]
 myriadforge = "myriadforge.cli:main"
+racklab-tune = "myriadforge.racklab_tuning:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -1,0 +1,7 @@
+{
+  "rules": {
+    "ready": "\"vehicle confirmed\" AND \"route confirmed\" AND \"reference found\" AND \"review approved\" AND NOT \"review hold\""
+  },
+  "answers": {"may_route": "@ready"},
+  "actions": {"review_service_reference": "@ready"}
+}

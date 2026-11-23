@@ -28,6 +28,13 @@ in-flight async requests — not faster math (the firmware bounds single-inferen
 latency). Model batching does *not* help on Myriad 2; async pipelining does. See
 [docs/NCS1_ROADMAP.md](docs/NCS1_ROADMAP.md) for the full evidence.
 
+## Rack Lab industry workflows
+
+Use [Rack Lab Fine-Tuning](docs/RACKLAB_FINE_TUNING.md) to fit a compact CPU
+router or source reranker from labeled business notes. The
+[industry expansion plan](docs/RACKLAB_INDUSTRY_PLAN.md) covers the primary
+model builds, the older-hardware variants, and the public workflow demos.
+
 ## Why this exists
 
 The Myriad 2 is a 12-SHAVE VLIW vector DSP USB accelerator that Intel abandoned.
@@ -60,6 +67,8 @@ on either the NCS1 (Myriad 2) or an NCS2 (Myriad X).
 | `apps/cascade` | Always-on gate fires → host Mirage describes the frame (latency chain) |
 
 ## Quickstart
+
+[Rack Lab automotive CPU preview](docs/RACKLAB_AUTOMOTIVE.md) runs the cited recall and bulletin intake demo, with durable approval, retry, and hold events.
 
 Four custom FP16 models now have physical NCS1 evaluation records covering speech commands, text intent routing, desktop control localization and browser target ranking. The model lab also includes a locally fine-tuned Cactus Needle UI adapter. [Model bundles, measurements and reproduction instructions](labs/shave_models/README.md)
 
