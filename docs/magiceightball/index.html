@@ -8,7 +8,7 @@
   <title>MagicEightBall · Rack Lab</title>
   <link rel="icon" href="../assets/rack-lab-avatar.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="./magic.css">
+  <link rel="stylesheet" href="../model-page.css">
   <script defer src="./replay.js"></script>
 </head>
 <body>
@@ -18,7 +18,7 @@
     <nav aria-label="MagicEightBall"><a href="#examples">Examples</a><a href="#downloads">Downloads</a><a href="#benchmarks">Benchmarks</a></nav>
   </header>
   <main class="wrap" id="content">
-    <section class="magic-hero" aria-labelledby="title">
+    <section class="model-hero" aria-labelledby="title">
       <h1 id="title">MagicEightBall</h1>
       <p>A Boolean decision engine that returns a yes or no, a category, and a proposed action. The host reads up to 131,072 Needle 3 tokens and extracts evidence. The original Intel Neural Compute Stick can run the 480-byte decision head.</p>
       <picture>
@@ -27,7 +27,7 @@
       </picture>
     </section>
 
-    <section class="magic-section" id="examples" aria-labelledby="examples-title">
+    <section class="model-section" id="examples" aria-labelledby="examples-title">
       <h2 id="examples-title">Replay a decision</h2>
       <p>Compare the expected decision with the recorded CPU and physical NCS1 results. The three industry simulations matched all 27 authored cases and 384 Boolean assignments on both runtimes. All 15 cases expected to produce no action passed.</p>
       <div class="replay">
@@ -53,7 +53,7 @@
       </figure>
     </section>
 
-    <section class="magic-section" id="downloads" aria-labelledby="downloads-title">
+    <section class="model-section" id="downloads" aria-labelledby="downloads-title">
       <h2 id="downloads-title">Choose a format</h2>
       <div class="formats">
         <a href="https://huggingface.co/tablinum/MagicEightBall"><strong>Native NCS1</strong><span>480 B · OpenVINO 2020.3.2</span></a>
@@ -65,7 +65,7 @@
       <a class="source-link" href="../hardware/index.html#quickstart">Set up the original stick</a>
     </section>
 
-    <section class="magic-section" id="benchmarks" aria-labelledby="benchmarks-title">
+    <section class="model-section" id="benchmarks" aria-labelledby="benchmarks-title">
       <h2 id="benchmarks-title">Measured runtime comparisons</h2>
       <p>All four formats matched 128 support-policy assignments and rejected 131,073 tokens. Timings include host text preparation and head execution on the same Intel Core i7-12650H host. The runtime versions and repeat counts are in the reports.</p>
       <div class="timings" tabindex="0" role="region" aria-label="Runtime timing table">
@@ -88,7 +88,7 @@
       </div>
     </section>
 
-    <section class="magic-section" aria-labelledby="size-title">
+    <section class="model-section" aria-labelledby="size-title">
       <h2 id="size-title">Model size comparisons</h2>
       <div class="charts">
         <figure>
@@ -103,6 +103,6 @@
       <p class="caption">Published peer examples use different tasks and count different parts of the runtime. <a class="source-link" href="./assets/size-published-models.webp">See the published-model chart</a>.</p>
     </section>
   </main>
-  <footer class="wrap magic-footer"><a href="../index.html">The Break Room</a><a href="https://huggingface.co/tablinum/MagicEightBall">Hugging Face model card</a></footer>
+  <footer class="wrap model-footer"><a href="../index.html">The Break Room</a><a href="https://huggingface.co/tablinum/MagicEightBall">Hugging Face model card</a></footer>
 </body>
 </html>

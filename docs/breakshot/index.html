@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#19111b">
+  <meta name="description" content="Listen to BreakShot's voice activity test audio and see actual recorded wake events and misses.">
+  <title>BreakShot Listen · Rack Lab</title>
+  <link rel="icon" href="../assets/rack-lab-avatar.png" type="image/png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../model-page.css">
+  <link rel="stylesheet" href="./timeline.css">
+  <script defer src="./replay.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to BreakShot Listen</a>
+  <header class="wrap masthead">
+    <a class="brand" href="../index.html"><img src="../assets/rack-lab-avatar.png" width="34" height="34" alt="">The Break Room</a>
+    <nav aria-label="BreakShot Listen"><a href="#examples">Wake examples</a><a href="#measurements">Measurements</a></nav>
+  </header>
+  <main class="wrap" id="content">
+    <section class="model-hero" aria-labelledby="title">
+      <h1 id="title">BreakShot Listen</h1>
+      <p>A speech activity gate for waking a downstream system. Hear the audio used in the CPU pilot and see exactly where the recorded detector fired.</p>
+      <picture><source media="(prefers-reduced-motion: no-preference)" srcset="./assets/motion.webp"><img src="./assets/hero.png" width="1913" height="822" fetchpriority="high" alt="The amber 1-ball watches a quiet waveform rise into a wake signal."></picture>
+    </section>
+    <section class="model-section" id="examples" aria-labelledby="examples-title">
+      <h2 id="examples-title">Listen to a wake test</h2>
+      <p>Switch between clean synthesized speech, ambient sound, and speech mixed with equally loud background sound. The retail mix is the missed wake from the recorded CPU pilot.</p>
+      <div class="replay">
+        <div class="replay-controls">
+          <div><label for="workflow">Workflow</label><select id="workflow" disabled></select></div>
+          <div><label for="condition">Audio condition</label><select id="condition" disabled><option value="speech">Clean speech</option><option value="ambient">Ambient sound only</option><option value="mixed">Speech and ambient at 0 dB SNR</option></select></div>
+        </div>
+        <p id="test-status" role="status">Loading recorded wake events…</p>
+        <div id="test-output" hidden>
+          <p id="prompt"></p>
+          <audio id="clip" controls preload="none" aria-label="BreakShot test audio"></audio>
+          <p class="caption">Green spans mark detected speech. Gold ticks mark wake starts. The white line follows playback.</p>
+          <div class="timeline" aria-hidden="true" id="timeline"><div id="events"></div><span id="cursor"></span></div>
+          <ul id="event-list" aria-label="Recorded events"></ul>
+          <p class="caption">Ambient audio source <a id="ambient-credit" class="source-link" href="https://freesound.org/">Freesound</a> · <a class="source-link" href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a></p>
+        </div>
+        <noscript><p>Enable JavaScript to switch recordings or open the example data.</p></noscript>
+      </div>
+      <div class="model-links"><a href="./examples.json">Recorded event data</a><a href="../workflows/index.html">All eleven workflows</a></div>
+    </section>
+    <section class="model-section" id="measurements" aria-labelledby="measurements-title">
+      <h2 id="measurements-title">What was measured</h2>
+      <p>The authored industry pilot matched 32 of 33 wake labels on CPU. A separate physical NCS1 experiment measured an earlier VAD graph at 3.89 ms p95 over 600 paired windows. The audio above shows the CPU pilot's recorded event timing.</p>
+      <div class="model-links"><a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/labs/shave_models/bundles/vad/paired-gap.json">Physical NCS1 VAD timing</a><a href="https://huggingface.co/spaces/tablinum/The-Break-Room">Hugging Face project notes</a></div>
+    </section>
+  </main>
+  <footer class="wrap model-footer"><a href="../index.html">The Break Room</a><a href="../cueball/index.html">CueBall Voice</a></footer>
+</body>
+</html>

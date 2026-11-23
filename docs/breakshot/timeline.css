@@ -1,0 +1,7 @@
+.timeline { position: relative; height: 32px; margin-block: 12px; border: 1px solid #785f72; border-radius: 8px; overflow: hidden; background: var(--canvas); }
+.timeline span { position: absolute; top: 0; height: 100%; }
+.timeline .interval { background: #419066; }
+.timeline .wake { width: 3px; background: var(--gold); }
+#cursor { width: 2px; background: #fff; }
+#test-status[data-missed="true"] { color: var(--gold); font-weight: 700; }
+#event-list { line-height: 1.6; padding-inline-start: 24px; }

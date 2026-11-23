@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#19111b">
+  <meta name="description" content="Step through recorded RailShot decisions, a process restart, an exact retry, and a late veto on CPU and Intel NCS1.">
+  <title>RailShot Stream · Rack Lab</title>
+  <link rel="icon" href="../assets/rack-lab-avatar.png" type="image/png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../model-page.css">
+  <script defer src="./replay.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to RailShot Stream</a>
+  <header class="wrap masthead">
+    <a class="brand" href="../index.html"><img src="../assets/rack-lab-avatar.png" width="34" height="34" alt="">The Break Room</a>
+    <nav aria-label="RailShot Stream"><a href="#replay">Restart replay</a><a href="#download">Preview package</a></nav>
+  </header>
+  <main class="wrap" id="content">
+    <section class="model-hero" aria-labelledby="title">
+      <h1 id="title">RailShot Stream</h1>
+      <p>Ordered, restartable text decisions. RailShot runs MagicEightBall on CPU or the original Intel Neural Compute Stick and commits each accepted fragment and result to SQLite before replying.</p>
+      <picture><source media="(prefers-reduced-motion: no-preference)" srcset="./assets/motion.webp"><img src="./assets/hero.png" width="1914" height="822" fetchpriority="high" alt="RailShot, a blue-striped 10-ball, guides input packets along illuminated rails."></picture>
+    </section>
+    <section class="model-section" id="replay" aria-labelledby="replay-title">
+      <h2 id="replay-title">Replay a process restart</h2>
+      <p>Choose one of three authored workflows and step through its recorded CPU or physical NCS1 run. After the restart, the exact retry returns the stored proposal. The next fragment contains a veto that clears it.</p>
+      <div class="replay">
+        <div class="replay-controls">
+          <div><label for="bank">Workflow</label><select id="bank" disabled><option value="dealership">Dealership service intake</option><option value="manufacturing">Manufacturing maintenance</option><option value="store_security">Store equipment review</option></select></div>
+          <div><label for="backend">Backend</label><select id="backend" disabled><option value="cpu">CPU</option><option value="ncs1">Physical NCS1</option></select></div>
+          <button type="button" id="next" disabled>Next request</button>
+          <button type="button" id="reset" disabled>Start over</button>
+        </div>
+        <p id="replay-status" role="status">Loading recorded requests…</p>
+        <div id="replay-log" class="timings" role="region" tabindex="0" aria-label="Recorded stream requests" hidden>
+          <table>
+            <thead><tr><th scope="col">Recorded event</th><th scope="col">Stream and sequence</th><th scope="col">Text fragment</th><th scope="col">Returned result</th></tr></thead>
+            <tbody id="requests"></tbody>
+          </table>
+        </div>
+        <noscript><p>Enable JavaScript to step through the replay, or open the recorded results below.</p></noscript>
+      </div>
+      <p>All 48 checks passed across the two backends. A separate physical run accepted exactly 131,072 tokens and recovered after rejecting an append that would have reached 131,073.</p>
+      <div class="model-links"><a href="./industry-results.json">Labeled CPU and NCS1 results</a><a href="https://huggingface.co/tablinum/RailShot-Stream/blob/efc59a32135793987430a4c61393d7fdba1cccfc/measurements/physical-replay.json">Physical context-limit replay</a><a href="../workflows/index.html">Expanded CPU workflows</a></div>
+      <figure><a href="./assets/industry-replay.webp"><img src="./assets/industry-replay.webp" width="1500" height="810" loading="lazy" alt="After restart, the dealership customer decline, manufacturing hold, and store alert clearance each removed the earlier proposal."></a></figure>
+    </section>
+    <section class="model-section" id="download" aria-labelledby="download-title">
+      <h2 id="download-title">Run the v0.1 preview</h2>
+      <p>The package includes the portable ONNX graph, compact NCS1 archive, and the dealership, manufacturing, and store-equipment policy banks. The preview stores input text and decisions in a local journal.</p>
+      <div class="formats">
+        <a href="https://huggingface.co/tablinum/RailShot-Stream"><strong>RailShot Stream</strong><span>CPU and NCS1 package</span></a>
+        <a href="https://huggingface.co/tablinum/RailShot-Stream/blob/efc59a32135793987430a4c61393d7fdba1cccfc/RUN.md"><strong>Runtime guide</strong><span>Requests, sequencing, and restart behavior</span></a>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap model-footer"><a href="../index.html">The Break Room</a><a href="../magiceightball/index.html">MagicEightBall</a></footer>
+</body>
+</html>

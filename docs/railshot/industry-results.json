@@ -1,0 +1,1973 @@
+{
+  "schema": "railshot.industry-replay/1",
+  "ranges": [
+    {
+      "bank": "dealership",
+      "backend": "cpu",
+      "passes": 8,
+      "source": "authored simulation of structured workflow records, with actual inference and SQLite commits",
+      "identity": {
+        "adapter": "magiceightball/1",
+        "artifact_sha256": "9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5",
+        "bank": "dealership",
+        "tokenizer_sha256": "97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25"
+      },
+      "process_1": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 1,
+            "append": "Service requested. Intake ",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": "Skipped",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "unrelated",
+            "seq": 1,
+            "append": "Routine note only.",
+            "reset": false
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 8,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "out_of_order",
+              "expected_seq": 2,
+              "message": "Expected the next contiguous seq"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 10,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_service_intake",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 6,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": null
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "unrelated"
+          }
+        ]
+      },
+      "process_2": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": " Customer declined.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "Conflicting approval",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 4,
+            "append": "Service requested. Intake approved.",
+            "reset": true
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 10,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_service_intake",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 16,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "conflicting_retry",
+              "message": "This seq already has a different request"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 10,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_service_intake",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 4,
+            "stream_id": "active"
+          }
+        ]
+      }
+    },
+    {
+      "bank": "manufacturing",
+      "backend": "cpu",
+      "passes": 8,
+      "source": "authored simulation of structured workflow records, with actual inference and SQLite commits",
+      "identity": {
+        "adapter": "magiceightball/1",
+        "artifact_sha256": "9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5",
+        "bank": "manufacturing",
+        "tokenizer_sha256": "97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25"
+      },
+      "process_1": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 1,
+            "append": "Vibration alert. Maintenance review ",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": "Skipped",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "unrelated",
+            "seq": 1,
+            "append": "Routine note only.",
+            "reset": false
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 9,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "out_of_order",
+              "expected_seq": 2,
+              "message": "Expected the next contiguous seq"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 11,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_mechanical_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 6,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": null
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "unrelated"
+          }
+        ]
+      },
+      "process_2": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": " Maintenance hold.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "Conflicting approval",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 4,
+            "append": "Vibration alert. Maintenance review approved.",
+            "reset": true
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 11,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_mechanical_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                1.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 16,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "conflicting_retry",
+              "message": "This seq already has a different request"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 11,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_mechanical_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 4,
+            "stream_id": "active"
+          }
+        ]
+      }
+    },
+    {
+      "bank": "store_security",
+      "backend": "cpu",
+      "passes": 8,
+      "source": "authored simulation of structured workflow records, with actual inference and SQLite commits",
+      "identity": {
+        "adapter": "magiceightball/1",
+        "artifact_sha256": "9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5",
+        "bank": "store_security",
+        "tokenizer_sha256": "97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25"
+      },
+      "process_1": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 1,
+            "append": "Camera offline. Security review ",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": "Skipped",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "unrelated",
+            "seq": 1,
+            "append": "Routine note only.",
+            "reset": false
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 10,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "out_of_order",
+              "expected_seq": 2,
+              "message": "Expected the next contiguous seq"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 12,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_camera_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 6,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": null
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "unrelated"
+          }
+        ]
+      },
+      "process_2": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": " Alert cleared.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "Conflicting approval",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 4,
+            "append": "Camera offline. Security review approved.",
+            "reset": true
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 12,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_camera_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 18,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "conflicting_retry",
+              "message": "This seq already has a different request"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 12,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_camera_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 4,
+            "stream_id": "active"
+          }
+        ]
+      }
+    },
+    {
+      "bank": "dealership",
+      "backend": "ncs1",
+      "passes": 8,
+      "source": "authored simulation of structured workflow records, with actual inference and SQLite commits",
+      "identity": {
+        "adapter": "magiceightball/1",
+        "artifact_sha256": "812c8f393db056c68cbca7f42fe7ac72ec9570d18f4e15f8e6eac2460ca04e46",
+        "bank": "dealership",
+        "boot_usb_id": "03E7:2150",
+        "stick": "ncs1",
+        "tokenizer_sha256": "97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25"
+      },
+      "process_1": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 1,
+            "append": "Service requested. Intake ",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": "Skipped",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "unrelated",
+            "seq": 1,
+            "append": "Routine note only.",
+            "reset": false
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 8,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "out_of_order",
+              "expected_seq": 2,
+              "message": "Expected the next contiguous seq"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 10,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_service_intake",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 6,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": null
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "unrelated"
+          }
+        ]
+      },
+      "process_2": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": " Customer declined.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "Conflicting approval",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 4,
+            "append": "Service requested. Intake approved.",
+            "reset": true
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 10,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_service_intake",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 16,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "conflicting_retry",
+              "message": "This seq already has a different request"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "dealership",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 10,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_service_intake",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "service"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 4,
+            "stream_id": "active"
+          }
+        ]
+      }
+    },
+    {
+      "bank": "manufacturing",
+      "backend": "ncs1",
+      "passes": 8,
+      "source": "authored simulation of structured workflow records, with actual inference and SQLite commits",
+      "identity": {
+        "adapter": "magiceightball/1",
+        "artifact_sha256": "812c8f393db056c68cbca7f42fe7ac72ec9570d18f4e15f8e6eac2460ca04e46",
+        "bank": "manufacturing",
+        "boot_usb_id": "03E7:2150",
+        "stick": "ncs1",
+        "tokenizer_sha256": "97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25"
+      },
+      "process_1": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 1,
+            "append": "Vibration alert. Maintenance review ",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": "Skipped",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "unrelated",
+            "seq": 1,
+            "append": "Routine note only.",
+            "reset": false
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 9,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "out_of_order",
+              "expected_seq": 2,
+              "message": "Expected the next contiguous seq"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 11,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_mechanical_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 6,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": null
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "unrelated"
+          }
+        ]
+      },
+      "process_2": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": " Maintenance hold.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "Conflicting approval",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 4,
+            "append": "Vibration alert. Maintenance review approved.",
+            "reset": true
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 11,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_mechanical_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                1.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 16,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "conflicting_retry",
+              "message": "This seq already has a different request"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "manufacturing",
+              "bits": [
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 11,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_mechanical_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "mechanical"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 4,
+            "stream_id": "active"
+          }
+        ]
+      }
+    },
+    {
+      "bank": "store_security",
+      "backend": "ncs1",
+      "passes": 8,
+      "source": "authored simulation of structured workflow records, with actual inference and SQLite commits",
+      "identity": {
+        "adapter": "magiceightball/1",
+        "artifact_sha256": "812c8f393db056c68cbca7f42fe7ac72ec9570d18f4e15f8e6eac2460ca04e46",
+        "bank": "store_security",
+        "boot_usb_id": "03E7:2150",
+        "stick": "ncs1",
+        "tokenizer_sha256": "97dfd5666620b19875deba9e55953d312364e7763bd08bee428b94f1b9491b25"
+      },
+      "process_1": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 1,
+            "append": "Camera offline. Security review ",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": "Skipped",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "unrelated",
+            "seq": 1,
+            "append": "Routine note only.",
+            "reset": false
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 10,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "out_of_order",
+              "expected_seq": 2,
+              "message": "Expected the next contiguous seq"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 12,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_camera_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 6,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": null
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 1,
+            "stream_id": "unrelated"
+          }
+        ]
+      },
+      "process_2": {
+        "requests": [
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "approved.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 3,
+            "append": " Alert cleared.",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 2,
+            "append": "Conflicting approval",
+            "reset": false
+          },
+          {
+            "stream_id": "active",
+            "seq": 4,
+            "append": "Camera offline. Security review approved.",
+            "reset": true
+          }
+        ],
+        "responses": [
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 12,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_camera_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 18,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": null,
+                "answers": {
+                  "may_route": false
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 3,
+            "stream_id": "active"
+          },
+          {
+            "error": {
+              "code": "conflicting_retry",
+              "message": "This seq already has a different request"
+            },
+            "ok": false,
+            "schema": "railshot.result/1",
+            "seq": 2,
+            "stream_id": "active"
+          },
+          {
+            "decision": {
+              "atoms": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bank": "store_security",
+              "bits": [
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "lexemes": null,
+              "model": "magiceightball",
+              "needle_tokens": 12,
+              "request_documents": 1,
+              "requests": 1,
+              "result": {
+                "action": "review_camera_alert",
+                "answers": {
+                  "may_route": true
+                },
+                "category": "camera_alert"
+              }
+            },
+            "ok": true,
+            "schema": "railshot.result/1",
+            "seq": 4,
+            "stream_id": "active"
+          }
+        ]
+      }
+    }
+  ]
+}

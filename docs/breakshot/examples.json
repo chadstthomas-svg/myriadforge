@@ -1,0 +1,187 @@
+{
+  "sample_rate": 16000,
+  "scope": "synthetic staff readouts and licensed ambient mixes",
+  "pilot": {
+    "correct": 32,
+    "total": 33
+  },
+  "examples": [
+    {
+      "title": "Automotive · vehicle identification",
+      "input": "Check the vehicle identity and the Buyers Guide.",
+      "ambient_source": "109197",
+      "conditions": [
+        {
+          "condition": "speech",
+          "audio": "vehicle_sales-speech.wav",
+          "sha256": "bb8636d849ff40cb7abeab8fe3ecf97037e88a40de16237b67ca91488678554f",
+          "expected_wake": true,
+          "observed_wake": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 8224,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 8224,
+              "end": 28640
+            },
+            {
+              "type": "wake",
+              "start": 31776,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 31776,
+              "end": 45536
+            }
+          ],
+          "samples": 55327
+        },
+        {
+          "condition": "ambient",
+          "audio": "vehicle_sales-ambient.wav",
+          "sha256": "f7c39a12983ff981ea0ec0afdc9f8a1370b6f9ebe46d5c77a4bd70603a848f6a",
+          "expected_wake": false,
+          "observed_wake": false,
+          "events": [],
+          "samples": 55327
+        },
+        {
+          "condition": "mixed",
+          "audio": "vehicle_sales-mixed.wav",
+          "sha256": "ce1bec606abd745cc92b95dc99110ea2cec2bd6f8815c5d9743c8b9c139f175e",
+          "expected_wake": true,
+          "observed_wake": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 13856,
+              "available_samples": 20480
+            },
+            {
+              "type": "interval",
+              "start": 13856,
+              "end": 26592
+            },
+            {
+              "type": "wake",
+              "start": 31776,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 31776,
+              "end": 43488
+            }
+          ],
+          "samples": 55327
+        }
+      ]
+    },
+    {
+      "title": "Facilities · HVAC work order",
+      "input": "Review the rooftop unit supply air reading.",
+      "ambient_source": "81210",
+      "conditions": [
+        {
+          "condition": "speech",
+          "audio": "hvac_work_order-speech.wav",
+          "sha256": "00900587882c858b19fc7ec366b30870f00775f3d80f96271a36ba1c680c1cf6",
+          "expected_wake": true,
+          "observed_wake": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 39392
+            }
+          ],
+          "samples": 49569
+        },
+        {
+          "condition": "ambient",
+          "audio": "hvac_work_order-ambient.wav",
+          "sha256": "825bc7313581cbfa68f7ea8ebb89a804caae7ddc87a800e0d809697d502522b1",
+          "expected_wake": false,
+          "observed_wake": false,
+          "events": [],
+          "samples": 49569
+        },
+        {
+          "condition": "mixed",
+          "audio": "hvac_work_order-mixed.wav",
+          "sha256": "dce27db8b2d832a07d49fd346a9d47389a3f9e923368414aafe8304bceee2a0c",
+          "expected_wake": true,
+          "observed_wake": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 21984
+            }
+          ],
+          "samples": 49569
+        }
+      ]
+    },
+    {
+      "title": "Retail · POS and recorder support",
+      "input": "Verify the device on the register support ticket.",
+      "ambient_source": "394221",
+      "conditions": [
+        {
+          "condition": "speech",
+          "audio": "store_equipment-speech.wav",
+          "sha256": "6dc31864bf877d43d9394d4c4f811ad7c31ff8cc5465f043074a952612f8f760",
+          "expected_wake": true,
+          "observed_wake": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 44000
+            }
+          ],
+          "samples": 56070
+        },
+        {
+          "condition": "ambient",
+          "audio": "store_equipment-ambient.wav",
+          "sha256": "42cbdb33d5f2888c559a398d018e33ca1e6e9056a82d0a30edf73805b006d51b",
+          "expected_wake": false,
+          "observed_wake": false,
+          "events": [],
+          "samples": 56070
+        },
+        {
+          "condition": "mixed",
+          "audio": "store_equipment-mixed.wav",
+          "sha256": "b0f42905b2e0de4c66f2d328329ea708943d4048b04cccbd095ce8e913641d3f",
+          "expected_wake": true,
+          "observed_wake": false,
+          "events": [],
+          "samples": 56070
+        }
+      ]
+    }
+  ]
+}
