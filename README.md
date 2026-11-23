@@ -68,6 +68,8 @@ on either the NCS1 (Myriad 2) or an NCS2 (Myriad X).
 
 ## Quickstart
 
+[Rack Lab automotive CPU preview](docs/RACKLAB_AUTOMOTIVE.md) runs the cited recall and bulletin intake demo, with durable approval, retry, and hold events.
+
 Four custom FP16 models now have physical NCS1 evaluation records covering speech commands, text intent routing, desktop control localization and browser target ranking. The model lab also includes a locally fine-tuned Cactus Needle UI adapter. [Model bundles, measurements and reproduction instructions](labs/shave_models/README.md)
 
 [MagicEightBall](labs/shave_models/boolean/README.md) is a 131,072-token Boolean decision model that returns a yes/no answer, a category and a tool proposal in one pass. Its **480-byte** compact native build passed replay on the physical NCS1. [Physical size comparison](labs/shave_models/boolean/measurements/compact-gather-physical-ncs1.json) · [Release and CPU comparisons](labs/shave_models/boolean/RELEASE-NCS1.md) · [Industry starter packs](labs/shave_models/boolean/industries/frontline/README.md)

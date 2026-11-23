@@ -1,0 +1,89 @@
+{
+  "schema": "racklab.pack/1",
+  "version": "automotive-service-preview.1",
+  "router": {
+    "recall_lookup": [
+      "recall",
+      "recalls",
+      "safety campaign"
+    ],
+    "bulletin_lookup": [
+      "service bulletin",
+      "technical bulletin",
+      "tsb"
+    ],
+    "other": [
+      "buyers guide",
+      "warranty claim",
+      "parts fitment",
+      "rental return",
+      "charging station"
+    ]
+  },
+  "sources": [
+    {
+      "id": "17V652",
+      "kind": "recall_lookup",
+      "title": "NHTSA campaign 17V652",
+      "url": "https://static.nhtsa.gov/odi/rcl/2017/RCAK-17V652-7166.pdf",
+      "make": "Ford",
+      "model": "F-150",
+      "years": [
+        2015,
+        2016,
+        2017,
+        2018
+      ],
+      "terms": [
+        "door latch",
+        "latch freezes",
+        "door closure",
+        "frozen latch",
+        "door opens"
+      ]
+    },
+    {
+      "id": "10V001000",
+      "kind": "recall_lookup",
+      "title": "NHTSA campaign 10V001000",
+      "url": "https://api.nhtsa.gov/recalls/campaignNumber?campaignNumber=10V001000",
+      "make": "Honda",
+      "model": "Ridgeline",
+      "years": [
+        2006,
+        2007
+      ],
+      "terms": [
+        "blower",
+        "wiring connector",
+        "passenger dash",
+        "passenger foot"
+      ]
+    },
+    {
+      "id": "19-2081",
+      "kind": "bulletin_lookup",
+      "title": "Ford technical service bulletin 19-2081",
+      "url": "https://static.nhtsa.gov/odi/tsbs/2019/MC-10156511-0001.pdf",
+      "make": "Ford",
+      "model": "F-150",
+      "years": [
+        2018,
+        2019
+      ],
+      "terms": [
+        "freezing",
+        "latch",
+        "unlatch",
+        "frozen door",
+        "cold weather"
+      ],
+      "review_note": "Confirm build date and assembly plant against the bulletin."
+    }
+  ],
+  "artifacts": {
+    "policy.json": "59d40b02d5e3ee92ac1f27f4aea9a11d99beb30db5dc61f7e9cf4dedf1d0ec3a",
+    "policy-table.json": "ca36455d6d9c9ae0deb6621a1091c2140a265fb74ad0052e0a3f49a117cd05a6",
+    "needle3.model.xz": "5e2ea51729dc921028a8a3f9ab75614001853593f69c123d3d5f94373d5c23f4"
+  }
+}

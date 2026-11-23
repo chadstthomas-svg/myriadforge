@@ -18,11 +18,19 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install test dependencies
-        run: uv sync --group boolean-tests
+        run: uv sync --group boolean-tests --extra racklab --extra racklab-tuning
       - name: Run hardware-free test suites
         run: |
           uv run --no-sync python -c "import onnx, onnxruntime; from sentencepiece import sentencepiece_model_pb2"
           uv run --no-sync pytest -q tests labs/shave_models/boolean/test_boolean.py
+          uv run --no-sync python tools/build_racklab_policy.py --check
+      - name: Build and smoke-test the released wheel
+        run: |
+          uv build --wheel
+          uv venv "${RUNNER_TEMP}/racklab-wheel"
+          uv pip install --python "${RUNNER_TEMP}/racklab-wheel/bin/python" dist/myriadforge-*.whl sentencepiece scikit-learn
+          "${RUNNER_TEMP}/racklab-wheel/bin/myriadforge" racklab demo
+          "${RUNNER_TEMP}/racklab-wheel/bin/racklab-tune" demo --pack labs/racklab/industry-packs.json --out "${RUNNER_TEMP}/racklab-tuning"
   boolean:
     runs-on: ubuntu-latest
     steps:
