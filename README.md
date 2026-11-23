@@ -28,6 +28,13 @@ in-flight async requests — not faster math (the firmware bounds single-inferen
 latency). Model batching does *not* help on Myriad 2; async pipelining does. See
 [docs/NCS1_ROADMAP.md](docs/NCS1_ROADMAP.md) for the full evidence.
 
+## Rack Lab industry workflows
+
+Use [Rack Lab Fine-Tuning](docs/RACKLAB_FINE_TUNING.md) to fit a compact CPU
+router or source reranker from labeled business notes. The
+[industry expansion plan](docs/RACKLAB_INDUSTRY_PLAN.md) covers the primary
+model builds, the older-hardware variants, and the public workflow demos.
+
 ## Why this exists
 
 The Myriad 2 is a 12-SHAVE VLIW vector DSP USB accelerator that Intel abandoned.
