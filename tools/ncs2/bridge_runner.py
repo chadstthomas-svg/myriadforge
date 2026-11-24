@@ -28,6 +28,7 @@ sys.path.insert(0, str(_REPO_SRC))
 
 from myriadforge.bench.metrics import percentile  # noqa: E402 (path set above)
 from myriadforge.bench.schema import make_result, save_result  # noqa: E402
+from myriadforge.myriad_x import compile_myriad_x  # noqa: E402
 
 
 def _timed(infer_fn, warmup_runs: int, measured_runs: int) -> dict[str, float]:
@@ -84,9 +85,11 @@ def main() -> int:
     else:
         load_ms = None
 
-    props = {"MYRIAD_NUMBER_OF_SHAVES": args.shaves} if args.device == "myriad" else {}
     t0 = time.perf_counter_ns()
-    compiled = core.compile_model(str(ir_path), ov_device, props)
+    if args.device == "myriad":
+        compiled = compile_myriad_x(core, ir_path, args.shaves)
+    else:
+        compiled = core.compile_model(str(ir_path), ov_device)
     init_ms = load_ms if load_ms is not None else (time.perf_counter_ns() - t0) / 1e6
 
     sig = next(iter(compiled.inputs))

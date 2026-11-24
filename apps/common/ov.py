@@ -31,6 +31,8 @@ from typing import Any
 
 import numpy as np
 
+from myriadforge.myriad_x import compile_myriad_x
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 IR_CACHE_DIR = REPO_ROOT / "models" / "ncs2" / "ir"
 NCS1_IR_CACHE_DIR = REPO_ROOT / "models" / "ncs1" / "ir"
@@ -240,8 +242,10 @@ def compile_model(model_path: str | Path, device: str = "myriad", *, shaves: int
     ir = to_ir(model_path, cache_dir)
     target = ov_device(device)
     if kind == "runtime":
-        props = {"MYRIAD_NUMBER_OF_SHAVES": int(shaves)} if target == "MYRIAD" else {}
-        return core().compile_model(str(ir), target, props)
+        session = core()
+        if target == "MYRIAD":
+            return compile_myriad_x(session, ir, int(shaves))
+        return session.compile_model(str(ir), target)
     # IECore: config values must be strings; Myriad 2 has no SHAVE-count key.
     net = core().read_network(model=str(ir), weights=str(ir.with_suffix(".bin")))
     config: dict[str, str] = {}
