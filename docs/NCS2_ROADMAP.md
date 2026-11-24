@@ -53,7 +53,7 @@ pending), WS1 (op matrix), WS2 (shim), SHAVE sweep + MYRIAD.SIM calibration
 | Fact | Value | Consequence for code |
 |---|---|---|
 | Chip | Movidius Myriad X MA2485, 16 SHAVE VLIW vector DSPs + NCE conv engine | latency models scale with SHAVE count |
-| Memory | 4 GB LPDDR4, **~1 GB usable** for graph+weights | hard budget gate in simulator and adapter |
+| Memory | ~1 GiB application planning budget | Actual graph residency depends on the compiler and operator; see [physical probes](NCS2_SHAVE_TUNING.md). |
 | Precision | **FP16 only** (int64 auto-downcast to int32) | shim must emit FP16-clean IR |
 | Shapes | **static only** — no dynamic shapes | shim pins shapes at convert time |
 | Transport | USB3; ~ms per host↔stick round trip | one big inference per transaction; batch queries |
@@ -62,8 +62,8 @@ pending), WS1 (op matrix), WS2 (shim), SHAVE sweep + MYRIAD.SIM calibration
 
 Workload class that fits: **static-shape, FP16-tolerant, linear-algebra or
 stencil-dominant** — CNNs (2D *and* 1D), MLPs, kNN-as-GEMM, DSP filters,
-decision-model heads. Does not fit: autoregressive LLM/VLM decoding,
-ASR, dynamic shapes, pointer-chasing (HNSW), int-heavy sequential work.
+decision-model heads. Static decoder experiments and the host/device split
+are tracked in the [SHAVE tuning and memory report](NCS2_SHAVE_TUNING.md).
 
 ---
 

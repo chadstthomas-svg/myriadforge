@@ -28,7 +28,7 @@ sys.path.insert(0, str(_REPO_SRC))
 
 from myriadforge.bench.metrics import percentile  # noqa: E402 (path set above)
 from myriadforge.bench.schema import make_result, save_result  # noqa: E402
-from myriadforge.myriad_x import compile_myriad_x  # noqa: E402
+from myriadforge.myriad_x import compile_myriad_x, load_tuned_allocation  # noqa: E402
 
 
 def _timed(infer_fn, warmup_runs: int, measured_runs: int) -> dict[str, float]:
@@ -53,7 +53,10 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
     ap.add_argument("--device", choices=["myriad", "cpu"], default="myriad")
-    ap.add_argument("--shaves", type=int, default=16)
+    group = ap.add_mutually_exclusive_group()
+    group.add_argument("--shaves", type=int)
+    group.add_argument("--tuning-profile", type=Path)
+    ap.add_argument("--objective", choices=("latency", "throughput"), default="latency")
     ap.add_argument("--warmup", type=int, default=5)
     ap.add_argument("--runs", type=int, default=50)
     ap.add_argument("--out", default="results")
@@ -61,7 +64,10 @@ def main() -> int:
     args = ap.parse_args()
 
     import numpy as np  # available in the ncs2 venv (openvino dependency)
-    from openvino.runtime import Core
+    from openvino.runtime import Core, get_version
+
+    if args.tuning_profile and args.device != "myriad":
+        ap.error("--tuning-profile requires --device myriad")
 
     model_path = Path(args.model)
     core = Core()
@@ -71,10 +77,10 @@ def main() -> int:
         print(json.dumps({"error": f"no MYRIAD device; available: {available}"}))
         return 2
 
-    # ONNX needs Model Optimizer conversion (2022.3 API); .xml is already IR.
+    # Keep the stock bridge's conversion. Tuned callers compile the sweep's artifact directly.
     ir_path = model_path
     tmp = tempfile.TemporaryDirectory(prefix="ncs2-bridge-")
-    if model_path.suffix.lower() == ".onnx":
+    if model_path.suffix.lower() == ".onnx" and not args.tuning_profile:
         from openvino.tools.mo import convert_model
         ov_model = convert_model(str(model_path))
         t0 = time.perf_counter_ns()
@@ -85,9 +91,14 @@ def main() -> int:
     else:
         load_ms = None
 
+    allocation = (
+        load_tuned_allocation(args.tuning_profile, model_path, core, get_version(), args.objective)
+        if args.tuning_profile
+        else {"shaves": args.shaves if args.shaves is not None else 16}
+    )
     t0 = time.perf_counter_ns()
     if args.device == "myriad":
-        compiled = compile_myriad_x(core, ir_path, args.shaves)
+        compiled = compile_myriad_x(core, ir_path, **allocation)
     else:
         compiled = core.compile_model(str(ir_path), ov_device)
     init_ms = load_ms if load_ms is not None else (time.perf_counter_ns() - t0) / 1e6
@@ -137,12 +148,13 @@ def main() -> int:
             "name": "openvino-myriad" if args.device == "myriad" else "openvino-cpu",
             "runtime": "OpenVINO 2022.3.1 LTS",
             "accelerator": "myriad" if args.device == "myriad" else "cpu",
-            "shave_count": args.shaves if args.device == "myriad" else None,
+            "shave_count": allocation["shaves"] if args.device == "myriad" else None,
             "usb_transport": args.device == "myriad",
             "simulated": False,
         },
         config={"warmup_runs": args.warmup, "measured_runs": args.runs,
-                "shaves": args.shaves if args.device == "myriad" else None},
+                "shaves": allocation["shaves"] if args.device == "myriad" else None,
+                "tuning_allocation": allocation if args.tuning_profile else None},
         metrics={
             "init_ms": round(init_ms, 3),
             "first_inference_ms": round(first_ms, 3),
