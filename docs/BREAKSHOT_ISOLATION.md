@@ -53,3 +53,5 @@ RTF is wall time divided by audio duration. The Inworld tests use pinned weights
 ## Next experiment
 
 Keep the raw BreakShot gate. Compare backup isolation after wake on vehicle and part identifiers, work-order readouts, and retail device names. Preserve the raw recording for workplace alarms and review. Use locked operator recordings with fan noise, transients, and competing speakers. Before allowing an isolated signal to trigger a wake, require a paired improvement in event recall without more false wakes on a held-out site. Measure actual push latency and timing alignment through the whole pipeline. Give an NCS1 compatibility lane its own new device test if a learned mask head is introduced.
+
+[Post-wake transcription probe](BREAKSHOT_POSTWAKE.md) · [Physical NCS2 replay](NCS2_AUDIO_REPLAY.md)
