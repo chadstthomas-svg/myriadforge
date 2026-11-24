@@ -1,0 +1,343 @@
+{
+  "scope": "Exploratory voice isolation. Keep the raw BreakShot wake path for deployment.",
+  "host": {
+    "cpu": "Intel Core i7-12650H",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "os": "Windows 11"
+  },
+  "pins": {
+    "industry_fixture_sha256": "8184d8dc881681d2119d1d719dac05a858286df0966186955b8e76b64bb467fa",
+    "desed_manifest_sha256": "a88aa2a4fdcc2f89ae2b54a0b47f9277878e24c06ad26d00d5a6a0f3786d522a",
+    "detector": {
+      "backend": "cpu",
+      "runtime": "1.24.1",
+      "manifest_sha256": "337795a1ab2a5ffbb121b053591996ac0e60e46b05379ea067f59566a5fb54a3"
+    }
+  },
+  "industry": [
+    {
+      "lane": "raw",
+      "profile": {
+        "device": "cpu",
+        "weights_bytes": 0
+      },
+      "cases": 33,
+      "wakes_correct": 32,
+      "by_condition": {
+        "speech": {
+          "correct": 11,
+          "cases": 11
+        },
+        "ambient": {
+          "correct": 11,
+          "cases": 11
+        },
+        "mixed": {
+          "correct": 10,
+          "cases": 11
+        }
+      },
+      "median_isolation_rtf": 4.462296484404789e-07,
+      "median_mixed_si_sdr_db": 0.003,
+      "retail_mix": {
+        "input_sha256": "b0f42905b2e0de4c66f2d328329ea708943d4048b04cccbd095ce8e913641d3f",
+        "observed_wake": false,
+        "events": [],
+        "rtf": 3.995036662145798e-07,
+        "si_sdr_db": -0.137,
+        "first_output_input_ms": 0.0
+      }
+    },
+    {
+      "lane": "spectral",
+      "profile": {
+        "device": "cpu",
+        "weights_bytes": 0,
+        "hop_samples": 256
+      },
+      "cases": 33,
+      "wakes_correct": 33,
+      "by_condition": {
+        "speech": {
+          "correct": 11,
+          "cases": 11
+        },
+        "ambient": {
+          "correct": 11,
+          "cases": 11
+        },
+        "mixed": {
+          "correct": 11,
+          "cases": 11
+        }
+      },
+      "median_isolation_rtf": 0.0019079207089014512,
+      "median_mixed_si_sdr_db": 0.464,
+      "retail_mix": {
+        "input_sha256": "b0f42905b2e0de4c66f2d328329ea708943d4048b04cccbd095ce8e913641d3f",
+        "observed_wake": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 10784,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 10784,
+            "end": 23520
+          },
+          {
+            "type": "wake",
+            "start": 27168,
+            "available_samples": 32768
+          },
+          {
+            "type": "interval",
+            "start": 27168,
+            "end": 36320
+          }
+        ],
+        "rtf": 0.002659390067084707,
+        "si_sdr_db": 1.878,
+        "first_output_input_ms": 40.0
+      }
+    },
+    {
+      "lane": "spectral-confirm",
+      "profile": {
+        "device": "cpu",
+        "weights_bytes": 0,
+        "hop_samples": 256
+      },
+      "cases": 33,
+      "wakes_correct": 33,
+      "by_condition": {
+        "speech": {
+          "correct": 11,
+          "cases": 11
+        },
+        "ambient": {
+          "correct": 11,
+          "cases": 11
+        },
+        "mixed": {
+          "correct": 11,
+          "cases": 11
+        }
+      },
+      "median_isolation_rtf": 0.0020378595063843047,
+      "median_mixed_si_sdr_db": 0.464,
+      "retail_mix": {
+        "input_sha256": "b0f42905b2e0de4c66f2d328329ea708943d4048b04cccbd095ce8e913641d3f",
+        "observed_wake": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 13344,
+            "available_samples": 20480
+          },
+          {
+            "type": "interval",
+            "start": 13344,
+            "end": 18912
+          }
+        ],
+        "rtf": 0.0020934403373188614,
+        "si_sdr_db": 1.878,
+        "first_output_input_ms": 40.0
+      }
+    },
+    {
+      "lane": "inworld-realtime",
+      "profile": {
+        "checkpoint_sha256": "76598f05523c0669e76562a8b2f31c9d395fca316e80c907ee11775e7497ae0f",
+        "checkpoint_bytes": 232780800,
+        "model_revision": "9b0285b3fe8403aa8e2f1dbb2165a80a4294c970",
+        "device": "cuda",
+        "torch": "2.7.1+cu126",
+        "precision": "fp32",
+        "threads": 4,
+        "init_ms": 651.7322999425232
+      },
+      "cases": 33,
+      "wakes_correct": 33,
+      "by_condition": {
+        "speech": {
+          "correct": 11,
+          "cases": 11
+        },
+        "ambient": {
+          "correct": 11,
+          "cases": 11
+        },
+        "mixed": {
+          "correct": 11,
+          "cases": 11
+        }
+      },
+      "median_isolation_rtf": 1.703285428588273,
+      "median_mixed_si_sdr_db": 7.82,
+      "retail_mix": {
+        "input_sha256": "b0f42905b2e0de4c66f2d328329ea708943d4048b04cccbd095ce8e913641d3f",
+        "observed_wake": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 44000
+          }
+        ],
+        "rtf": 1.6021260567473201,
+        "si_sdr_db": 7.366,
+        "first_output_input_ms": 80.0
+      }
+    }
+  ],
+  "retail_cpu_reference": [
+    {
+      "lane": "inworld-realtime",
+      "profile": {
+        "checkpoint_sha256": "76598f05523c0669e76562a8b2f31c9d395fca316e80c907ee11775e7497ae0f",
+        "checkpoint_bytes": 232780800,
+        "model_revision": "9b0285b3fe8403aa8e2f1dbb2165a80a4294c970",
+        "device": "cpu",
+        "torch": "2.7.1+cu126",
+        "threads": 4,
+        "init_ms": 412.5091000460088
+      },
+      "cases": 3,
+      "wakes_correct": 3,
+      "by_condition": {
+        "speech": {
+          "correct": 1,
+          "cases": 1
+        },
+        "ambient": {
+          "correct": 1,
+          "cases": 1
+        },
+        "mixed": {
+          "correct": 1,
+          "cases": 1
+        }
+      },
+      "median_isolation_rtf": 5.40275096126593,
+      "median_mixed_si_sdr_db": 7.366,
+      "retail_mix": {
+        "input_sha256": "b0f42905b2e0de4c66f2d328329ea708943d4048b04cccbd095ce8e913641d3f",
+        "observed_wake": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 44000
+          }
+        ],
+        "rtf": 5.541430554642213,
+        "si_sdr_db": 7.366,
+        "first_output_input_ms": 80.0
+      }
+    },
+    {
+      "lane": "inworld-offline",
+      "profile": {
+        "checkpoint_sha256": "647335a6aeb4dc706b895532c209d51e0e84a4849d17b339f00d4392a050ae53",
+        "checkpoint_bytes": 256260128,
+        "model_revision": "9b0285b3fe8403aa8e2f1dbb2165a80a4294c970",
+        "device": "cpu",
+        "torch": "2.7.1+cu126",
+        "threads": 4,
+        "init_ms": 359.245500061661
+      },
+      "cases": 3,
+      "wakes_correct": 3,
+      "by_condition": {
+        "speech": {
+          "correct": 1,
+          "cases": 1
+        },
+        "ambient": {
+          "correct": 1,
+          "cases": 1
+        },
+        "mixed": {
+          "correct": 1,
+          "cases": 1
+        }
+      },
+      "median_isolation_rtf": 5.352621080776746,
+      "median_mixed_si_sdr_db": 10.139,
+      "retail_mix": {
+        "input_sha256": "b0f42905b2e0de4c66f2d328329ea708943d4048b04cccbd095ce8e913641d3f",
+        "observed_wake": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 44000
+          }
+        ],
+        "rtf": 5.352621080776746,
+        "si_sdr_db": 10.139,
+        "first_output_input_ms": null
+      }
+    }
+  ],
+  "room_regression": [
+    {
+      "lane": "raw",
+      "recordings": 464,
+      "summary": {
+        "samples": 73563880,
+        "truth": 13395795,
+        "covered": 10128928,
+        "expected_events": 561,
+        "missed_events": 136,
+        "false_wakes": 92,
+        "detected_events": 425
+      }
+    },
+    {
+      "lane": "spectral",
+      "recordings": 464,
+      "summary": {
+        "samples": 73563880,
+        "truth": 13395795,
+        "covered": 10954384,
+        "expected_events": 561,
+        "missed_events": 89,
+        "false_wakes": 152,
+        "detected_events": 472
+      }
+    },
+    {
+      "lane": "spectral-confirm",
+      "recordings": 464,
+      "summary": {
+        "samples": 73563880,
+        "truth": 13395795,
+        "covered": 10432384,
+        "expected_events": 561,
+        "missed_events": 124,
+        "false_wakes": 113,
+        "detected_events": 437
+      }
+    }
+  ]
+}

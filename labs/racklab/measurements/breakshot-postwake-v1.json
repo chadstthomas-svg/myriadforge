@@ -1,0 +1,905 @@
+{
+  "scope": "authored post-wake ASR replay with synthetic CueBall speech",
+  "labels_sha256": "8cfe0764e6f4127783ef143a64e139a75a3bb26fc0b1d91fb6e7351408db5d13",
+  "fixture_manifest_sha256": "8184d8dc881681d2119d1d719dac05a858286df0966186955b8e76b64bb467fa",
+  "detector": {
+    "backend": "cpu",
+    "runtime": "1.24.1",
+    "manifest_sha256": "337795a1ab2a5ffbb121b053591996ac0e60e46b05379ea067f59566a5fb54a3"
+  },
+  "whisper": {
+    "repository": "openai/whisper-tiny.en",
+    "revision": "87c7102498dcde7456f24cfd30239ca606ed9063",
+    "weights_sha256": "db59695928ded6043adaef491a53ef4e12da9611184d77c53baa691a60b958ad"
+  },
+  "libraries": {
+    "torch": "2.7.1+cu126",
+    "transformers": "4.57.6",
+    "numpy": "2.5.4",
+    "scipy": "1.17.0"
+  },
+  "runs": [
+    {
+      "pre_roll_ms": 400,
+      "summary": {
+        "all-captures": {
+          "raw": {
+            "clips": 20,
+            "fields": 30,
+            "exact_fields": 2,
+            "all_fields_exact": 0,
+            "word_errors": 139,
+            "words": 200,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.695
+          },
+          "clean-control": {
+            "clips": 20,
+            "fields": 30,
+            "exact_fields": 8,
+            "all_fields_exact": 3,
+            "word_errors": 116,
+            "words": 200,
+            "gains_vs_raw": 6,
+            "losses_vs_raw": 0,
+            "wer": 0.58
+          },
+          "compact": {
+            "clips": 20,
+            "fields": 30,
+            "exact_fields": 2,
+            "all_fields_exact": 0,
+            "word_errors": 146,
+            "words": 200,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.73
+          },
+          "inworld-realtime": {
+            "clips": 20,
+            "fields": 30,
+            "exact_fields": 2,
+            "all_fields_exact": 2,
+            "word_errors": 148,
+            "words": 200,
+            "gains_vs_raw": 2,
+            "losses_vs_raw": 2,
+            "wer": 0.74
+          }
+        },
+        "raw-wake": {
+          "raw": {
+            "clips": 19,
+            "fields": 29,
+            "exact_fields": 2,
+            "all_fields_exact": 0,
+            "word_errors": 134,
+            "words": 192,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.6979166666666666
+          },
+          "clean-control": {
+            "clips": 19,
+            "fields": 29,
+            "exact_fields": 8,
+            "all_fields_exact": 3,
+            "word_errors": 112,
+            "words": 192,
+            "gains_vs_raw": 6,
+            "losses_vs_raw": 0,
+            "wer": 0.5833333333333334
+          },
+          "compact": {
+            "clips": 19,
+            "fields": 29,
+            "exact_fields": 2,
+            "all_fields_exact": 0,
+            "word_errors": 141,
+            "words": 192,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.734375
+          },
+          "inworld-realtime": {
+            "clips": 19,
+            "fields": 29,
+            "exact_fields": 1,
+            "all_fields_exact": 1,
+            "word_errors": 144,
+            "words": 192,
+            "gains_vs_raw": 1,
+            "losses_vs_raw": 2,
+            "wer": 0.75
+          }
+        },
+        "forced-capture": {
+          "raw": {
+            "clips": 1,
+            "fields": 1,
+            "exact_fields": 0,
+            "all_fields_exact": 0,
+            "word_errors": 5,
+            "words": 8,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.625
+          },
+          "clean-control": {
+            "clips": 1,
+            "fields": 1,
+            "exact_fields": 0,
+            "all_fields_exact": 0,
+            "word_errors": 4,
+            "words": 8,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.5
+          },
+          "compact": {
+            "clips": 1,
+            "fields": 1,
+            "exact_fields": 0,
+            "all_fields_exact": 0,
+            "word_errors": 5,
+            "words": 8,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.625
+          },
+          "inworld-realtime": {
+            "clips": 1,
+            "fields": 1,
+            "exact_fields": 1,
+            "all_fields_exact": 1,
+            "word_errors": 4,
+            "words": 8,
+            "gains_vs_raw": 1,
+            "losses_vs_raw": 0,
+            "wer": 0.5
+          }
+        },
+        "synthetic-identifiers": {
+          "raw": {
+            "clips": 9,
+            "fields": 14,
+            "exact_fields": 1,
+            "all_fields_exact": 0,
+            "word_errors": 70,
+            "words": 104,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.6730769230769231
+          },
+          "clean-control": {
+            "clips": 9,
+            "fields": 14,
+            "exact_fields": 4,
+            "all_fields_exact": 1,
+            "word_errors": 65,
+            "words": 104,
+            "gains_vs_raw": 3,
+            "losses_vs_raw": 0,
+            "wer": 0.625
+          },
+          "compact": {
+            "clips": 9,
+            "fields": 14,
+            "exact_fields": 1,
+            "all_fields_exact": 0,
+            "word_errors": 71,
+            "words": 104,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.6826923076923077
+          },
+          "inworld-realtime": {
+            "clips": 9,
+            "fields": 14,
+            "exact_fields": 1,
+            "all_fields_exact": 1,
+            "word_errors": 80,
+            "words": 104,
+            "gains_vs_raw": 1,
+            "losses_vs_raw": 1,
+            "wer": 0.7692307692307693
+          }
+        }
+      },
+      "passes_authored_gate": {
+        "compact": false,
+        "inworld-realtime": false
+      },
+      "isolators": {
+        "inworld-realtime": {
+          "checkpoint_sha256": "76598f05523c0669e76562a8b2f31c9d395fca316e80c907ee11775e7497ae0f",
+          "checkpoint_bytes": 232780800,
+          "model_revision": "9b0285b3fe8403aa8e2f1dbb2165a80a4294c970",
+          "device": "cuda",
+          "torch": "2.7.1+cu126",
+          "precision": "fp32",
+          "threads": 2,
+          "init_ms": 584.5391999464482
+        }
+      },
+      "cropped_clips": 19,
+      "max_preroll_bytes_at_wake": 30144,
+      "examples": [
+        {
+          "id": "product_recall",
+          "raw_wake": true,
+          "crop_start_samples": 22304,
+          "prompt": "For model A one six four seven, verify the unit serial number.",
+          "systems": {
+            "raw": {
+              "transcript": "647 or have you a Syrian mom?",
+              "fields": {
+                "model": false,
+                "identifier": false
+              },
+              "words": 12,
+              "errors": 12,
+              "asr_ms": 361.085900105536
+            },
+            "clean-control": {
+              "transcript": "647 bar for the unit serial knob.",
+              "fields": {
+                "model": false,
+                "identifier": false
+              },
+              "words": 12,
+              "errors": 9,
+              "asr_ms": 370.9997001569718
+            },
+            "compact": {
+              "transcript": "64730, Syrian.",
+              "fields": {
+                "model": false,
+                "identifier": false
+              },
+              "words": 12,
+              "errors": 11,
+              "asr_ms": 330.49759990535676
+            },
+            "inworld-realtime": {
+              "transcript": "6-4-7, BRC, have a great cereal now.",
+              "fields": {
+                "model": false,
+                "identifier": false
+              },
+              "words": 12,
+              "errors": 10,
+              "asr_ms": 442.0167999342084
+            }
+          }
+        },
+        {
+          "id": "store_equipment",
+          "raw_wake": false,
+          "crop_start_samples": 0,
+          "prompt": "Verify the device on the register support ticket.",
+          "systems": {
+            "raw": {
+              "transcript": "We are finding the noise on the register support table.",
+              "fields": {
+                "ticket": false
+              },
+              "words": 8,
+              "errors": 5,
+              "asr_ms": 419.4108000956476
+            },
+            "clean-control": {
+              "transcript": "Larafide nice on the register support tent.",
+              "fields": {
+                "ticket": false
+              },
+              "words": 8,
+              "errors": 4,
+              "asr_ms": 390.00819995999336
+            },
+            "compact": {
+              "transcript": "We are finally nice on the Register support deck.",
+              "fields": {
+                "ticket": false
+              },
+              "words": 8,
+              "errors": 5,
+              "asr_ms": 379.26400010474026
+            },
+            "inworld-realtime": {
+              "transcript": "Not a funny noise on the register support ticket.",
+              "fields": {
+                "ticket": true
+              },
+              "words": 8,
+              "errors": 4,
+              "asr_ms": 374.5887998957187
+            }
+          }
+        },
+        {
+          "id": "recall-campaign",
+          "raw_wake": true,
+          "crop_start_samples": 7968,
+          "prompt": "Check recall one seven V six five two for the Ford F one fifty.",
+          "systems": {
+            "raw": {
+              "transcript": "Share, recall 1-7-V-6-5-2. We're at 1-8.",
+              "fields": {
+                "campaign": true,
+                "vehicle": false
+              },
+              "words": 14,
+              "errors": 6,
+              "asr_ms": 627.4076998233795
+            },
+            "clean-control": {
+              "transcript": "Check out our channel at 1.7v652 for the 4F1V.",
+              "fields": {
+                "campaign": true,
+                "vehicle": false
+              },
+              "words": 14,
+              "errors": 11,
+              "asr_ms": 507.03259999863803
+            },
+            "compact": {
+              "transcript": "Share, recall 1 7 V 6 5 2 4 F 1 8",
+              "fields": {
+                "campaign": true,
+                "vehicle": false
+              },
+              "words": 14,
+              "errors": 5,
+              "asr_ms": 480.7978000026196
+            },
+            "inworld-realtime": {
+              "transcript": "Share it with call 17- v6524 for F1V.",
+              "fields": {
+                "campaign": false,
+                "vehicle": false
+              },
+              "words": 14,
+              "errors": 13,
+              "asr_ms": 545.5505000427365
+            }
+          }
+        },
+        {
+          "id": "part-number",
+          "raw_wake": true,
+          "crop_start_samples": 1824,
+          "prompt": "Verify part B three zero nine seven before approving the order.",
+          "systems": {
+            "raw": {
+              "transcript": "No effect part being 3-0, 9-7 before a crew meal.",
+              "fields": {
+                "part": false
+              },
+              "words": 11,
+              "errors": 6,
+              "asr_ms": 460.0211998913437
+            },
+            "clean-control": {
+              "transcript": "No if I part D3097 before approving the ore.",
+              "fields": {
+                "part": false
+              },
+              "words": 11,
+              "errors": 8,
+              "asr_ms": 435.30470016412437
+            },
+            "compact": {
+              "transcript": "No effect part beat 3-0-9-7 before a female.",
+              "fields": {
+                "part": false
+              },
+              "words": 11,
+              "errors": 6,
+              "asr_ms": 476.66289983317256
+            },
+            "inworld-realtime": {
+              "transcript": "Fact part B3097 before a preview.",
+              "fields": {
+                "part": true
+              },
+              "words": 11,
+              "errors": 9,
+              "asr_ms": 398.36360001936555
+            }
+          }
+        },
+        {
+          "id": "pos-device",
+          "raw_wake": true,
+          "crop_start_samples": 28960,
+          "prompt": "Check register four and printer P two zero six before reopening.",
+          "systems": {
+            "raw": {
+              "transcript": "No pay to zero six before me.",
+              "fields": {
+                "register": false,
+                "printer": false
+              },
+              "words": 11,
+              "errors": 8,
+              "asr_ms": 399.3142999242991
+            },
+            "clean-control": {
+              "transcript": "20-06 before OV.",
+              "fields": {
+                "register": false,
+                "printer": false
+              },
+              "words": 11,
+              "errors": 9,
+              "asr_ms": 360.8448999002576
+            },
+            "compact": {
+              "transcript": "and her P2-Virals since before my life.",
+              "fields": {
+                "register": false,
+                "printer": false
+              },
+              "words": 11,
+              "errors": 10,
+              "asr_ms": 437.1301999781281
+            },
+            "inworld-realtime": {
+              "transcript": "Okay, two zero, six before okay.",
+              "fields": {
+                "register": false,
+                "printer": false
+              },
+              "words": 11,
+              "errors": 7,
+              "asr_ms": 393.05850001983345
+            }
+          }
+        }
+      ]
+    },
+    {
+      "pre_roll_ms": 2500,
+      "summary": {
+        "all-captures": {
+          "raw": {
+            "clips": 20,
+            "fields": 30,
+            "exact_fields": 3,
+            "all_fields_exact": 0,
+            "word_errors": 146,
+            "words": 200,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.73
+          },
+          "clean-control": {
+            "clips": 20,
+            "fields": 30,
+            "exact_fields": 10,
+            "all_fields_exact": 4,
+            "word_errors": 121,
+            "words": 200,
+            "gains_vs_raw": 8,
+            "losses_vs_raw": 1,
+            "wer": 0.605
+          },
+          "compact": {
+            "clips": 20,
+            "fields": 30,
+            "exact_fields": 2,
+            "all_fields_exact": 0,
+            "word_errors": 235,
+            "words": 200,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 1,
+            "wer": 1.175
+          },
+          "inworld-realtime": {
+            "clips": 20,
+            "fields": 30,
+            "exact_fields": 1,
+            "all_fields_exact": 1,
+            "word_errors": 143,
+            "words": 200,
+            "gains_vs_raw": 1,
+            "losses_vs_raw": 3,
+            "wer": 0.715
+          }
+        },
+        "raw-wake": {
+          "raw": {
+            "clips": 19,
+            "fields": 29,
+            "exact_fields": 3,
+            "all_fields_exact": 0,
+            "word_errors": 141,
+            "words": 192,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.734375
+          },
+          "clean-control": {
+            "clips": 19,
+            "fields": 29,
+            "exact_fields": 10,
+            "all_fields_exact": 4,
+            "word_errors": 117,
+            "words": 192,
+            "gains_vs_raw": 8,
+            "losses_vs_raw": 1,
+            "wer": 0.609375
+          },
+          "compact": {
+            "clips": 19,
+            "fields": 29,
+            "exact_fields": 2,
+            "all_fields_exact": 0,
+            "word_errors": 230,
+            "words": 192,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 1,
+            "wer": 1.1979166666666667
+          },
+          "inworld-realtime": {
+            "clips": 19,
+            "fields": 29,
+            "exact_fields": 0,
+            "all_fields_exact": 0,
+            "word_errors": 139,
+            "words": 192,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 3,
+            "wer": 0.7239583333333334
+          }
+        },
+        "forced-capture": {
+          "raw": {
+            "clips": 1,
+            "fields": 1,
+            "exact_fields": 0,
+            "all_fields_exact": 0,
+            "word_errors": 5,
+            "words": 8,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.625
+          },
+          "clean-control": {
+            "clips": 1,
+            "fields": 1,
+            "exact_fields": 0,
+            "all_fields_exact": 0,
+            "word_errors": 4,
+            "words": 8,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.5
+          },
+          "compact": {
+            "clips": 1,
+            "fields": 1,
+            "exact_fields": 0,
+            "all_fields_exact": 0,
+            "word_errors": 5,
+            "words": 8,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.625
+          },
+          "inworld-realtime": {
+            "clips": 1,
+            "fields": 1,
+            "exact_fields": 1,
+            "all_fields_exact": 1,
+            "word_errors": 4,
+            "words": 8,
+            "gains_vs_raw": 1,
+            "losses_vs_raw": 0,
+            "wer": 0.5
+          }
+        },
+        "synthetic-identifiers": {
+          "raw": {
+            "clips": 9,
+            "fields": 14,
+            "exact_fields": 2,
+            "all_fields_exact": 0,
+            "word_errors": 77,
+            "words": 104,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 0,
+            "wer": 0.7403846153846154
+          },
+          "clean-control": {
+            "clips": 9,
+            "fields": 14,
+            "exact_fields": 5,
+            "all_fields_exact": 2,
+            "word_errors": 72,
+            "words": 104,
+            "gains_vs_raw": 4,
+            "losses_vs_raw": 1,
+            "wer": 0.6923076923076923
+          },
+          "compact": {
+            "clips": 9,
+            "fields": 14,
+            "exact_fields": 1,
+            "all_fields_exact": 0,
+            "word_errors": 164,
+            "words": 104,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 1,
+            "wer": 1.5769230769230769
+          },
+          "inworld-realtime": {
+            "clips": 9,
+            "fields": 14,
+            "exact_fields": 0,
+            "all_fields_exact": 0,
+            "word_errors": 73,
+            "words": 104,
+            "gains_vs_raw": 0,
+            "losses_vs_raw": 2,
+            "wer": 0.7019230769230769
+          }
+        }
+      },
+      "passes_authored_gate": {
+        "compact": false,
+        "inworld-realtime": false
+      },
+      "isolators": {
+        "inworld-realtime": {
+          "checkpoint_sha256": "76598f05523c0669e76562a8b2f31c9d395fca316e80c907ee11775e7497ae0f",
+          "checkpoint_bytes": 232780800,
+          "model_revision": "9b0285b3fe8403aa8e2f1dbb2165a80a4294c970",
+          "device": "cuda",
+          "torch": "2.7.1+cu126",
+          "precision": "fp32",
+          "threads": 2,
+          "init_ms": 478.97240007296205
+        }
+      },
+      "cropped_clips": 0,
+      "max_preroll_bytes_at_wake": 81920,
+      "examples": [
+        {
+          "id": "product_recall",
+          "raw_wake": true,
+          "crop_start_samples": 0,
+          "prompt": "For model A one six four seven, verify the unit serial number.",
+          "systems": {
+            "raw": {
+              "transcript": "4 miles at 160, 47, 30, and 0 miles.",
+              "fields": {
+                "model": false,
+                "identifier": false
+              },
+              "words": 12,
+              "errors": 11,
+              "asr_ms": 450.1683998387307
+            },
+            "clean-control": {
+              "transcript": "Form Model 11647 bar for the unit serial knob.",
+              "fields": {
+                "model": false,
+                "identifier": false
+              },
+              "words": 12,
+              "errors": 8,
+              "asr_ms": 459.6802999731153
+            },
+            "compact": {
+              "transcript": "4 mile at 1 6 4 7, 30, 30, 30, 30 mile.",
+              "fields": {
+                "model": false,
+                "identifier": false
+              },
+              "words": 12,
+              "errors": 8,
+              "asr_ms": 506.00340007804334
+            },
+            "inworld-realtime": {
+              "transcript": "Form Bible 116-7 Parachadiac serial law.",
+              "fields": {
+                "model": false,
+                "identifier": false
+              },
+              "words": 12,
+              "errors": 9,
+              "asr_ms": 439.2719999887049
+            }
+          }
+        },
+        {
+          "id": "store_equipment",
+          "raw_wake": false,
+          "crop_start_samples": 0,
+          "prompt": "Verify the device on the register support ticket.",
+          "systems": {
+            "raw": {
+              "transcript": "We are finding the noise on the register support table.",
+              "fields": {
+                "ticket": false
+              },
+              "words": 8,
+              "errors": 5,
+              "asr_ms": 397.34090003184974
+            },
+            "clean-control": {
+              "transcript": "Larafide nice on the register support tent.",
+              "fields": {
+                "ticket": false
+              },
+              "words": 8,
+              "errors": 4,
+              "asr_ms": 410.7361000496894
+            },
+            "compact": {
+              "transcript": "We are finally nice on the Register support deck.",
+              "fields": {
+                "ticket": false
+              },
+              "words": 8,
+              "errors": 5,
+              "asr_ms": 399.7819998767227
+            },
+            "inworld-realtime": {
+              "transcript": "Not a funny noise on the register support ticket.",
+              "fields": {
+                "ticket": true
+              },
+              "words": 8,
+              "errors": 4,
+              "asr_ms": 417.91810002177954
+            }
+          }
+        },
+        {
+          "id": "recall-campaign",
+          "raw_wake": true,
+          "crop_start_samples": 0,
+          "prompt": "Check recall one seven V six five two for the Ford F one fifty.",
+          "systems": {
+            "raw": {
+              "transcript": "Chair, recall 1-7-V-6-5-2-4-5-1-3.",
+              "fields": {
+                "campaign": true,
+                "vehicle": false
+              },
+              "words": 14,
+              "errors": 6,
+              "asr_ms": 593.6589997727424
+            },
+            "clean-control": {
+              "transcript": "Chair recall 17V6524F1V.",
+              "fields": {
+                "campaign": false,
+                "vehicle": false
+              },
+              "words": 14,
+              "errors": 13,
+              "asr_ms": 396.00829989649355
+            },
+            "compact": {
+              "transcript": "Chair, recall 17 v6 by 2 or f1.",
+              "fields": {
+                "campaign": false,
+                "vehicle": false
+              },
+              "words": 14,
+              "errors": 12,
+              "asr_ms": 422.0335001591593
+            },
+            "inworld-realtime": {
+              "transcript": "Share it with call 17 v6524 for F1V.",
+              "fields": {
+                "campaign": false,
+                "vehicle": false
+              },
+              "words": 14,
+              "errors": 13,
+              "asr_ms": 421.36829998344183
+            }
+          }
+        },
+        {
+          "id": "part-number",
+          "raw_wake": true,
+          "crop_start_samples": 0,
+          "prompt": "Verify part B three zero nine seven before approving the order.",
+          "systems": {
+            "raw": {
+              "transcript": "The",
+              "fields": {
+                "part": false
+              },
+              "words": 11,
+              "errors": 10,
+              "asr_ms": 336.8052002042532
+            },
+            "clean-control": {
+              "transcript": "No if I part B3097 before I proving the ore.",
+              "fields": {
+                "part": true
+              },
+              "words": 11,
+              "errors": 10,
+              "asr_ms": 504.21459996141493
+            },
+            "compact": {
+              "transcript": "The LFX part beat 3-0-9-7 before a few meal.",
+              "fields": {
+                "part": false
+              },
+              "words": 11,
+              "errors": 6,
+              "asr_ms": 580.9160000644624
+            },
+            "inworld-realtime": {
+              "transcript": "Five-part B-300-97 before a preview.",
+              "fields": {
+                "part": false
+              },
+              "words": 11,
+              "errors": 6,
+              "asr_ms": 425.1233001705259
+            }
+          }
+        },
+        {
+          "id": "pos-device",
+          "raw_wake": true,
+          "crop_start_samples": 0,
+          "prompt": "Check register four and printer P two zero six before reopening.",
+          "systems": {
+            "raw": {
+              "transcript": "Check ready, sir, for infratal P-2-0-6 before moving.",
+              "fields": {
+                "register": false,
+                "printer": true
+              },
+              "words": 11,
+              "errors": 5,
+              "asr_ms": 511.7170000448823
+            },
+            "clean-control": {
+              "transcript": "Check ready, sir, for and print out P206 before OV.",
+              "fields": {
+                "register": false,
+                "printer": true
+              },
+              "words": 11,
+              "errors": 9,
+              "asr_ms": 432.138699805364
+            },
+            "compact": {
+              "transcript": "Check ready, sir, for and Prado P2-0-6 before moving.",
+              "fields": {
+                "register": false,
+                "printer": true
+              },
+              "words": 11,
+              "errors": 7,
+              "asr_ms": 482.48020000755787
+            },
+            "inworld-realtime": {
+              "transcript": "Check Redister 4 and Pray Opey 2006 before Opey.",
+              "fields": {
+                "register": false,
+                "printer": false
+              },
+              "words": 11,
+              "errors": 5,
+              "asr_ms": 458.80569983273745
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

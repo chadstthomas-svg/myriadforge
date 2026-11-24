@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#19111b">
+  <meta name="description" content="Physical Intel NCS1 and NCS2 benchmarks for Rack Lab decisions, audio, search, and streaming.">
+  <title>Stick benchmarks · Rack Lab</title>
+  <link rel="icon" href="../../assets/rack-lab-avatar.png" type="image/png">
+  <link rel="stylesheet" href="./charts.css">
+</head>
+<body>
+  <header class="shell mast">
+    <a href="../../index.html"><img src="../../assets/rack-lab-avatar.png" alt="" width="30" height="30">Rack Lab</a>
+    <nav aria-label="Benchmarks"><a href="#compatibility">Compatibility</a><a href="#charts">Charts</a><a href="#pilots">Full suite</a></nav>
+  </header>
+  <main class="shell">
+    <div class="hero">
+      <h1>Intel stick <span>benchmarks</span></h1>
+      <p>Rack Lab workloads replayed on physical Intel Neural Compute Sticks. Every result identifies the stage that ran on the device and the work the host handled.</p>
+      <div class="device-grid" aria-label="Tested devices">
+        <div class="device"><strong>Intel NCS1</strong><span>Myriad 2 · OpenVINO 2020.3.2</span></div>
+        <div class="device"><strong>Intel NCS2</strong><span>Myriad X · OpenVINO 2022.3.1</span></div>
+      </div>
+    </div>
+
+    <section id="compatibility" aria-labelledby="compatibility-title">
+      <h2 id="compatibility-title">What ran on each stick</h2>
+      <div class="matrix">
+        <table aria-label="Rack Lab workloads by physical stick">
+          <thead><tr><th scope="col">Workload</th><th scope="col">NCS1</th><th scope="col">NCS2</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">MagicEightBall<br>Boolean decisions</th><td>27/27 industry cases and 384/384 assignments, including late-veto tests at 131,072 tokens.</td><td>27/27 industry cases and 384/384 assignments. Also passed seven exact 131,072-token support cases.</td></tr>
+            <tr><th scope="row">BreakShot<br>Speech detection</th><td>425/561 speech events, 91 false wakes</td><td>424/561 speech events, 90 false wakes. Both learned stages on device.</td></tr>
+            <tr><th scope="row">RailShot<br>Stream recovery</th><td>10/10 physical restart checks</td><td>10/10 with an experimental NCS2 adapter. SQLite and tokenization on host.</td></tr>
+            <tr><th scope="row">BankShot<br>Source search</th><td>4/5 target references returned</td><td>4/5 on the same catalog with an experimental adapter. The lathe reference was missed on both sticks.</td></tr>
+            <tr><th scope="row">CueBall<br>Text to speech</th><td>Full and student v0.3 rendered all ten prompts</td><td>Both variants compiled. Device I/O errors prevented all ten prompts per variant from completing, including on a single-stream retry.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>MagicEightBall scans and tokenizes text on the host before its device call. BreakShot uses host-side audio framing. BankShot uses a host catalog and feature extraction.</p>
+    </section>
+
+    <section id="charts" aria-labelledby="charts-title">
+      <h2 id="charts-title">Measured results</h2>
+      <div class="chart-grid">
+        <figure>
+          <img src="./decision-latency.png" width="1320" height="957" alt="Host plus NCS2 median latency is 2.55, 10.81, and 33.39 ms at 1,024, 32,768, and 131,072 tokens. The CPU reference takes 0.84, 8.67, and 30.78 ms.">
+          <figcaption>Ten warm decisions per size on the support policy. At 131,072 tokens, the NCS2 path took 33.39 ms at p50 and 46.86 ms at p95. Host tokenization took 26.45 ms at p50. The CPU policy reference used the same text.</figcaption>
+        </figure>
+        <figure>
+          <img src="./breakshot-room.png" width="1320" height="957" alt="CPU, NCS1 and NCS2 detected 425, 425 and 424 of 561 annotated events respectively, with 92, 91 and 90 false wakes.">
+          <figcaption>Both sticks replayed the same 464 DESED room recordings. On 33 separate authored clips, NCS2 matched 33 CPU wake decisions and 32 fixture labels.</figcaption>
+        </figure>
+        <figure>
+          <img src="./bankshot-latency.png" width="1320" height="957" loading="lazy" alt="BankShot warm median search latency ranged from 4.37 to 6.57 ms on CPU, 11.52 to 15.27 ms on NCS1, and 9.04 to 10.36 ms on NCS2.">
+          <figcaption>Seven warm searches per query, excluding session setup. All three runtimes returned the same target ranks on five editorial cases. CPU was quickest on every query in this replay.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="pilots" aria-labelledby="pilots-title">
+      <h2 id="pilots-title">Full MyriadForge pilot suite</h2>
+      <p>All five pilots completed on Windows. Four used the physical NCS2 for their device stage.</p>
+      <ul class="pilot-list">
+        <li><strong>MobileNetV2 gate</strong><span>22.63 ms warm median, 50 timed inferences</span></li>
+        <li><strong>kNN</strong><span>37.0 queries/sec, 100,000-vector table, 32 queries per batch</span></li>
+        <li><strong>Cascade</strong><span>22.7 ms NCS2 gate. Host captioning requires Mirage.</span></li>
+        <li><strong>Footage</strong><span>19 events from 20 sampled frames</span></li>
+        <li><strong>Podcast</strong><span>51 energy-gate events across 66 windows on CPU</span></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="sources-title">
+      <h2 id="sources-title">Data and reproduction</h2>
+      <div class="source-list">
+        <a href="./data.json">Download benchmark data</a>
+        <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/NCS2_AUDIO_REPLAY.md">Replay instructions</a>
+        <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/tools/ncs2/demo_mvp.py">Pilot runner</a>
+        <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/labs/racklab/render_stick_charts.py">Chart source</a>
+        <a href="https://zenodo.org/records/14808180">DESED room audio</a>
+        <a href="https://www.intel.com/content/www/us/en/support/articles/000091265/software.html">Intel runtime support</a>
+      </div>
+    </section>
+  </main>
+  <footer class="shell"><a href="../../index.html">Back to the Break Room</a></footer>
+</body>
+</html>

@@ -1,0 +1,2560 @@
+{
+  "schema": "racklab.stick-benchmarks/1",
+  "recorded_on": "2026-11-24",
+  "devices": {
+    "ncs1": {
+      "name": "Myriad 2",
+      "usb_id": "03E7:2150",
+      "openvino": "2020.3.2"
+    },
+    "ncs2": {
+      "name": "Intel Movidius Myriad X VPU",
+      "usb_id": "03E7:2485",
+      "openvino": "2022.3.1-9227-cf2c7da5689-releases/2022/3"
+    }
+  },
+  "magiceightball": {
+    "ncs1_frontline": {
+      "matched_cases": 27,
+      "simulated_cases": 27,
+      "verified_assignments_by_bank": {
+        "dealership": 128,
+        "manufacturing": 128,
+        "store_security": 128
+      },
+      "scenario_sha256": "6968e61c30c05244e6566836744f1c8fba6fbb91627430daeeb7f0d6e9b1d4b9"
+    },
+    "ncs2_frontline": {
+      "matched_cases": 27,
+      "simulated_cases": 27,
+      "verified_assignments_by_bank": {
+        "dealership": 128,
+        "manufacturing": 128,
+        "store_security": 128
+      },
+      "scenario_sha256": "b9b9c77c788f8179f838a9d880c2b6e6ad8f7441dedce75b16c435c8966a7144",
+      "cases": [
+        {
+          "vertical": "dealership",
+          "workload": "text",
+          "id": "dealership-service-intake",
+          "tokens": 22,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_intake"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_intake"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_intake"
+          }
+        },
+        {
+          "vertical": "dealership",
+          "workload": "text",
+          "id": "dealership-inspection-intake",
+          "tokens": 16,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "inspection",
+            "action": "review_inspection_intake"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "inspection",
+            "action": "review_inspection_intake"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "inspection",
+            "action": "review_inspection_intake"
+          }
+        },
+        {
+          "vertical": "dealership",
+          "workload": "text",
+          "id": "dealership-combined-intake",
+          "tokens": 19,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "combined_intake",
+            "action": "review_combined_intake"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "combined_intake",
+            "action": "review_combined_intake"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "combined_intake",
+            "action": "review_combined_intake"
+          }
+        },
+        {
+          "vertical": "dealership",
+          "workload": "text",
+          "id": "dealership-missing-approval",
+          "tokens": 18,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_intake"
+          }
+        },
+        {
+          "vertical": "dealership",
+          "workload": "text",
+          "id": "dealership-customer-withdrew",
+          "tokens": 20,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "inspection",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "inspection",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "inspection",
+            "action": "review_inspection_intake"
+          }
+        },
+        {
+          "vertical": "dealership",
+          "workload": "text",
+          "id": "dealership-boundary-guard",
+          "tokens": 27,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          }
+        },
+        {
+          "vertical": "dealership",
+          "workload": "structured",
+          "id": "dealership-history-approval",
+          "tokens": 33,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_intake"
+          }
+        },
+        {
+          "vertical": "dealership",
+          "workload": "structured",
+          "id": "dealership-history-hold",
+          "tokens": 35,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "inspection",
+            "action": "review_inspection_intake"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "inspection",
+            "action": "review_inspection_intake"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "inspection",
+            "action": "review_inspection_intake"
+          }
+        },
+        {
+          "vertical": "dealership",
+          "workload": "full_context",
+          "id": "dealership-late-veto",
+          "tokens": 131072,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_intake"
+          }
+        },
+        {
+          "vertical": "manufacturing",
+          "workload": "text",
+          "id": "manufacturing-vibration",
+          "tokens": 20,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "mechanical",
+            "action": "review_mechanical_alert"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "mechanical",
+            "action": "review_mechanical_alert"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "mechanical",
+            "action": "review_mechanical_alert"
+          }
+        },
+        {
+          "vertical": "manufacturing",
+          "workload": "text",
+          "id": "manufacturing-filter",
+          "tokens": 17,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_alert"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_alert"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_alert"
+          }
+        },
+        {
+          "vertical": "manufacturing",
+          "workload": "text",
+          "id": "manufacturing-combined",
+          "tokens": 23,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "combined_maintenance",
+            "action": "review_combined_maintenance"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "combined_maintenance",
+            "action": "review_combined_maintenance"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "combined_maintenance",
+            "action": "review_combined_maintenance"
+          }
+        },
+        {
+          "vertical": "manufacturing",
+          "workload": "text",
+          "id": "manufacturing-missing-approval",
+          "tokens": 23,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "mechanical",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "mechanical",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "mechanical",
+            "action": "review_mechanical_alert"
+          }
+        },
+        {
+          "vertical": "manufacturing",
+          "workload": "text",
+          "id": "manufacturing-work-order-blocked",
+          "tokens": 28,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_alert"
+          }
+        },
+        {
+          "vertical": "manufacturing",
+          "workload": "text",
+          "id": "manufacturing-boundary-guard",
+          "tokens": 31,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          }
+        },
+        {
+          "vertical": "manufacturing",
+          "workload": "structured",
+          "id": "manufacturing-history-approval",
+          "tokens": 39,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "mechanical",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "mechanical",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "mechanical",
+            "action": "review_mechanical_alert"
+          }
+        },
+        {
+          "vertical": "manufacturing",
+          "workload": "structured",
+          "id": "manufacturing-history-hold",
+          "tokens": 36,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_alert"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_alert"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_alert"
+          }
+        },
+        {
+          "vertical": "manufacturing",
+          "workload": "full_context",
+          "id": "manufacturing-late-veto",
+          "tokens": 131072,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "service",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "service",
+            "action": "review_service_alert"
+          }
+        },
+        {
+          "vertical": "store_security",
+          "workload": "text",
+          "id": "retail-door-event",
+          "tokens": 29,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "access_alert",
+            "action": "review_access_alert"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "access_alert",
+            "action": "review_access_alert"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "access_alert",
+            "action": "review_access_alert"
+          }
+        },
+        {
+          "vertical": "store_security",
+          "workload": "text",
+          "id": "retail-camera-event",
+          "tokens": 21,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "camera_alert",
+            "action": "review_camera_alert"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "camera_alert",
+            "action": "review_camera_alert"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "camera_alert",
+            "action": "review_camera_alert"
+          }
+        },
+        {
+          "vertical": "store_security",
+          "workload": "text",
+          "id": "retail-combined-event",
+          "tokens": 21,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "combined_alert",
+            "action": "review_combined_alert"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "combined_alert",
+            "action": "review_combined_alert"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "combined_alert",
+            "action": "review_combined_alert"
+          }
+        },
+        {
+          "vertical": "store_security",
+          "workload": "text",
+          "id": "retail-missing-approval",
+          "tokens": 24,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "access_alert",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "access_alert",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "access_alert",
+            "action": "review_access_alert"
+          }
+        },
+        {
+          "vertical": "store_security",
+          "workload": "text",
+          "id": "retail-drill-hold",
+          "tokens": 21,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "access_alert",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "access_alert",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "access_alert",
+            "action": "review_access_alert"
+          }
+        },
+        {
+          "vertical": "store_security",
+          "workload": "text",
+          "id": "retail-boundary-guard",
+          "tokens": 32,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          }
+        },
+        {
+          "vertical": "store_security",
+          "workload": "structured",
+          "id": "retail-history-approval",
+          "tokens": 36,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "camera_alert",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "camera_alert",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "camera_alert",
+            "action": "review_camera_alert"
+          }
+        },
+        {
+          "vertical": "store_security",
+          "workload": "structured",
+          "id": "retail-history-clear",
+          "tokens": 35,
+          "expected": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "access_alert",
+            "action": "review_access_alert"
+          },
+          "actual": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "access_alert",
+            "action": "review_access_alert"
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "access_alert",
+            "action": "review_access_alert"
+          }
+        },
+        {
+          "vertical": "store_security",
+          "workload": "full_context",
+          "id": "retail-late-veto",
+          "tokens": 131072,
+          "expected": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "camera_alert",
+            "action": null
+          },
+          "actual": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "camera_alert",
+            "action": null
+          },
+          "ungated": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "camera_alert",
+            "action": "review_camera_alert"
+          }
+        }
+      ]
+    },
+    "ncs2_support": {
+      "session": 1,
+      "variant": "gather",
+      "fast_count": true,
+      "onnx_sha256": "9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5",
+      "corpus_sha256": "48e0522844402a86a3ea98f0947ba85ea54838db3c59022299298ed968a5a163",
+      "load_ms": 1526.6866001766175,
+      "devices": [
+        "CPU",
+        "GPU",
+        "MYRIAD"
+      ],
+      "backend": "MYRIAD",
+      "lane": "ncs2",
+      "openvino_version": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "exhaustive_combinations": 128,
+      "adversarial_cases": 13,
+      "context_cases": {
+        "early": {
+          "tokens": 131072,
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "billing",
+            "action": "review_billing"
+          },
+          "input_sha256": "3f60c64bbcb6c816df973f3a103b800798568a160a83d06cc6961f9f2111c6d0"
+        },
+        "middle": {
+          "tokens": 131072,
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "billing",
+            "action": "review_billing"
+          },
+          "input_sha256": "2fa359075b5f7220c88f546d8da4eb0688cee66994b692381d53f45a8b043fb9"
+        },
+        "last": {
+          "tokens": 131072,
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "billing",
+            "action": "review_billing"
+          },
+          "input_sha256": "3af4cedf19704d4a4e02f4d1f201a1ecef761f6b7ee972469d1c936e90ec640e"
+        },
+        "far_apart": {
+          "tokens": 131072,
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "delivery",
+            "action": "review_delivery"
+          },
+          "input_sha256": "53c77b72ea859e9d68efc45a46566761aea3a58f4bb777a378af1c0480afa0d5"
+        },
+        "late_veto": {
+          "tokens": 131072,
+          "result": {
+            "answers": {
+              "may_route": false
+            },
+            "category": "billing",
+            "action": null
+          },
+          "input_sha256": "8472fa9b8a48701237449c53e242cbf58f1975484652a75222023a3c2f611b17"
+        },
+        "late_category": {
+          "tokens": 131072,
+          "result": {
+            "answers": {
+              "may_route": true
+            },
+            "category": "mixed",
+            "action": "triage_mixed"
+          },
+          "input_sha256": "a9d99cdf06c91fb603865d708df51dfa90246597520ab911f9d58e8c1bd475e3"
+        },
+        "absent": {
+          "tokens": 131072,
+          "result": {
+            "answers": {
+              "may_route": false
+            },
+            "category": null,
+            "action": null
+          },
+          "input_sha256": "826e867448a3eb145120833539cb0f322a6646261d7603dfad3c636ec507bb26"
+        }
+      },
+      "rejected_131073": true,
+      "bytes": {
+        "onnx": 192,
+        "ir_xml": 2443,
+        "ir_weights": 40,
+        "compiled_blob": 898
+      },
+      "timing": {
+        "1024": {
+          "total_ms": {
+            "p50": 2.554900012910366,
+            "p95": 2.984610048588365,
+            "max": 3.0954000540077686
+          },
+          "tokenization_ms": {
+            "p50": 0.678549986332655,
+            "p95": 0.8193399058654903,
+            "max": 0.8799999486654997
+          },
+          "host_projection_ms": {
+            "p50": 0.0271000899374485,
+            "p95": 0.06075516575947402,
+            "max": 0.06890017539262772
+          },
+          "inference_path_ms": {
+            "p50": 1.8383498536422849,
+            "p95": 2.1972749964334066,
+            "max": 2.3811000864952803
+          },
+          "cpu_reference_ms": {
+            "p50": 0.8447500877082348,
+            "p95": 0.910775107331574,
+            "max": 0.9200000204145908
+          },
+          "requests": 1,
+          "lexemes": null,
+          "utf8_bytes": 2545,
+          "documents": 10,
+          "tokens_per_second_p50": 400798.4636680673
+        },
+        "32768": {
+          "total_ms": {
+            "p50": 10.809550061821938,
+            "p95": 12.111350102350114,
+            "max": 12.568100122734904
+          },
+          "tokenization_ms": {
+            "p50": 7.770949974656105,
+            "p95": 8.726015081629157,
+            "max": 9.07490006648004
+          },
+          "host_projection_ms": {
+            "p50": 0.8789498824626207,
+            "p95": 1.0009050951339304,
+            "max": 1.023000106215477
+          },
+          "inference_path_ms": {
+            "p50": 2.255750121548772,
+            "p95": 2.4211000418290496,
+            "max": 2.4238000623881817
+          },
+          "cpu_reference_ms": {
+            "p50": 8.666600100696087,
+            "p95": 16.525849991012354,
+            "max": 21.208100020885468
+          },
+          "requests": 1,
+          "lexemes": null,
+          "utf8_bytes": 95569,
+          "documents": 10,
+          "tokens_per_second_p50": 3031393.5189340333
+        },
+        "131072": {
+          "total_ms": {
+            "p50": 33.38649997022003,
+            "p95": 46.856205060612396,
+            "max": 52.04700003378093
+          },
+          "tokenization_ms": {
+            "p50": 26.448250049725175,
+            "p95": 40.89486005250363,
+            "max": 46.03349999524653
+          },
+          "host_projection_ms": {
+            "p50": 3.6586500937119126,
+            "p95": 4.010255041066557,
+            "max": 4.085000138729811
+          },
+          "inference_path_ms": {
+            "p50": 2.2586999693885446,
+            "p95": 3.5632350365631273,
+            "max": 4.015800077468157
+          },
+          "cpu_reference_ms": {
+            "p50": 30.781849985942245,
+            "p95": 38.279250031337135,
+            "max": 40.680899983271956
+          },
+          "requests": 1,
+          "lexemes": null,
+          "utf8_bytes": 397562,
+          "documents": 10,
+          "tokens_per_second_p50": 3925898.1958849574
+        }
+      },
+      "device_name": "Intel Movidius Myriad X VPU",
+      "usb_id": "03E7:2485"
+    }
+  },
+  "breakshot": {
+    "room": {
+      "recordings": 464,
+      "manifest_sha256": "a88aa2a4fdcc2f89ae2b54a0b47f9277878e24c06ad26d00d5a6a0f3786d522a",
+      "placement": {
+        "encoder": "MYRIAD",
+        "scan": "MYRIAD",
+        "audio_frontend": "host"
+      },
+      "graph_format": "onnx",
+      "detector_manifest_sha256": "337795a1ab2a5ffbb121b053591996ac0e60e46b05379ea067f59566a5fb54a3",
+      "compiled_input_sha256": {
+        "encoder": {
+          "onnx": "70378f5718a8f60531e15aedf6cd3a6ae196d0b5f328498d87ec4d449bf1b9da"
+        },
+        "scan": {
+          "onnx": "31612944daa23eca1b7c49920b6e8302d3ce07c9f511ba02cafb854639bb4037"
+        }
+      },
+      "stage_wall_p95_ms": {
+        "encoder": 2.4786998983472586,
+        "scan": 4.048800095915794
+      },
+      "expected_events": 561,
+      "cpu": {
+        "detected_events": 425,
+        "false_wakes": 92
+      },
+      "ncs1": {
+        "detected_events": 425,
+        "false_wakes": 91
+      },
+      "ncs2": {
+        "detected_events": 424,
+        "false_wakes": 90
+      }
+    },
+    "ncs2_industry": {
+      "scope": "physical NCS2 raw BreakShot replay on authored clips",
+      "fixture_manifest_sha256": "8184d8dc881681d2119d1d719dac05a858286df0966186955b8e76b64bb467fa",
+      "checks": 33,
+      "matches_labels": 32,
+      "matches_cpu_wake": 33,
+      "matches_cpu_trace": 32,
+      "rows": [
+        {
+          "workflow": "vehicle_sales",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 8224,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 8224,
+              "end": 28640
+            },
+            {
+              "type": "wake",
+              "start": 31776,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 31776,
+              "end": 45536
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "vehicle_sales",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "vehicle_sales",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 13856,
+              "available_samples": 20480
+            },
+            {
+              "type": "interval",
+              "start": 13856,
+              "end": 26592
+            },
+            {
+              "type": "wake",
+              "start": 31776,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 31776,
+              "end": 43488
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "service_bulletin",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 8224,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 8224,
+              "end": 46560
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "service_bulletin",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "service_bulletin",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 10784,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 10784,
+              "end": 26080
+            },
+            {
+              "type": "wake",
+              "start": 30752,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 30752,
+              "end": 45536
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "parts_warranty",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 23008
+            },
+            {
+              "type": "wake",
+              "start": 25632,
+              "available_samples": 32768
+            },
+            {
+              "type": "interval",
+              "start": 25632,
+              "end": 52704
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "parts_warranty",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "parts_warranty",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 22496
+            },
+            {
+              "type": "wake",
+              "start": 25632,
+              "available_samples": 32768
+            },
+            {
+              "type": "interval",
+              "start": 25632,
+              "end": 41952
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "fleet_handoff",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7200,
+              "available_samples": 12288
+            },
+            {
+              "type": "interval",
+              "start": 7200,
+              "end": 36320
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "fleet_handoff",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "fleet_handoff",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 8224,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 8224,
+              "end": 35808
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "ev_support",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 8224,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 8224,
+              "end": 27616
+            },
+            {
+              "type": "wake",
+              "start": 30752,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 30752,
+              "end": 52704
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "ev_support",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "ev_support",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 8224,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 8224,
+              "end": 27616
+            },
+            {
+              "type": "wake",
+              "start": 31776,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 31776,
+              "end": 45536
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "hvac_work_order",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 39392
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "hvac_work_order",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "hvac_work_order",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 21984
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "equipment_receiving",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7200,
+              "available_samples": 12288
+            },
+            {
+              "type": "interval",
+              "start": 7200,
+              "end": 46560
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "equipment_receiving",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "equipment_receiving",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 23520
+            },
+            {
+              "type": "wake",
+              "start": 29728,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 29728,
+              "end": 53728
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "guest_maintenance",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 10272,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 10272,
+              "end": 47584
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "guest_maintenance",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "guest_maintenance",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 10272,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 10272,
+              "end": 22496
+            },
+            {
+              "type": "wake",
+              "start": 30240,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 30240,
+              "end": 53728
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "receiving_discrepancy",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 51168
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "receiving_discrepancy",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "receiving_discrepancy",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 16928,
+              "available_samples": 24576
+            },
+            {
+              "type": "interval",
+              "start": 16928,
+              "end": 25056
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "product_recall",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 8224,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 8224,
+              "end": 61408
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "product_recall",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "product_recall",
+          "condition": "mixed",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 28704,
+              "available_samples": 36864
+            },
+            {
+              "type": "interval",
+              "start": 28704,
+              "end": 36320
+            },
+            {
+              "type": "wake",
+              "start": 49696,
+              "available_samples": 57344
+            },
+            {
+              "type": "interval",
+              "start": 49696,
+              "end": 56800
+            }
+          ],
+          "exact_cpu_trace": false,
+          "expected_wake": true
+        },
+        {
+          "workflow": "store_equipment",
+          "condition": "speech",
+          "woke_on_ncs2": true,
+          "woke_on_cpu": true,
+          "events": [
+            {
+              "type": "wake",
+              "start": 7712,
+              "available_samples": 16384
+            },
+            {
+              "type": "interval",
+              "start": 7712,
+              "end": 44000
+            }
+          ],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        },
+        {
+          "workflow": "store_equipment",
+          "condition": "ambient",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": false
+        },
+        {
+          "workflow": "store_equipment",
+          "condition": "mixed",
+          "woke_on_ncs2": false,
+          "woke_on_cpu": false,
+          "events": [],
+          "exact_cpu_trace": true,
+          "expected_wake": true
+        }
+      ],
+      "placement": {
+        "encoder": "MYRIAD",
+        "scan": "MYRIAD",
+        "audio_frontend": "host"
+      },
+      "graph_format": "onnx",
+      "boot_usb_products": [
+        "2150",
+        "2485"
+      ],
+      "physical_usb_id": "03E7:2485",
+      "device_name": "Intel Movidius Myriad X VPU",
+      "openvino": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "detector_manifest_sha256": "337795a1ab2a5ffbb121b053591996ac0e60e46b05379ea067f59566a5fb54a3",
+      "compiled_input_sha256": {
+        "encoder": {
+          "onnx": "70378f5718a8f60531e15aedf6cd3a6ae196d0b5f328498d87ec4d449bf1b9da"
+        },
+        "scan": {
+          "onnx": "31612944daa23eca1b7c49920b6e8302d3ce07c9f511ba02cafb854639bb4037"
+        }
+      },
+      "stage_wall_p95_ms": {
+        "encoder": 2.4122249451465905,
+        "scan": 3.967875032685697
+      }
+    }
+  },
+  "bankshot": {
+    "case_manifest_sha256": "2c3b6e6a3686b8cead29dffb425963520b84b0c8f763791652a5ea7eaf82fcd1",
+    "catalog_sha256": "8897972e7fdd4332a3377fa167b5e7dcb7a6ca8bf4b530e7c627de16a6071bbb",
+    "profile_sha256": "85236618f2bf3c88d5b3aa691e64c08bf3e8c6dd0292f53ac08fa96a2a437181",
+    "vehicle_onnx_sha256": "bbeda430d5731209a40e6ebe6c4f82495b22c544f7e032d6b709feaa84d9e44d",
+    "scope": "Five selected queries. Device graphs over a host catalog; timing excludes session setup.",
+    "lanes": {
+      "cpu": [
+        {
+          "id": "lockout",
+          "target_rank": 1,
+          "median_ms": 6.5713,
+          "requests": 7,
+          "request_ms": [
+            7.1587,
+            6.3416,
+            7.294,
+            6.0971,
+            5.5244,
+            7.6345,
+            6.5713
+          ]
+        },
+        {
+          "id": "lathe",
+          "target_rank": null,
+          "median_ms": 5.1832,
+          "requests": 7,
+          "request_ms": [
+            6.1588,
+            5.7156,
+            5.1832,
+            5.8508,
+            5.0576,
+            4.6585,
+            4.8618
+          ]
+        },
+        {
+          "id": "exit",
+          "target_rank": 2,
+          "median_ms": 4.7041,
+          "requests": 7,
+          "request_ms": [
+            4.4719,
+            5.2048,
+            4.5942,
+            4.3303,
+            5.3011,
+            5.6218,
+            4.7041
+          ]
+        },
+        {
+          "id": "recall",
+          "target_rank": 1,
+          "median_ms": 5.2458,
+          "requests": 7,
+          "request_ms": [
+            5.2458,
+            6.2214,
+            5.3938,
+            6.4943,
+            4.9381,
+            4.871,
+            4.7499
+          ]
+        },
+        {
+          "id": "recorder",
+          "target_rank": 1,
+          "median_ms": 4.3654,
+          "requests": 7,
+          "request_ms": [
+            4.9987,
+            5.0282,
+            4.3654,
+            4.0454,
+            4.3146,
+            5.1101,
+            4.2237
+          ]
+        }
+      ],
+      "ncs1": [
+        {
+          "id": "lockout",
+          "target_rank": 1,
+          "median_ms": 13.2342,
+          "requests": 7,
+          "request_ms": [
+            14.732,
+            13.717,
+            12.9429,
+            13.1345,
+            14.8297,
+            12.9229,
+            13.2342
+          ]
+        },
+        {
+          "id": "lathe",
+          "target_rank": null,
+          "median_ms": 11.5164,
+          "requests": 7,
+          "request_ms": [
+            11.6814,
+            11.5601,
+            11.5765,
+            11.3147,
+            11.4848,
+            11.5164,
+            11.4394
+          ]
+        },
+        {
+          "id": "exit",
+          "target_rank": 2,
+          "median_ms": 13.0953,
+          "requests": 7,
+          "request_ms": [
+            13.2873,
+            12.5534,
+            12.0284,
+            11.6867,
+            14.1375,
+            13.8593,
+            13.0953
+          ]
+        },
+        {
+          "id": "recall",
+          "target_rank": 1,
+          "median_ms": 15.2683,
+          "requests": 7,
+          "request_ms": [
+            13.631,
+            15.5978,
+            15.2528,
+            16.0807,
+            14.1838,
+            16.3395,
+            15.2683
+          ]
+        },
+        {
+          "id": "recorder",
+          "target_rank": 1,
+          "median_ms": 13.7671,
+          "requests": 7,
+          "request_ms": [
+            14.82,
+            15.9442,
+            12.5572,
+            14.3401,
+            13.2331,
+            13.6919,
+            13.7671
+          ]
+        }
+      ],
+      "ncs2": [
+        {
+          "id": "lockout",
+          "target_rank": 1,
+          "median_ms": 10.3643,
+          "requests": 7,
+          "request_ms": [
+            10.4264,
+            10.5065,
+            10.9908,
+            10.3282,
+            10.3643,
+            10.1642,
+            10.0074
+          ]
+        },
+        {
+          "id": "lathe",
+          "target_rank": null,
+          "median_ms": 9.1961,
+          "requests": 7,
+          "request_ms": [
+            9.1961,
+            9.168,
+            9.332,
+            9.344,
+            8.8671,
+            8.8067,
+            11.1179
+          ]
+        },
+        {
+          "id": "exit",
+          "target_rank": 2,
+          "median_ms": 9.1128,
+          "requests": 7,
+          "request_ms": [
+            9.1059,
+            9.1128,
+            8.9562,
+            9.1862,
+            9.3901,
+            8.7465,
+            12.0503
+          ]
+        },
+        {
+          "id": "recall",
+          "target_rank": 1,
+          "median_ms": 9.7252,
+          "requests": 7,
+          "request_ms": [
+            10.2092,
+            10.3344,
+            9.6814,
+            9.5382,
+            9.2362,
+            9.7565,
+            9.7252
+          ]
+        },
+        {
+          "id": "recorder",
+          "target_rank": 1,
+          "median_ms": 9.037,
+          "requests": 7,
+          "request_ms": [
+            9.8586,
+            8.5769,
+            8.6803,
+            9.037,
+            9.9016,
+            9.2136,
+            8.5884
+          ]
+        }
+      ]
+    }
+  },
+  "railshot": {
+    "ncs2": {
+      "fixture": "published NCS1 restart replay",
+      "checks": 10,
+      "matches": 10,
+      "runs": [
+        {
+          "process_ms": 3031.664100009948,
+          "identity": "{\"device\": \"Intel Movidius Myriad X VPU\", \"onnx_sha256\": \"9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5\", \"runtime\": \"2022.3.1-9227-cf2c7da5689-releases/2022/3\"}",
+          "rows": [
+            {
+              "schema": "railshot.result/1",
+              "ok": true,
+              "stream_id": "billing",
+              "seq": 1,
+              "decision": {
+                "model": "magiceightball",
+                "result": {
+                  "answers": {
+                    "may_route": false
+                  },
+                  "category": null,
+                  "action": null
+                },
+                "bits": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "atoms": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "needle_tokens": 7,
+                "lexemes": null,
+                "requests": 1,
+                "request_documents": 1
+              }
+            },
+            {
+              "schema": "railshot.result/1",
+              "ok": true,
+              "stream_id": "billing",
+              "seq": 2,
+              "decision": {
+                "model": "magiceightball",
+                "result": {
+                  "answers": {
+                    "may_route": true
+                  },
+                  "category": "billing",
+                  "action": "review_billing"
+                },
+                "bits": [
+                  1.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "atoms": [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "needle_tokens": 12,
+                "lexemes": null,
+                "requests": 1,
+                "request_documents": 1
+              }
+            },
+            {
+              "schema": "railshot.result/1",
+              "ok": true,
+              "stream_id": "delivery",
+              "seq": 1,
+              "decision": {
+                "model": "magiceightball",
+                "result": {
+                  "answers": {
+                    "may_route": true
+                  },
+                  "category": "delivery",
+                  "action": "review_delivery"
+                },
+                "bits": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "atoms": [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "needle_tokens": 10,
+                "lexemes": null,
+                "requests": 1,
+                "request_documents": 1
+              }
+            },
+            {
+              "schema": "railshot.result/1",
+              "ok": true,
+              "stream_id": "max",
+              "seq": 1,
+              "decision": {
+                "model": "magiceightball",
+                "result": {
+                  "answers": {
+                    "may_route": false
+                  },
+                  "category": null,
+                  "action": null
+                },
+                "bits": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "atoms": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "needle_tokens": 131072,
+                "lexemes": null,
+                "requests": 1,
+                "request_documents": 1
+              }
+            }
+          ]
+        },
+        {
+          "process_ms": 3152.5683000218123,
+          "identity": "{\"device\": \"Intel Movidius Myriad X VPU\", \"onnx_sha256\": \"9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5\", \"runtime\": \"2022.3.1-9227-cf2c7da5689-releases/2022/3\"}",
+          "rows": [
+            {
+              "decision": {
+                "atoms": [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "bits": [
+                  1.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "lexemes": null,
+                "model": "magiceightball",
+                "needle_tokens": 12,
+                "request_documents": 1,
+                "requests": 1,
+                "result": {
+                  "action": "review_billing",
+                  "answers": {
+                    "may_route": true
+                  },
+                  "category": "billing"
+                }
+              },
+              "ok": true,
+              "schema": "railshot.result/1",
+              "seq": 2,
+              "stream_id": "billing"
+            },
+            {
+              "ok": false,
+              "error": {
+                "code": "out_of_order",
+                "expected_seq": 3
+              }
+            },
+            {
+              "schema": "railshot.result/1",
+              "ok": true,
+              "stream_id": "billing",
+              "seq": 3,
+              "decision": {
+                "model": "magiceightball",
+                "result": {
+                  "answers": {
+                    "may_route": false
+                  },
+                  "category": "billing",
+                  "action": null
+                },
+                "bits": [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "atoms": [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  1.0,
+                  0.0
+                ],
+                "needle_tokens": 16,
+                "lexemes": null,
+                "requests": 1,
+                "request_documents": 1
+              }
+            },
+            {
+              "ok": false,
+              "error": {
+                "code": "invalid_append",
+                "expected_seq": 2
+              }
+            },
+            {
+              "schema": "railshot.result/1",
+              "ok": true,
+              "stream_id": "max",
+              "seq": 2,
+              "decision": {
+                "model": "magiceightball",
+                "result": {
+                  "answers": {
+                    "may_route": false
+                  },
+                  "category": null,
+                  "action": null
+                },
+                "bits": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "atoms": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "needle_tokens": 0,
+                "lexemes": null,
+                "requests": 1,
+                "request_documents": 1
+              }
+            },
+            {
+              "ok": false,
+              "error": {
+                "code": "conflicting_retry"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "cueball": {
+    "ncs2": {
+      "device_name": "Intel Movidius Myriad X VPU",
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "prompts": 10,
+      "graphs": {
+        "graph_a": {
+          "sha256": "d887dc32d3c344023a6b13c1c6a24b4fe60f90fc5e33a51974fd94bf258576d6",
+          "compiled": true
+        },
+        "graph_b": {
+          "sha256": "2600ebe8bb98c8b4af487c5083d79c4540c016ac4898bfbc52481eb77791d965",
+          "compiled": true
+        },
+        "vocoder2d": {
+          "sha256": "d28da56a79b6e77341c587e579f2a536e5fe21ea2856739d010f0c60969634aa",
+          "compiled": true
+        },
+        "vocoder2d-student": {
+          "sha256": "9014a563590784db613b8934de642d1b70d5b24e850942ae7d4508dd5f6fa143",
+          "compiled": true
+        }
+      },
+      "replays": {
+        "vocoder2d": [
+          {
+            "id": "checklist",
+            "ok": false,
+            "error": "Failed to read output from FIFO: NC_ERROR"
+          },
+          {
+            "id": "shipping",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "customer",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "hydraulic",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "alarm",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "notes",
+            "ok": false,
+            "error": "Failed to read output from FIFO: NC_ERROR"
+          },
+          {
+            "id": "handoff",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "dates",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "parts",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "confirmation",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          }
+        ],
+        "vocoder2d-student": [
+          {
+            "id": "checklist",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "shipping",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "customer",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "hydraulic",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "alarm",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "notes",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "handoff",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "dates",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "parts",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          },
+          {
+            "id": "confirmation",
+            "ok": false,
+            "error": "Failed to queue inference: NC_ERROR"
+          }
+        ]
+      }
+    },
+    "ncs2_single_stream": {
+      "vocoder2d": {
+        "device_name": "Intel Movidius Myriad X VPU",
+        "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+        "prompts": 10,
+        "graphs": {
+          "graph_a": {
+            "sha256": "d887dc32d3c344023a6b13c1c6a24b4fe60f90fc5e33a51974fd94bf258576d6",
+            "compiled": true
+          },
+          "graph_b": {
+            "sha256": "2600ebe8bb98c8b4af487c5083d79c4540c016ac4898bfbc52481eb77791d965",
+            "compiled": true
+          },
+          "vocoder2d": {
+            "sha256": "d28da56a79b6e77341c587e579f2a536e5fe21ea2856739d010f0c60969634aa",
+            "compiled": true
+          }
+        },
+        "replays": {
+          "vocoder2d": [
+            {
+              "id": "checklist",
+              "ok": false,
+              "error": "Failed to read output from FIFO: NC_ERROR"
+            },
+            {
+              "id": "shipping",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "customer",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "hydraulic",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "alarm",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "notes",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "handoff",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "dates",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "parts",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "confirmation",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            }
+          ]
+        }
+      },
+      "vocoder2d-student": {
+        "device_name": "Intel Movidius Myriad X VPU",
+        "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+        "prompts": 10,
+        "graphs": {
+          "graph_a": {
+            "sha256": "d887dc32d3c344023a6b13c1c6a24b4fe60f90fc5e33a51974fd94bf258576d6",
+            "compiled": true
+          },
+          "graph_b": {
+            "sha256": "2600ebe8bb98c8b4af487c5083d79c4540c016ac4898bfbc52481eb77791d965",
+            "compiled": true
+          },
+          "vocoder2d-student": {
+            "sha256": "9014a563590784db613b8934de642d1b70d5b24e850942ae7d4508dd5f6fa143",
+            "compiled": true
+          }
+        },
+        "replays": {
+          "vocoder2d-student": [
+            {
+              "id": "checklist",
+              "ok": false,
+              "error": "Failed to read output from FIFO: NC_ERROR"
+            },
+            {
+              "id": "shipping",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "customer",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "hydraulic",
+              "ok": false,
+              "error": "Failed to read output from FIFO: NC_ERROR"
+            },
+            {
+              "id": "alarm",
+              "ok": false,
+              "error": "Failed to read output from FIFO: NC_ERROR"
+            },
+            {
+              "id": "notes",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "handoff",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "dates",
+              "ok": false,
+              "error": "Failed to read output from FIFO: NC_ERROR"
+            },
+            {
+              "id": "parts",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            },
+            {
+              "id": "confirmation",
+              "ok": false,
+              "error": "Failed to queue inference: NC_ERROR"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mvp_ncs2": {
+    "gate": {
+      "device": "MYRIAD",
+      "onnx_sha256": "c0c3f76d93fa3fd6580652a45618618a220fced18babf65774ed169de0432ad5",
+      "steady_state_ms": {
+        "mean": 22.659,
+        "p50": 22.628,
+        "p90": 23.033,
+        "p99": 23.617,
+        "stddev": 0.339,
+        "min": 22.102,
+        "max": 23.666,
+        "runs": 50.0
+      }
+    },
+    "knn": {
+      "capacity": {
+        "n_vectors": 100000,
+        "dim": 256,
+        "table_mb_fp16": 48.8,
+        "budget_mb": 921.6,
+        "fits": true,
+        "max_vectors_at_dim": 1887436,
+        "budget_utilization": 0.053,
+        "note": "TopK runs on the host; only the GEMM lives on-device"
+      },
+      "bench": {
+        "device": "MYRIAD",
+        "batch": 32,
+        "queries": 128,
+        "total_ms": 3460.76,
+        "ms_per_batch": 865.189,
+        "queries_per_sec": 37.0
+      }
+    },
+    "cascade": {
+      "device": "MYRIAD",
+      "gate": 22.7,
+      "triggered": "no - gate below threshold, brain not invoked",
+      "total": 22.7
+    },
+    "footage": {
+      "device": "MYRIAD",
+      "frames_gated": 20,
+      "events_fired": 19,
+      "gate_p50_ms": 22.45
+    },
+    "podcast": {
+      "device": "host-cpu",
+      "windows_gated": 66,
+      "events_fired": 51
+    },
+    "cascade_trigger": {
+      "gate": 22.3,
+      "triggered": "yes",
+      "total": 22.3,
+      "host_caption_status": "cactus-compute not installed - caption stage skipped (pip install cactus-compute); gate ran for real"
+    }
+  }
+}

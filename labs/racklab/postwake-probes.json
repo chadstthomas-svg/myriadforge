@@ -1,0 +1,26 @@
+{
+  "existing": {
+    "vehicle_sales": {"sector": "automotive", "fields": {"document": ["buyers guide", "buyer s guide"]}},
+    "service_bulletin": {"sector": "automotive", "fields": {"component": ["door latch"], "document": ["service bulletin"]}},
+    "parts_warranty": {"sector": "automotive", "fields": {"identifier": ["part number"], "document": ["warranty document"]}},
+    "fleet_handoff": {"sector": "automotive", "fields": {"handoff": ["depot return"]}},
+    "ev_support": {"sector": "automotive", "fields": {"component": ["charging connector"]}},
+    "hvac_work_order": {"sector": "facilities", "fields": {"equipment": ["rooftop unit"], "reading": ["supply air"]}},
+    "equipment_receiving": {"sector": "facilities", "fields": {"task": ["lift inspection"]}},
+    "guest_maintenance": {"sector": "facilities", "fields": {"location": ["east wing"]}},
+    "receiving_discrepancy": {"sector": "retail", "fields": {"identifier": ["item identifier"], "container": ["carton"]}},
+    "product_recall": {"sector": "retail", "fields": {"model": ["A1647"], "identifier": ["serial number"]}},
+    "store_equipment": {"sector": "retail", "fields": {"ticket": ["register support ticket"]}}
+  },
+  "synthetic_identifiers": [
+    {"id": "recall-campaign", "sector": "automotive", "noise": "vehicle_sales", "text": "Check recall one seven V six five two for the Ford F one fifty.", "fields": {"campaign": ["17V652"], "vehicle": ["Ford F150"]}},
+    {"id": "service-bulletin-id", "sector": "automotive", "noise": "service_bulletin", "text": "Pull service bulletin nineteen dash two zero eight one for the advisor.", "fields": {"bulletin": ["19-2081"]}},
+    {"id": "part-number", "sector": "automotive", "noise": "parts_warranty", "text": "Verify part B three zero nine seven before approving the order.", "fields": {"part": ["B3097"]}},
+    {"id": "work-order-id", "sector": "facilities", "noise": "hvac_work_order", "text": "Open work order W O five eight two four for rooftop unit three.", "fields": {"work_order": ["WO5824", "work order 5824"], "equipment": ["rooftop unit 3"]}},
+    {"id": "lift-asset-id", "sector": "facilities", "noise": "equipment_receiving", "text": "Log lift L twelve at dock four for the inspection.", "fields": {"equipment": ["L12"], "dock": ["dock 4"]}},
+    {"id": "contractor-ticket", "sector": "facilities", "noise": "guest_maintenance", "text": "Send ticket M two four six to the east wing.", "fields": {"ticket": ["M246"], "location": ["east wing"]}},
+    {"id": "return-sku", "sector": "retail", "noise": "receiving_discrepancy", "text": "Verify S K U five four eight one on the return carton.", "fields": {"sku": ["SKU5481"]}},
+    {"id": "recall-model", "sector": "retail", "noise": "product_recall", "text": "The returned power bank is model A one six four seven.", "fields": {"model": ["A1647"]}},
+    {"id": "pos-device", "sector": "retail", "noise": "store_equipment", "text": "Check register four and printer P two zero six before reopening.", "fields": {"register": ["register 4"], "printer": ["P206"]}}
+  ]
+}
