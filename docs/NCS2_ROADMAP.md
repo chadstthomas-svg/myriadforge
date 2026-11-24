@@ -8,6 +8,8 @@ arrives**, against a two-layer simulator.
 Scoped 2026-11-16. Extends [SCOPE.md](../SCOPE.md) (NCS2 moves from
 *out of scope* to a **Phase 5 adapter lane**, same treatment as Coral).
 
+**Physical NCS2 installed (2026-11-24).** OpenVINO 2022.3.1 selected the Myriad X while the original NCS1 was attached. MagicEightBall passed all 128 support-policy assignments. Both BreakShot learned stages ran from ONNX and matched the CPU wake labels on all 33 authored industry clips. [Physical replay and room-audio results](NCS2_AUDIO_REPLAY.md)
+
 **Delivery status (2026-11-16, wrapper-app build):** WS3 delivered as
 `src/myriadforge/devices/sim_myriad.py` (envelope gates + CALIBRATION latency
 model); WS4 delivered as `src/myriadforge/devices/ncs2.py` +

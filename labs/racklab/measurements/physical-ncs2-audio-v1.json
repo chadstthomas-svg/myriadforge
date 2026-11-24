@@ -1,0 +1,735 @@
+{
+  "magiceightball": {
+    "scope": "physical NCS2 support-policy smoke",
+    "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+    "target": "MYRIAD",
+    "device_name": "Intel Movidius Myriad X VPU",
+    "cold_usb_id": "03E7:2485",
+    "onnx_sha256": "9d8bb1854edfbdc43d36084fb858e76b72d23fd46d63e1c86ae1845d8f582ce5",
+    "checks": 128,
+    "passed": 128,
+    "device_calls_per_batch": 1,
+    "warm_median_ms": 5.512800067663193,
+    "samples_ms": [
+      6.475500063970685,
+      5.488700000569224,
+      5.339500028640032,
+      5.512800067663193,
+      6.618899991735816,
+      6.4604999497532845
+    ]
+  },
+  "breakshot_industry": {
+    "scope": "physical NCS2 raw BreakShot replay on authored clips",
+    "fixture_manifest_sha256": "8184d8dc881681d2119d1d719dac05a858286df0966186955b8e76b64bb467fa",
+    "checks": 33,
+    "matches_labels": 32,
+    "matches_cpu_wake": 33,
+    "matches_cpu_trace": 32,
+    "rows": [
+      {
+        "workflow": "vehicle_sales",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 8224,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 8224,
+            "end": 28640
+          },
+          {
+            "type": "wake",
+            "start": 31776,
+            "available_samples": 36864
+          },
+          {
+            "type": "interval",
+            "start": 31776,
+            "end": 45536
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "vehicle_sales",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "vehicle_sales",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 13856,
+            "available_samples": 20480
+          },
+          {
+            "type": "interval",
+            "start": 13856,
+            "end": 26592
+          },
+          {
+            "type": "wake",
+            "start": 31776,
+            "available_samples": 36864
+          },
+          {
+            "type": "interval",
+            "start": 31776,
+            "end": 43488
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "service_bulletin",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 8224,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 8224,
+            "end": 46560
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "service_bulletin",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "service_bulletin",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 10784,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 10784,
+            "end": 26080
+          },
+          {
+            "type": "wake",
+            "start": 30752,
+            "available_samples": 36864
+          },
+          {
+            "type": "interval",
+            "start": 30752,
+            "end": 45536
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "parts_warranty",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 23008
+          },
+          {
+            "type": "wake",
+            "start": 25632,
+            "available_samples": 32768
+          },
+          {
+            "type": "interval",
+            "start": 25632,
+            "end": 52704
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "parts_warranty",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "parts_warranty",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 22496
+          },
+          {
+            "type": "wake",
+            "start": 25632,
+            "available_samples": 32768
+          },
+          {
+            "type": "interval",
+            "start": 25632,
+            "end": 41952
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "fleet_handoff",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7200,
+            "available_samples": 12288
+          },
+          {
+            "type": "interval",
+            "start": 7200,
+            "end": 36320
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "fleet_handoff",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "fleet_handoff",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 8224,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 8224,
+            "end": 35808
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "ev_support",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 8224,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 8224,
+            "end": 27616
+          },
+          {
+            "type": "wake",
+            "start": 30752,
+            "available_samples": 36864
+          },
+          {
+            "type": "interval",
+            "start": 30752,
+            "end": 52704
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "ev_support",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "ev_support",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 8224,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 8224,
+            "end": 27616
+          },
+          {
+            "type": "wake",
+            "start": 31776,
+            "available_samples": 36864
+          },
+          {
+            "type": "interval",
+            "start": 31776,
+            "end": 45536
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "hvac_work_order",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 39392
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "hvac_work_order",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "hvac_work_order",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 21984
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "equipment_receiving",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7200,
+            "available_samples": 12288
+          },
+          {
+            "type": "interval",
+            "start": 7200,
+            "end": 46560
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "equipment_receiving",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "equipment_receiving",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 23520
+          },
+          {
+            "type": "wake",
+            "start": 29728,
+            "available_samples": 36864
+          },
+          {
+            "type": "interval",
+            "start": 29728,
+            "end": 53728
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "guest_maintenance",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 10272,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 10272,
+            "end": 47584
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "guest_maintenance",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "guest_maintenance",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 10272,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 10272,
+            "end": 22496
+          },
+          {
+            "type": "wake",
+            "start": 30240,
+            "available_samples": 36864
+          },
+          {
+            "type": "interval",
+            "start": 30240,
+            "end": 53728
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "receiving_discrepancy",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 51168
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "receiving_discrepancy",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "receiving_discrepancy",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 16928,
+            "available_samples": 24576
+          },
+          {
+            "type": "interval",
+            "start": 16928,
+            "end": 25056
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "product_recall",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 8224,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 8224,
+            "end": 61408
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "product_recall",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "product_recall",
+        "condition": "mixed",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 28704,
+            "available_samples": 36864
+          },
+          {
+            "type": "interval",
+            "start": 28704,
+            "end": 36320
+          },
+          {
+            "type": "wake",
+            "start": 49696,
+            "available_samples": 57344
+          },
+          {
+            "type": "interval",
+            "start": 49696,
+            "end": 56800
+          }
+        ],
+        "exact_cpu_trace": false,
+        "expected_wake": true
+      },
+      {
+        "workflow": "store_equipment",
+        "condition": "speech",
+        "woke_on_ncs2": true,
+        "woke_on_cpu": true,
+        "events": [
+          {
+            "type": "wake",
+            "start": 7712,
+            "available_samples": 16384
+          },
+          {
+            "type": "interval",
+            "start": 7712,
+            "end": 44000
+          }
+        ],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      },
+      {
+        "workflow": "store_equipment",
+        "condition": "ambient",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": false
+      },
+      {
+        "workflow": "store_equipment",
+        "condition": "mixed",
+        "woke_on_ncs2": false,
+        "woke_on_cpu": false,
+        "events": [],
+        "exact_cpu_trace": true,
+        "expected_wake": true
+      }
+    ],
+    "placement": {
+      "encoder": "MYRIAD",
+      "scan": "MYRIAD",
+      "audio_frontend": "host"
+    },
+    "graph_format": "onnx",
+    "boot_usb_products": [
+      "2150",
+      "2485"
+    ],
+    "physical_usb_id": "03E7:2485",
+    "device_name": "Intel Movidius Myriad X VPU",
+    "openvino": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+    "detector_manifest_sha256": "337795a1ab2a5ffbb121b053591996ac0e60e46b05379ea067f59566a5fb54a3",
+    "compiled_input_sha256": {
+      "encoder": {
+        "onnx": "70378f5718a8f60531e15aedf6cd3a6ae196d0b5f328498d87ec4d449bf1b9da"
+      },
+      "scan": {
+        "onnx": "31612944daa23eca1b7c49920b6e8302d3ce07c9f511ba02cafb854639bb4037"
+      }
+    },
+    "stage_wall_p95_ms": {
+      "encoder": 3.5297501017339528,
+      "scan": 5.424700095318258
+    }
+  },
+  "breakshot_room": {
+    "scope": "physical NCS2 raw BreakShot replay on annotated DESED room audio",
+    "manifest_sha256": "a88aa2a4fdcc2f89ae2b54a0b47f9277878e24c06ad26d00d5a6a0f3786d522a",
+    "recordings": 464,
+    "placement": {
+      "encoder": "MYRIAD",
+      "scan": "MYRIAD",
+      "audio_frontend": "host"
+    },
+    "graph_format": "onnx",
+    "boot_usb_products": [
+      "2150",
+      "2485"
+    ],
+    "physical_usb_id": "03E7:2485",
+    "device_name": "Intel Movidius Myriad X VPU",
+    "openvino": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+    "detector_manifest_sha256": "337795a1ab2a5ffbb121b053591996ac0e60e46b05379ea067f59566a5fb54a3",
+    "compiled_input_sha256": {
+      "encoder": {
+        "onnx": "70378f5718a8f60531e15aedf6cd3a6ae196d0b5f328498d87ec4d449bf1b9da"
+      },
+      "scan": {
+        "onnx": "31612944daa23eca1b7c49920b6e8302d3ce07c9f511ba02cafb854639bb4037"
+      }
+    },
+    "stage_wall_p95_ms": {
+      "encoder": 2.9122999403625727,
+      "scan": 4.545600153505802
+    },
+    "summary": {
+      "samples": 73563880,
+      "truth": 13395795,
+      "covered": 10114400,
+      "expected_events": 561,
+      "missed_events": 137,
+      "false_wakes": 90,
+      "detected_events": 424
+    }
+  },
+  "breakshot_room_cpu_control": {
+    "samples": 73563880,
+    "truth": 13395795,
+    "covered": 10128928,
+    "expected_events": 561,
+    "missed_events": 136,
+    "false_wakes": 92,
+    "detected_events": 425
+  }
+}
