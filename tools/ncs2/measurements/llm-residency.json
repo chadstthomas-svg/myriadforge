@@ -1,0 +1,716 @@
+{
+  "schema": "myriadforge.ncs2-residency-study/1",
+  "observed_date": "2026-11-24",
+  "attention_scope": "Trained static 32-token prefix recompute. CPU baseline and greedy token checks.",
+  "checkpoint_revision": "0bd21da7698eaf29a0d7de3992de8a46ef624add",
+  "dense_probes": [
+    {
+      "device": "Intel Movidius Myriad X VPU",
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "shape": [
+        1,
+        4096
+      ],
+      "seed": 24,
+      "fp16_constants_mib": 64,
+      "dense_layers": 2,
+      "lane": "MYRIAD",
+      "compile_ms": 2734.8205,
+      "status": "ok",
+      "first_ms": 13.2646,
+      "warm_median_ms": 12.4848,
+      "max_abs_error": 0.003135502338409424,
+      "graph_count": 1
+    },
+    {
+      "device": "Intel Movidius Myriad X VPU",
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "shape": [
+        1,
+        4096
+      ],
+      "seed": 24,
+      "fp16_constants_mib": 96,
+      "dense_layers": 3,
+      "lane": "MYRIAD",
+      "compile_ms": 3234.8256,
+      "status": "ok",
+      "first_ms": 18.083,
+      "warm_median_ms": 17.9619,
+      "max_abs_error": 0.004627317190170288,
+      "graph_count": 1
+    },
+    {
+      "device": "Intel Movidius Myriad X VPU",
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "shape": [
+        1,
+        4096
+      ],
+      "seed": 24,
+      "fp16_constants_mib": 128,
+      "dense_layers": 4,
+      "lane": "MYRIAD",
+      "compile_ms": 4107.7614,
+      "status": "ok",
+      "first_ms": 18.773,
+      "warm_median_ms": 18.736,
+      "max_abs_error": 0.006178081035614014,
+      "graph_count": 1
+    },
+    {
+      "device": "Intel Movidius Myriad X VPU",
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "shape": [
+        1,
+        4096
+      ],
+      "seed": 24,
+      "fp16_constants_mib": 160,
+      "dense_layers": 5,
+      "lane": "MYRIAD",
+      "compile_ms": 4436.8967,
+      "status": "ok",
+      "first_ms": 24.3573,
+      "warm_median_ms": 23.7355,
+      "max_abs_error": 0.0077231526374816895,
+      "graph_count": 1
+    },
+    {
+      "device": "Intel Movidius Myriad X VPU",
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "shape": [
+        1,
+        4096
+      ],
+      "seed": 24,
+      "fp16_constants_mib": 192,
+      "dense_layers": 6,
+      "lane": "MYRIAD",
+      "compile_ms": 4943.5383,
+      "status": "ok",
+      "first_ms": 27.5238,
+      "warm_median_ms": 26.4299,
+      "max_abs_error": 0.01042330265045166,
+      "graph_count": 1
+    },
+    {
+      "device": "Intel Movidius Myriad X VPU",
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "shape": [
+        1,
+        4096
+      ],
+      "seed": 24,
+      "fp16_constants_mib": 224,
+      "dense_layers": 7,
+      "lane": "MYRIAD",
+      "compile_ms": 5485.2945,
+      "status": "ok",
+      "first_ms": 30.9292,
+      "warm_median_ms": 28.188,
+      "max_abs_error": 0.011916771531105042,
+      "graph_count": 1
+    },
+    {
+      "status": "timeout",
+      "timeout_sec": 45,
+      "experiment": "dense-256-repeat",
+      "fp16_constants_mib": 256,
+      "graph_count": 1,
+      "last_progress": [
+        "Compiling graph 1/1 on MYRIAD"
+      ]
+    },
+    {
+      "status": "timeout",
+      "timeout_sec": 85,
+      "experiment": "dense-256",
+      "fp16_constants_mib": 256,
+      "graph_count": 1,
+      "last_progress": []
+    },
+    {
+      "device": "Intel Movidius Myriad X VPU",
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "shape": [
+        1,
+        4096
+      ],
+      "seed": 24,
+      "fp16_constants_mib": 192,
+      "dense_layers": 6,
+      "lane": "MYRIAD",
+      "graph_count": 2,
+      "fp16_constants_mib_per_graph": 96,
+      "compile_ms_per_graph": [
+        3223.6039,
+        6775.1532
+      ],
+      "status": "ok",
+      "first_ms": 35.8466,
+      "warm_median_ms": 34.9771,
+      "max_abs_error": 0.01042330265045166
+    },
+    {
+      "status": "timeout",
+      "timeout_sec": 45,
+      "experiment": "dense-2graph-256",
+      "fp16_constants_mib": 256,
+      "graph_count": 2,
+      "last_progress": [
+        "Compiling graph 1/2 on MYRIAD",
+        "Compiled in 3846.7 ms",
+        "Compiling graph 2/2 on MYRIAD"
+      ]
+    }
+  ],
+  "tiny_llama_probes": [
+    {
+      "schema": "myriadforge.ncs2-tiny-llama/1",
+      "model": "stories260K.bin",
+      "checkpoint_sha256": "b0a507e7ad0f626624f17112325e66691f9076d622e1d3274d103d00299f2696",
+      "parameters": 260032,
+      "tokenizer_sha256": "dfff07d929db979913f166ec94a6f5ecad4c70cfed8eb5c9cbe7e464455e46f5",
+      "fp16_weight_bytes": 520064,
+      "context": 32,
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "placement": {
+        "host": [
+          "tokenizer",
+          "token embedding lookup",
+          "greedy selection",
+          "decode loop"
+        ],
+        "graph": [
+          "transformer",
+          "attention",
+          "vocabulary projection"
+        ]
+      },
+      "prompts": [
+        {
+          "text": "Once upon a time",
+          "input_token_ids": [
+            1,
+            403,
+            407,
+            261,
+            378
+          ],
+          "cpu_token_ids": [
+            432,
+            383,
+            286,
+            261,
+            376,
+            298,
+            315,
+            421,
+            395,
+            317,
+            426,
+            338
+          ],
+          "cpu_text": "Once upon a time, there was a little girl named Lily. She",
+          "cpu_ms": [
+            12.5698,
+            0.9999,
+            0.9861,
+            0.8846,
+            0.8969,
+            0.6214,
+            0.5251,
+            0.4534,
+            0.4749,
+            0.4362,
+            0.4297,
+            0.4294
+          ],
+          "ncs2_token_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ncs2_text": "Once upon a time \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207 ",
+          "ncs2_ms": [
+            55.5603,
+            55.5381,
+            55.5266,
+            55.5849,
+            55.9267,
+            55.9646,
+            55.8472,
+            55.8353,
+            55.8437,
+            55.7133,
+            55.8201,
+            55.8866
+          ],
+          "teacher_forced_matches": 0,
+          "max_abs_logit_error": 20.519458770751953
+        },
+        {
+          "text": "The little dog",
+          "input_token_ids": [
+            1,
+            291,
+            376,
+            400,
+            428
+          ],
+          "cpu_token_ids": [
+            286,
+            261,
+            376,
+            298,
+            315,
+            421,
+            395,
+            317,
+            426,
+            338,
+            401,
+            396
+          ],
+          "cpu_text": "The little dog was a little girl named Lily. She loved",
+          "cpu_ms": [
+            0.4217,
+            0.4691,
+            0.4346,
+            0.4553,
+            0.5166,
+            0.8103,
+            0.6003,
+            0.5117,
+            0.4541,
+            0.7489,
+            0.4659,
+            0.4377
+          ],
+          "ncs2_token_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ncs2_text": "The little dog \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207  \\342\\201\\207 ",
+          "ncs2_ms": [
+            55.4702,
+            56.1195,
+            56.0809,
+            56.8413,
+            55.8934,
+            56.1838,
+            56.5458,
+            56.1045,
+            55.8024,
+            55.4787,
+            56.0005,
+            56.0023
+          ],
+          "teacher_forced_matches": 0,
+          "max_abs_logit_error": 21.477508544921875
+        }
+      ],
+      "device": "Intel Movidius Myriad X VPU",
+      "compile_ms": 82321.4245,
+      "warm_median_ms_per_token": 55.89,
+      "status": "parity_failed",
+      "partition": "full"
+    },
+    {
+      "status": "stopped",
+      "partition": "full",
+      "context": 32,
+      "detail": "No result after more than 120 seconds. The physical full-graph trial was stopped.",
+      "model": "stories15M.bin",
+      "parameters": 15191712,
+      "checkpoint_sha256": "cd590644d963867a2b6e5a1107f51fad663c41d79c149fbecbbb1f95fa81f49a",
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3"
+    },
+    {
+      "schema": "myriadforge.ncs2-tiny-llama/1",
+      "model": "stories260K.bin",
+      "checkpoint_sha256": "b0a507e7ad0f626624f17112325e66691f9076d622e1d3274d103d00299f2696",
+      "parameters": 260032,
+      "tokenizer_sha256": "dfff07d929db979913f166ec94a6f5ecad4c70cfed8eb5c9cbe7e464455e46f5",
+      "fp16_weight_bytes": 520064,
+      "context": 32,
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "partition": "head",
+      "placement": {
+        "host": [
+          "tokenizer",
+          "token embedding lookup",
+          "greedy selection",
+          "decode loop",
+          "transformer",
+          "attention"
+        ],
+        "myriad": [
+          "vocabulary projection"
+        ]
+      },
+      "prompts": [
+        {
+          "text": "Once upon a time",
+          "input_token_ids": [
+            1,
+            403,
+            407,
+            261,
+            378
+          ],
+          "cpu_token_ids": [
+            432,
+            383,
+            286,
+            261,
+            376,
+            298,
+            315,
+            421,
+            395,
+            317,
+            426,
+            338
+          ],
+          "cpu_text": "Once upon a time, there was a little girl named Lily. She",
+          "cpu_ms": [
+            12.247,
+            1.0027,
+            0.5863,
+            0.5407,
+            0.5368,
+            0.5635,
+            0.5595,
+            0.5512,
+            0.5503,
+            0.5532,
+            0.536,
+            0.5653
+          ],
+          "ncs2_token_ids": [
+            432,
+            383,
+            286,
+            261,
+            376,
+            298,
+            315,
+            421,
+            395,
+            317,
+            426,
+            338
+          ],
+          "ncs2_text": "Once upon a time, there was a little girl named Lily. She",
+          "ncs2_ms": [
+            2.1318,
+            2.2613,
+            2.2258,
+            2.2336,
+            2.3392,
+            2.1402,
+            2.2342,
+            2.2198,
+            2.4822,
+            2.2192,
+            2.2956,
+            2.184
+          ],
+          "teacher_forced_matches": 12,
+          "max_abs_logit_error": 0.029567718505859375
+        },
+        {
+          "text": "The little dog",
+          "input_token_ids": [
+            1,
+            291,
+            376,
+            400,
+            428
+          ],
+          "cpu_token_ids": [
+            286,
+            261,
+            376,
+            298,
+            315,
+            421,
+            395,
+            317,
+            426,
+            338,
+            401,
+            396
+          ],
+          "cpu_text": "The little dog was a little girl named Lily. She loved",
+          "cpu_ms": [
+            0.7488,
+            0.564,
+            0.5473,
+            0.5378,
+            0.6371,
+            0.6876,
+            0.5889,
+            0.613,
+            0.5696,
+            0.5906,
+            0.6207,
+            0.7299
+          ],
+          "ncs2_token_ids": [
+            286,
+            261,
+            376,
+            298,
+            315,
+            421,
+            395,
+            317,
+            426,
+            338,
+            401,
+            396
+          ],
+          "ncs2_text": "The little dog was a little girl named Lily. She loved",
+          "ncs2_ms": [
+            2.1227,
+            2.3147,
+            3.081,
+            2.0848,
+            2.1855,
+            2.0807,
+            2.2655,
+            2.2499,
+            2.5637,
+            2.2006,
+            2.1659,
+            2.1175
+          ],
+          "teacher_forced_matches": 12,
+          "max_abs_logit_error": 0.029232025146484375
+        }
+      ],
+      "device": "Intel Movidius Myriad X VPU",
+      "myriad_fp16_weight_bytes": 65536,
+      "compile_ms": 1568.1958,
+      "warm_median_ms_per_token": 2.2297000000000002,
+      "warm_median_projection_ms": 1.6623,
+      "status": "ok"
+    },
+    {
+      "schema": "myriadforge.ncs2-tiny-llama/1",
+      "model": "stories15M.bin",
+      "checkpoint_sha256": "cd590644d963867a2b6e5a1107f51fad663c41d79c149fbecbbb1f95fa81f49a",
+      "parameters": 15191712,
+      "tokenizer_sha256": "9e556afd44213b6bd1be2b850ebbbd98f5481437a8021afaf58ee7fb1818d347",
+      "fp16_weight_bytes": 30383424,
+      "context": 32,
+      "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+      "partition": "head",
+      "placement": {
+        "host": [
+          "tokenizer",
+          "token embedding lookup",
+          "greedy selection",
+          "decode loop",
+          "transformer",
+          "attention"
+        ],
+        "myriad": [
+          "vocabulary projection"
+        ]
+      },
+      "prompts": [
+        {
+          "text": "Once upon a time",
+          "input_token_ids": [
+            1,
+            9038,
+            2501,
+            263,
+            931
+          ],
+          "cpu_token_ids": [
+            29892,
+            727,
+            471,
+            263,
+            2217,
+            7826,
+            4257,
+            365,
+            2354,
+            29889,
+            2296,
+            18012
+          ],
+          "cpu_text": "Once upon a time, there was a little girl named Lily. She loved",
+          "cpu_ms": [
+            17.739,
+            6.837,
+            8.0697,
+            6.7792,
+            7.3698,
+            6.4657,
+            7.3098,
+            6.9956,
+            7.0577,
+            6.7521,
+            7.0748,
+            7.6678
+          ],
+          "ncs2_token_ids": [
+            29892,
+            727,
+            471,
+            263,
+            2217,
+            7826,
+            4257,
+            365,
+            2354,
+            29889,
+            2296,
+            18012
+          ],
+          "ncs2_text": "Once upon a time, there was a little girl named Lily. She loved",
+          "ncs2_ms": [
+            9.2278,
+            10.9196,
+            10.8325,
+            10.9633,
+            9.2273,
+            11.9336,
+            11.6456,
+            10.8795,
+            9.9637,
+            10.2249,
+            9.6458,
+            9.5545
+          ],
+          "teacher_forced_matches": 12,
+          "max_abs_logit_error": 0.04692840576171875
+        },
+        {
+          "text": "The little dog",
+          "input_token_ids": [
+            1,
+            450,
+            2217,
+            11203
+          ],
+          "cpu_token_ids": [
+            471,
+            1407,
+            24173,
+            29889,
+            940,
+            750,
+            1063,
+            10534,
+            363,
+            263,
+            1472,
+            931
+          ],
+          "cpu_text": "The little dog was very excited. He had been waiting for a long time",
+          "cpu_ms": [
+            7.245,
+            6.8254,
+            6.6617,
+            7.0664,
+            7.0185,
+            7.6116,
+            6.9104,
+            8.8669,
+            7.557,
+            8.0117,
+            7.0992,
+            7.4103
+          ],
+          "ncs2_token_ids": [
+            471,
+            1407,
+            24173,
+            29889,
+            940,
+            750,
+            1063,
+            10534,
+            363,
+            263,
+            1472,
+            931
+          ],
+          "ncs2_text": "The little dog was very excited. He had been waiting for a long time",
+          "ncs2_ms": [
+            10.8273,
+            9.532,
+            10.6039,
+            10.3289,
+            9.1606,
+            11.2913,
+            20.007,
+            16.4988,
+            11.2243,
+            13.0517,
+            14.6082,
+            14.1838
+          ],
+          "teacher_forced_matches": 12,
+          "max_abs_logit_error": 0.02919769287109375
+        }
+      ],
+      "device": "Intel Movidius Myriad X VPU",
+      "myriad_fp16_weight_bytes": 18432000,
+      "compile_ms": 1674.8843,
+      "warm_median_ms_per_token": 10.899550000000001,
+      "warm_median_projection_ms": 3.9972,
+      "status": "ok"
+    }
+  ],
+  "profile_bridge_smoke": {
+    "allocation": {
+      "shaves": 4,
+      "cmx_slices": 8,
+      "streams": 2
+    },
+    "metrics": {
+      "init_ms": 1945.861,
+      "first_inference_ms": 24.605,
+      "warmup_runs": 5,
+      "steady_state_ms": {
+        "mean": 23.883,
+        "p50": 23.63,
+        "p90": 24.715,
+        "p99": 24.93,
+        "stddev": 0.543,
+        "min": 23.354,
+        "max": 24.954,
+        "runs": 10.0
+      },
+      "throughput_fps": 42.32
+    }
+  }
+}

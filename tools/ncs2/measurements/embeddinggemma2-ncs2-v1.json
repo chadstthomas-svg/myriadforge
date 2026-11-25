@@ -1,0 +1,1449 @@
+{
+  "schema": "myriadforge.embeddinggemma2-evidence/1",
+  "recorded_date": "2026-11-24",
+  "checkpoint": {
+    "model": "google/embeddinggemma-2",
+    "revision": "f9972ac22e696a105c482202646979e33e4b5a1e",
+    "weight_sha256": "197a32965d4b1105faf060417baa899e193fb73cd401f42ec9295234d5553d79",
+    "weight_bytes": 1488915288,
+    "transformers": "5.24.0",
+    "torch": "2.7.1+cu126"
+  },
+  "cold_usb_id": "03E7:2485",
+  "fixture_sha256": "e59142922a1d828bf36aee39e6f184b523f625f7a4a270e2763f8ccdabac0ef5",
+  "timing_scope": "Five resident 15-text passes after one warm-up. Each mode has its own CPU reference. CPU reference precedes the hybrid timing.",
+  "recorded_projections": {
+    "head-final": {
+      "schema": "myriadforge.embeddinggemma2/1",
+      "mode": "head",
+      "dimension": 256,
+      "text_count": 15,
+      "host_text_parameters": 271002624,
+      "cpu_threads": 2,
+      "batch": 8,
+      "max_tokens": 128,
+      "device_block": 16,
+      "device_shaves": 16,
+      "benchmark": {
+        "cpu_samples_ms": [
+          995.3422,
+          967.2598,
+          1109.044,
+          992.2097,
+          929.6039
+        ],
+        "selected_samples_ms": [
+          956.9676,
+          971.468,
+          975.4525,
+          923.5486,
+          916.5425
+        ],
+        "ncs2": {
+          "status": "ready",
+          "device": "Intel Movidius Myriad X VPU",
+          "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+          "compile_ms": {
+            "head": 1437.6911
+          }
+        },
+        "stages": {
+          "head": {
+            "learned_parameters": 393216,
+            "requests": 12,
+            "float32_sha256": "3b564a94559705ba73e4e11808e0d4658b21283893f169d9994446e1849d470b",
+            "device_median_ms": 3.7363,
+            "call_wall_median_ms": 4.522600000000001
+          }
+        }
+      },
+      "parity": {
+        "128": {
+          "min_embedding_cosine": 0.9999984502792358,
+          "mean_embedding_cosine": 0.9999989867210388,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.8314480781555176
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.8477715849876404
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8687697649002075
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.8023182153701782
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.9071933031082153
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.8559770584106445
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.8314175605773926
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.8477280139923096
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8687074780464172
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.8022252321243286
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.9071718454360962
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.8559818267822266
+              }
+            ]
+          }
+        },
+        "256": {
+          "min_embedding_cosine": 0.9999980330467224,
+          "mean_embedding_cosine": 0.9999984502792358,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7857283353805542
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7855777740478516
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8020849227905273
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7411205768585205
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8628770112991333
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7737866044044495
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7856939435005188
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7854976654052734
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8020308017730713
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7410657405853271
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.862837553024292
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7737830281257629
+              }
+            ]
+          }
+        },
+        "512": {
+          "min_embedding_cosine": 0.9999973773956299,
+          "mean_embedding_cosine": 0.999998152256012,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7773585319519043
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7804434895515442
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7945252656936646
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7170842885971069
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8558197617530823
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7465354800224304
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7773442268371582
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7803568840026855
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7944849729537964
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7170350551605225
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8557841777801514
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7465347051620483
+              }
+            ]
+          }
+        },
+        "768": {
+          "min_embedding_cosine": 0.9999968409538269,
+          "mean_embedding_cosine": 0.9999976754188538,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7760475873947144
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7782957553863525
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7945150136947632
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7120587825775146
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8533047437667847
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7408767342567444
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7760332226753235
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7782124280929565
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7944891452789307
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.712033748626709
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8532695770263672
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7408658266067505
+              }
+            ]
+          }
+        }
+      },
+      "ranking": {
+        "q-recall": [
+          {
+            "id": "recall",
+            "cosine": 0.7856939435005188
+          },
+          {
+            "id": "auction",
+            "cosine": 0.6589568257331848
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6440833806991577
+          }
+        ],
+        "q-service": [
+          {
+            "id": "service",
+            "cosine": 0.7854976654052734
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6749858856201172
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6693196892738342
+          }
+        ],
+        "q-loto": [
+          {
+            "id": "loto",
+            "cosine": 0.8020308017730713
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6525954604148865
+          },
+          {
+            "id": "gauge",
+            "cosine": 0.6299169659614563
+          }
+        ],
+        "q-gauge": [
+          {
+            "id": "gauge",
+            "cosine": 0.7410657405853271
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6987835168838501
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6464294791221619
+          }
+        ],
+        "q-recorder": [
+          {
+            "id": "recorder",
+            "cosine": 0.862837553024292
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6928905248641968
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6399320363998413
+          }
+        ],
+        "q-exit": [
+          {
+            "id": "egress",
+            "cosine": 0.7737830281257629
+          },
+          {
+            "id": "loto",
+            "cosine": 0.7134634256362915
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6787923574447632
+          }
+        ]
+      },
+      "min_embedding_cosine": 0.9999968409538269,
+      "cpu_median_ms": 992.2097,
+      "hybrid_median_ms": 956.9676
+    },
+    "ple-head-final": {
+      "schema": "myriadforge.embeddinggemma2/1",
+      "mode": "ple-head",
+      "dimension": 256,
+      "text_count": 15,
+      "host_text_parameters": 271002624,
+      "cpu_threads": 2,
+      "batch": 8,
+      "max_tokens": 128,
+      "device_block": 16,
+      "device_shaves": 16,
+      "benchmark": {
+        "cpu_samples_ms": [
+          943.8489,
+          991.1144,
+          1014.7329,
+          987.0931,
+          951.6232
+        ],
+        "selected_samples_ms": [
+          2039.7984,
+          2034.1428,
+          2009.4288,
+          2157.6376,
+          2099.1284
+        ],
+        "ncs2": {
+          "status": "ready",
+          "device": "Intel Movidius Myriad X VPU",
+          "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+          "compile_ms": {
+            "head": 1500.1856,
+            "ple": 5139.2582
+          }
+        },
+        "stages": {
+          "head": {
+            "learned_parameters": 393216,
+            "requests": 12,
+            "float32_sha256": "3b564a94559705ba73e4e11808e0d4658b21283893f169d9994446e1849d470b",
+            "device_median_ms": 3.6917,
+            "call_wall_median_ms": 4.5258
+          },
+          "ple": {
+            "learned_parameters": 6291456,
+            "requests": 198,
+            "float32_sha256": "686895498af25b1ae79722bb8e494305434ddb2a8ff5f62f7e575ebe79974080",
+            "device_median_ms": 28.404249999999998,
+            "call_wall_median_ms": 555.2676
+          }
+        }
+      },
+      "parity": {
+        "128": {
+          "min_embedding_cosine": 0.9999983310699463,
+          "mean_embedding_cosine": 0.9999988079071045,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.8314480781555176
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.8477715849876404
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8687697649002075
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.8023182153701782
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.9071933031082153
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.8559770584106445
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.8313466310501099
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.8477157354354858
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.868776261806488
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.8022282123565674
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.9072089791297913
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.85596764087677
+              }
+            ]
+          }
+        },
+        "256": {
+          "min_embedding_cosine": 0.9999977350234985,
+          "mean_embedding_cosine": 0.999998152256012,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7857283353805542
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7855777740478516
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8020849227905273
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7411205768585205
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8628770112991333
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7737866044044495
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7856515645980835
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7854931950569153
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8020644783973694
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7411341667175293
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8629357814788818
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7738011479377747
+              }
+            ]
+          }
+        },
+        "512": {
+          "min_embedding_cosine": 0.9999969601631165,
+          "mean_embedding_cosine": 0.9999977946281433,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7773585319519043
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7804434895515442
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7945252656936646
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7170842885971069
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8558197617530823
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7465354800224304
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7773032188415527
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7803765535354614
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7945088744163513
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7170872688293457
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8558759093284607
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.746543288230896
+              }
+            ]
+          }
+        },
+        "768": {
+          "min_embedding_cosine": 0.999996542930603,
+          "mean_embedding_cosine": 0.9999973773956299,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7760475873947144
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7782957553863525
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7945150136947632
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7120587825775146
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8533047437667847
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7408767342567444
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7759938836097717
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7782188653945923
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7944953441619873
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7120693922042847
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8533483743667603
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7408720254898071
+              }
+            ]
+          }
+        }
+      },
+      "ranking": {
+        "q-recall": [
+          {
+            "id": "recall",
+            "cosine": 0.7856515645980835
+          },
+          {
+            "id": "auction",
+            "cosine": 0.6590309143066406
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6440596580505371
+          }
+        ],
+        "q-service": [
+          {
+            "id": "service",
+            "cosine": 0.7854931950569153
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6750533580780029
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6693809628486633
+          }
+        ],
+        "q-loto": [
+          {
+            "id": "loto",
+            "cosine": 0.8020644783973694
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6526955366134644
+          },
+          {
+            "id": "gauge",
+            "cosine": 0.6301277279853821
+          }
+        ],
+        "q-gauge": [
+          {
+            "id": "gauge",
+            "cosine": 0.7411341667175293
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6988109350204468
+          },
+          {
+            "id": "recall",
+            "cosine": 0.646535336971283
+          }
+        ],
+        "q-recorder": [
+          {
+            "id": "recorder",
+            "cosine": 0.8629357814788818
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6929630041122437
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6400856375694275
+          }
+        ],
+        "q-exit": [
+          {
+            "id": "egress",
+            "cosine": 0.7738011479377747
+          },
+          {
+            "id": "loto",
+            "cosine": 0.7135233879089355
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6789618730545044
+          }
+        ]
+      },
+      "min_embedding_cosine": 0.999996542930603,
+      "cpu_median_ms": 987.0931,
+      "hybrid_median_ms": 2039.7984
+    },
+    "ple-head-block64": {
+      "schema": "myriadforge.embeddinggemma2/1",
+      "mode": "ple-head",
+      "dimension": 256,
+      "text_count": 15,
+      "host_text_parameters": 271002624,
+      "cpu_threads": 2,
+      "batch": 8,
+      "max_tokens": 128,
+      "device_block": 64,
+      "device_shaves": 16,
+      "benchmark": {
+        "cpu_samples_ms": [
+          946.6112,
+          945.7007,
+          972.1684,
+          1013.7061,
+          951.0275
+        ],
+        "selected_samples_ms": [
+          2101.2566,
+          2113.8785,
+          2093.054,
+          2099.8171,
+          2107.1449
+        ],
+        "ncs2": {
+          "status": "ready",
+          "device": "Intel Movidius Myriad X VPU",
+          "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+          "compile_ms": {
+            "head": 1474.2222,
+            "ple": 5202.4082
+          }
+        },
+        "stages": {
+          "head": {
+            "learned_parameters": 393216,
+            "requests": 12,
+            "float32_sha256": "3b564a94559705ba73e4e11808e0d4658b21283893f169d9994446e1849d470b",
+            "device_median_ms": 9.251999999999999,
+            "call_wall_median_ms": 10.15265
+          },
+          "ple": {
+            "learned_parameters": 6291456,
+            "requests": 54,
+            "float32_sha256": "686895498af25b1ae79722bb8e494305434ddb2a8ff5f62f7e575ebe79974080",
+            "device_median_ms": 109.44354999999999,
+            "call_wall_median_ms": 582.4225
+          }
+        }
+      },
+      "parity": {
+        "128": {
+          "min_embedding_cosine": 0.9999983310699463,
+          "mean_embedding_cosine": 0.9999988079071045,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.8314480781555176
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.8477715849876404
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8687697649002075
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.8023182153701782
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.9071933031082153
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.8559770584106445
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.8313466310501099
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.8477157354354858
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.868776261806488
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.8022282123565674
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.9072089791297913
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.85596764087677
+              }
+            ]
+          }
+        },
+        "256": {
+          "min_embedding_cosine": 0.9999977350234985,
+          "mean_embedding_cosine": 0.999998152256012,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7857283353805542
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7855777740478516
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8020849227905273
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7411205768585205
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8628770112991333
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7737866044044495
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7856515645980835
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7854931950569153
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.8020644783973694
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7411341667175293
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8629357814788818
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7738011479377747
+              }
+            ]
+          }
+        },
+        "512": {
+          "min_embedding_cosine": 0.9999969601631165,
+          "mean_embedding_cosine": 0.9999977946281433,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7773585319519043
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7804434895515442
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7945252656936646
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7170842885971069
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8558197617530823
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7465354800224304
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7773032188415527
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7803765535354614
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7945088744163513
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7170872688293457
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8558759093284607
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.746543288230896
+              }
+            ]
+          }
+        },
+        "768": {
+          "min_embedding_cosine": 0.999996542930603,
+          "mean_embedding_cosine": 0.9999973773956299,
+          "ranking_top1_matches": 6,
+          "queries_with_catalog": 6,
+          "labeled_top1_matches": 6,
+          "labeled_queries": 6,
+          "cpu_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7760475873947144
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7782957553863525
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7945150136947632
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7120587825775146
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8533047437667847
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7408767342567444
+              }
+            ]
+          },
+          "hybrid_top1": {
+            "q-recall": [
+              {
+                "id": "recall",
+                "cosine": 0.7759938836097717
+              }
+            ],
+            "q-service": [
+              {
+                "id": "service",
+                "cosine": 0.7782188653945923
+              }
+            ],
+            "q-loto": [
+              {
+                "id": "loto",
+                "cosine": 0.7944953441619873
+              }
+            ],
+            "q-gauge": [
+              {
+                "id": "gauge",
+                "cosine": 0.7120693922042847
+              }
+            ],
+            "q-recorder": [
+              {
+                "id": "recorder",
+                "cosine": 0.8533483743667603
+              }
+            ],
+            "q-exit": [
+              {
+                "id": "egress",
+                "cosine": 0.7408720254898071
+              }
+            ]
+          }
+        }
+      },
+      "ranking": {
+        "q-recall": [
+          {
+            "id": "recall",
+            "cosine": 0.7856515645980835
+          },
+          {
+            "id": "auction",
+            "cosine": 0.6590309143066406
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6440596580505371
+          }
+        ],
+        "q-service": [
+          {
+            "id": "service",
+            "cosine": 0.7854931950569153
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6750533580780029
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6693809628486633
+          }
+        ],
+        "q-loto": [
+          {
+            "id": "loto",
+            "cosine": 0.8020644783973694
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6526955366134644
+          },
+          {
+            "id": "gauge",
+            "cosine": 0.6301277279853821
+          }
+        ],
+        "q-gauge": [
+          {
+            "id": "gauge",
+            "cosine": 0.7411341667175293
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6988109350204468
+          },
+          {
+            "id": "recall",
+            "cosine": 0.646535336971283
+          }
+        ],
+        "q-recorder": [
+          {
+            "id": "recorder",
+            "cosine": 0.8629357814788818
+          },
+          {
+            "id": "loto",
+            "cosine": 0.6929630041122437
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6400856375694275
+          }
+        ],
+        "q-exit": [
+          {
+            "id": "egress",
+            "cosine": 0.7738011479377747
+          },
+          {
+            "id": "loto",
+            "cosine": 0.7135233879089355
+          },
+          {
+            "id": "recall",
+            "cosine": 0.6789618730545044
+          }
+        ]
+      },
+      "min_embedding_cosine": 0.999996542930603,
+      "cpu_median_ms": 951.0275,
+      "hybrid_median_ms": 2101.2566
+    }
+  }
+}

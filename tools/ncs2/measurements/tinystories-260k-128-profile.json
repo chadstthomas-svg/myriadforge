@@ -1,0 +1,30 @@
+{
+  "schema": "myriadforge.ncs2-decoder-profile/1",
+  "binding": {
+    "checkpoint_sha256": "b0a507e7ad0f626624f17112325e66691f9076d622e1d3274d103d00299f2696",
+    "tokenizer_sha256": "dfff07d929db979913f166ec94a6f5ecad4c70cfed8eb5c9cbe7e464455e46f5",
+    "context": 128,
+    "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+    "device": "Intel Movidius Myriad X VPU"
+  },
+  "allocation": [
+    1,
+    1,
+    1
+  ],
+  "graphs": 1,
+  "graph_ranges": [
+    [
+      0,
+      5
+    ]
+  ],
+  "attention": "reduce",
+  "layout": "packed",
+  "norm": "standard",
+  "shave_only": false,
+  "decoder_sha256": "0a847dee39ede3c0ded1971da4cdadb55a62e15768e759cc6661e0c89c745b14",
+  "confirmation_p95_ms": 31.11138,
+  "stock_p95_ms": 41.305275,
+  "soak_seconds": 600
+}
