@@ -4,7 +4,6 @@ from argparse import ArgumentParser
 import json
 from pathlib import Path
 from statistics import median
-import struct
 import sys
 from time import perf_counter_ns
 
@@ -13,47 +12,8 @@ from openvino.runtime import Core, Model, get_version, opset8 as op
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
+from decoder_checkpoint import Checkpoint
 from myriadforge.myriad_x import allocation_properties, model_fingerprint, require_myriad_x
-
-
-class Checkpoint:
-    """Legacy llama2.c float32 checkpoint layout."""
-
-    def __init__(self, file):
-        with file.open("rb") as stream:
-            d, h, layers, heads, kv_heads, vocab, limit = struct.unpack("<7i", stream.read(28))
-        if (min(d, h, layers, heads, kv_heads, abs(vocab), limit) <= 0 or d % heads
-                or heads % kv_heads or (d // heads) % 2):
-            raise ValueError("Invalid llama2.c checkpoint header")
-        self.dim, self.layers, self.heads = d, layers, heads
-        self.kv_heads, self.head_dim, self.vocab, self.limit = kv_heads, d // heads, abs(vocab), limit
-        k = self.head_dim * kv_heads
-        data = np.memmap(file, mode="r", dtype="<f4", offset=28)
-        offset = 0
-
-        def take(*shape):
-            nonlocal offset
-            size = int(np.prod(shape))
-            array = data[offset:offset + size].reshape(shape)
-            offset += size
-            return array
-
-        self.embed = take(self.vocab, d)
-        self.att_norm = take(layers, d)
-        self.wq = take(layers, d, d)
-        self.wk = take(layers, k, d)
-        self.wv = take(layers, k, d)
-        self.wo = take(layers, d, d)
-        self.ffn_norm = take(layers, d)
-        self.w1 = take(layers, h, d)
-        self.w2 = take(layers, d, h)
-        self.w3 = take(layers, h, d)
-        self.final_norm = take(d)
-        self.parameters = offset + (self.vocab * d if vocab < 0 else 0)
-        take(limit, self.head_dim)  # Legacy stored RoPE tables.
-        self.output = self.embed if vocab > 0 else take(self.vocab, d)
-        if offset != len(data):
-            raise ValueError("Unexpected llama2.c checkpoint length")
 
 
 def constant(value):

@@ -57,6 +57,8 @@ The evidence establishes 224 MiB for this dense workload. Graph layout, firmware
 
 ## Trained model replay
 
+The follow-up cached decoder runs all transformer blocks and the vocabulary projection on MYRIAD. See the [full-decoder benchmark and instructions](NCS2_FULL_DECODER.md).
+
 The static decoder uses a 32-token window and recomputes the prefix each step. The host handles tokenization, embedding lookup, and sampling. The vocabulary-projection partition also keeps attention and transformer blocks on the CPU.
 
 | Checkpoint and placement | Greedy agreement on two 12-token prompts | Median warm step |
