@@ -1,0 +1,196 @@
+{
+  "schema": "myriadforge.ncs2-static-embedder/1",
+  "variant": "hybrid",
+  "dataset": "hotpot",
+  "device": {
+    "device": "Intel Movidius Myriad X VPU",
+    "runtime": "2022.3.1-9227-cf2c7da5689-releases/2022/3",
+    "shaves": 16
+  },
+  "platform": "Windows-10-10.0.26200-SP0",
+  "max_tokens": 128,
+  "dimensions": 5120,
+  "compile_and_load_ms": 3575.0786,
+  "weights": {
+    "parameters": 31254528,
+    "file_bytes": 62509184,
+    "sha256": "ddd3869c835b2bd7b82cd1e4bb8746f1b78d7c8cd9db7133df283755ea54ec67",
+    "tokenizer_sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+    "lexical_file_bytes": 16512,
+    "lexical_sha256": "e3e47b96cbff43d1256262e2dde55ea13bea9af0d55733af21ff5c3f2efd418d"
+  },
+  "reference_agreement": {
+    "worst_cosine": 0.9999995827674866,
+    "max_norm_error": 0.000141143798828125,
+    "rows": 434
+  },
+  "retrieval": {
+    "teacher_cpu_256d": {
+      "ndcg_at_10": 0.9542603394769656,
+      "recall_at_10": 0.96,
+      "mrr_at_10": 0.98,
+      "top1_correct": 49,
+      "queries": 50,
+      "documents": 384
+    },
+    "teacher_cpu_768d": {
+      "ndcg_at_10": 0.9669817924941472,
+      "recall_at_10": 0.98,
+      "mrr_at_10": 0.99,
+      "top1_correct": 49,
+      "queries": 50,
+      "documents": 384
+    },
+    "base_cpu_256d": {
+      "ndcg_at_10": 0.8870702681330667,
+      "recall_at_10": 0.93,
+      "mrr_at_10": 0.96,
+      "top1_correct": 47,
+      "queries": 50,
+      "documents": 384
+    },
+    "student_cpu": {
+      "ndcg_at_10": 0.9436347214254661,
+      "recall_at_10": 0.96,
+      "mrr_at_10": 0.99,
+      "top1_correct": 49,
+      "queries": 50,
+      "documents": 384
+    },
+    "student_myriad": {
+      "ndcg_at_10": 0.9436347214254661,
+      "recall_at_10": 0.96,
+      "mrr_at_10": 0.99,
+      "top1_correct": 49,
+      "queries": 50,
+      "documents": 384
+    }
+  },
+  "paired_ndcg_delta": {
+    "myriad_minus_teacher_768d": -0.02334707106868109,
+    "bootstrap_95": [
+      -0.05398007654653284,
+      0.005856342688339966
+    ]
+  },
+  "latency_ms": {
+    "teacher_cpu_threads": 4,
+    "teacher_cpu": {
+      "n": 24,
+      "median": 102.86005,
+      "p95": 206.107165,
+      "min": 65.1083,
+      "max": 206.6533,
+      "samples": [
+        206.239,
+        163.8728,
+        198.5789,
+        107.256,
+        111.4356,
+        206.6533,
+        151.9838,
+        149.831,
+        204.8104,
+        191.9521,
+        205.3601,
+        199.7139,
+        97.057,
+        66.2601,
+        74.0105,
+        76.5947,
+        98.4641,
+        83.182,
+        70.8427,
+        67.1429,
+        65.1083,
+        80.488,
+        72.4999,
+        66.3971
+      ]
+    },
+    "student_cpu": {
+      "n": 24,
+      "median": 0.2253,
+      "p95": 0.715965,
+      "min": 0.089,
+      "max": 0.8787,
+      "samples": [
+        0.5684,
+        0.4812,
+        0.7067,
+        0.2261,
+        0.2245,
+        0.8787,
+        0.3757,
+        0.335,
+        0.7176,
+        0.5983,
+        0.61,
+        0.5565,
+        0.217,
+        0.1037,
+        0.113,
+        0.1208,
+        0.2225,
+        0.3199,
+        0.1211,
+        0.0906,
+        0.089,
+        0.1544,
+        0.13,
+        0.1066
+      ]
+    },
+    "student_myriad": {
+      "n": 24,
+      "median": 10.2908,
+      "p95": 10.70609,
+      "min": 9.9822,
+      "max": 15.2095,
+      "samples": [
+        10.7249,
+        15.2095,
+        10.5995,
+        9.9822,
+        10.3039,
+        10.3588,
+        10.0197,
+        10.253,
+        10.5765,
+        10.5698,
+        10.2658,
+        10.5625,
+        10.3743,
+        10.1143,
+        10.5292,
+        10.2003,
+        10.2566,
+        10.3009,
+        10.3026,
+        10.0372,
+        10.063,
+        10.2373,
+        10.2124,
+        10.2807
+      ]
+    }
+  },
+  "racklab": {
+    "base_cpu": {
+      "ndcg_at_10": 0.9051127596788988,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 0.875,
+      "top1_correct": 5,
+      "queries": 6,
+      "documents": 9
+    },
+    "student_myriad": {
+      "ndcg_at_10": 1.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 1.0,
+      "top1_correct": 6,
+      "queries": 6,
+      "documents": 9
+    }
+  }
+}

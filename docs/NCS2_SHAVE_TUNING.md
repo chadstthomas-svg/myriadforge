@@ -60,6 +60,7 @@ The evidence establishes 224 MiB for this dense workload. Graph layout, firmware
 The follow-up cached decoder runs all transformer blocks and the vocabulary projection on MYRIAD. See the [full-decoder benchmark and instructions](NCS2_FULL_DECODER.md).
 
 For semantic retrieval, the [EmbeddingGemma 2 shim](NCS2_EMBEDDINGGEMMA2.md) uses MYRIAD for two learned projections from Google's text checkpoint.
+The [static text encoder experiment](NCS2_STATIC_EMBEDDER.md) runs all learned encoder stages on MYRIAD and compares retrieval quality with EmbeddingGemma 2 on two public samples.
 
 The static decoder uses a 32-token window and recomputes the prefix each step. The host handles tokenization, embedding lookup, and sampling. The vocabulary-projection partition also keeps attention and transformer blocks on the CPU.
 
