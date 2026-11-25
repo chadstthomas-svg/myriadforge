@@ -1,0 +1,15 @@
+{"id":"recall","title":"Vehicle recall intake","text":"Check the full vehicle identification number against the open safety recall database. Record the campaign and route the vehicle to an authorized repair facility."}
+{"id":"service","title":"Service scheduling","text":"Book a routine oil and filter change by odometer mileage. Confirm the engine variant and send the service appointment time to the owner."}
+{"id":"auction","title":"Wholesale vehicle shipment","text":"Record the bill of lading and confirm that the correct vehicle is loaded on the dealer transport truck for shipment."}
+{"id":"loto","title":"Machine lockout during maintenance","text":"Isolate all energy feeds before entering the machine enclosure. Apply personal lockout tags and verify that the electrical and pneumatic systems have no stored energy."}
+{"id":"gauge","title":"Dimensional quality inspection","text":"Check machined parts against tolerance with a calibrated micrometer. Record readings by lot number and quarantine parts outside specification."}
+{"id":"handoff","title":"Assembly line shift handoff","text":"Record the work in progress, jam locations, estimated output and missing materials for the incoming production supervisor."}
+{"id":"recorder","title":"Recorder playback and retention","text":"When security camera clips disappear after reboot, check disk health, recording schedules, retention policy and whether the recorder clock is synchronized."}
+{"id":"egress","title":"Retail emergency exit","text":"Keep the route to each emergency exit clear of stock and carts. Check the exit sign, release hardware and door swing during the opening inspection."}
+{"id":"cash","title":"Cash drawer reconciliation","text":"Count the change float when closing shift. Compare tender totals and reconcile discrepancies before depositing receipts."}
+{"id":"q-recall","kind":"query","text":"A customer gives the VIN and wants to know which official safety campaign still needs repair.","expected":"recall"}
+{"id":"q-service","kind":"query","text":"How do I arrange the regular lubrication and fast filter replacement at the next mileage interval?","expected":"service"}
+{"id":"q-loto","kind":"query","text":"A technician must enter a stalled machine. How can they isolate electricity and compressed air before working?","expected":"loto"}
+{"id":"q-gauge","kind":"query","text":"What should the operator use to check that the shaft diameter falls inside the allowed dimensions?","expected":"gauge"}
+{"id":"q-recorder","kind":"query","text":"Our surveillance clips seem to vanish when the recording appliance restarts. What settings should we inspect?","expected":"recorder"}
+{"id":"q-exit","kind":"query","text":"A trolley is blocking a marked fire escape door at a shop. What must the opening team check?","expected":"egress"}
