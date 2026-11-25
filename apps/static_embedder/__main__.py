@@ -15,9 +15,10 @@ def main():
     parser.add_argument("--backend", choices=("cpu", "myriad"), default="cpu")
     parser.add_argument("--shaves", type=int, default=16)
     parser.add_argument("--lexical-weights", type=Path)
+    parser.add_argument("--context-weights", type=Path)
     args = parser.parse_args()
     encoder = StaticEncoder(args.tokenizer, args.weights, backend=args.backend, shaves=args.shaves,
-                            lexical_path=args.lexical_weights)
+                            lexical_path=args.lexical_weights, context_path=args.context_weights)
     vector = encoder.encode(args.text)
     print(json.dumps({"runtime": encoder.identity, "embedding": vector.tolist()}, allow_nan=False))
 

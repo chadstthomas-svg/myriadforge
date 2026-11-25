@@ -2,6 +2,8 @@
 
 The Intel NCS2 runs the full learned encoder in one FP16 MYRIAD graph. The host tokenizes English text and counts tokens. The stick applies the learned embedding table, pools token contributions, applies optional corpus-frequency weights, and returns a normalized vector. Cosine search runs on the host. The runtime targets MYRIAD directly.
 
+The [contextual adapter experiment](NCS2_CONTEXTUAL_EMBEDDER.md) evaluates an optional weight-shared attention block on the same hardware.
+
 The 256-dimensional distilled model contains 7,813,632 parameters in a 14.9 MiB weights file. The higher-quality model uses the original 1,024-dimensional table and adds a balanced 4,096-bucket keyword channel. It uses 59.6 MiB of FP16 semantic weights and 16 KiB of frequency weights and returns a 5,120-dimensional vector. These measurements are file sizes. VPU allocator memory and power are unmeasured.
 
 ## Physical results

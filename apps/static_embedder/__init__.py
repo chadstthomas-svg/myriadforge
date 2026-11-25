@@ -3,8 +3,12 @@
 from collections import Counter
 from hashlib import blake2s
 import re
+from pathlib import Path
 
 import numpy as np
+
+from .contextual import (CONTEXT_WEIGHT, WIDTH, graph_context, grouped_features, load_adapter,
+                         model_fingerprint, numpy_context, unit)
 
 TOKEN_LIMIT = 128
 LEXICAL_BUCKETS = 4096
@@ -35,7 +39,7 @@ def fit_lexical_weights(texts):
 
 class StaticEncoder:
     def __init__(self, tokenizer_path, table_path, *, backend="cpu", shaves=16,
-                 lexical_path=None):
+                 lexical_path=None, context_path=None, profile=False):
         from tokenizers import Tokenizer
 
         self.tokenizer = Tokenizer.from_file(str(tokenizer_path))
@@ -49,20 +53,28 @@ class StaticEncoder:
         if self.lexical is not None and (self.lexical.shape != (LEXICAL_BUCKETS,)
                 or not np.isfinite(self.lexical).all() or np.any(self.lexical <= 0)):
             raise ValueError("Lexical weights must contain one positive finite value per bucket")
+        if context_path and (self.lexical is None or self.table.shape[1] != 1024):
+            raise ValueError("The contextual adapter requires the 1024-dimensional table and keyword weights")
+        self.context = load_adapter(context_path) if context_path else None
         self.identity = {"device": "CPU (NumPy)"}
         if backend == "myriad":
-            self.infer, self.identity = compile_myriad(self.table, shaves, self.lexical)
+            self.infer, self.identity = compile_myriad(self.table, shaves, self.lexical,
+                                                       self.context, profile=profile)
         elif backend == "cpu":
-            self.infer = self.encode_cpu
+            self.infer = self.encode_cpu_context if self.context else self.encode_cpu
         else:
             raise ValueError("Expected backend cpu or myriad")
+        if self.context:
+            self.identity["model_fingerprint"] = model_fingerprint(
+                *(Path(p) for p in (tokenizer_path, table_path, lexical_path, context_path)))
 
     def encode(self, text):
         ids = self.tokenizer.encode(text, add_special_tokens=False).ids
         if not ids:
             raise ValueError("Text must contain at least one token")
         lexical = lexical_counts(text) if self.lexical is not None else None
-        values = self.infer(ids, lexical)
+        values = (self.infer(ids, lexical, grouped_features(ids)) if self.context
+                  else self.infer(ids, lexical))
         if not np.isfinite(values).all() or not np.any(values):
             raise ArithmeticError("The encoder produced an invalid vector")
         return values
@@ -81,8 +93,14 @@ class StaticEncoder:
             return np.concatenate([semantic, weighted])
         return np.concatenate([semantic, weighted / lexical_norm]) * CHANNEL_SCALE
 
+    def encode_cpu_context(self, ids, lexical, grouped):
+        base = self.encode_cpu(ids, lexical)
+        context = numpy_context(*grouped, self.context)
+        return unit(np.concatenate([np.float32(np.sqrt(1 - CONTEXT_WEIGHT)) * base,
+                                    np.float32(np.sqrt(CONTEXT_WEIGHT)) * context]))
 
-def compile_myriad(table, shaves, lexical_weights):
+
+def compile_myriad(table, shaves, lexical_weights, context_adapter=None, *, profile=False):
     from openvino.runtime import Core, Model, get_version, opset8 as op
 
     from myriadforge.myriad_x import allocation_properties, require_myriad_x
@@ -102,15 +120,27 @@ def compile_myriad(table, shaves, lexical_weights):
         normalized = op.normalize_l2(weighted, axes, 1e-8, "max")
         output = op.normalize_l2(op.concat([output, normalized], 1), axes, 1e-8, "max")
         inputs.append(lexical)
+    if context_adapter:
+        context, group_inputs = graph_context(op, context_adapter)
+        # Legacy MYRIAD lowers a scalar ScaleShift on rank-two vectors incorrectly.
+        base = op.multiply(output, np.full((1, table.shape[1] + LEXICAL_BUCKETS),
+                                           np.sqrt(1 - CONTEXT_WEIGHT), dtype=np.float32))
+        context = op.multiply(context, np.full((1, WIDTH), np.sqrt(CONTEXT_WEIGHT), dtype=np.float32))
+        output = op.normalize_l2(op.concat([base, context], 1), axes, 1e-8, "max")
+        inputs.extend(group_inputs)
     model = Model([output], inputs, "static_embedder")
     executable = core.compile_model(model, "MYRIAD", allocation_properties(shaves, shaves, 1))
+    if profile:
+        identity["compiled_blob_bytes"] = len(executable.export_model())
     request = executable.create_infer_request()
 
-    def infer(ids, lexical):
+    def infer(ids, lexical, grouped=None):
         values = np.bincount(ids, minlength=len(table)).astype(np.float32)[None, :]
         inputs = {executable.input(0): values}
         if lexical is not None:
             inputs[executable.input(1)] = lexical[None, :]
+        if grouped is not None:
+            inputs.update(zip(executable.inputs[2:], grouped))
         result = request.infer(inputs)[executable.output(0)]
         return result[0].astype(np.float32, copy=True)
 
