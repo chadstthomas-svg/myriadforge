@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#19111b">
-  <meta name="description" content="Physical Intel NCS1 and NCS2 benchmarks for Rack Lab decisions, audio, search, and streaming.">
+  <meta name="description" content="Physical Intel NCS1 and NCS2 benchmarks for Rack Lab, SHAVE tuning, cached text generation, and EmbeddingGemma 2 offload.">
   <title>Stick benchmarks · Rack Lab</title>
   <link rel="icon" href="../../assets/rack-lab-avatar.png" type="image/png">
   <link rel="stylesheet" href="./charts.css">
@@ -12,7 +12,7 @@
 <body>
   <header class="shell mast">
     <a href="../../index.html"><img src="../../assets/rack-lab-avatar.png" alt="" width="30" height="30">Rack Lab</a>
-    <nav aria-label="Benchmarks"><a href="#compatibility">Compatibility</a><a href="#charts">Charts</a><a href="#pilots">Full suite</a></nav>
+    <nav aria-label="Benchmarks"><a href="#compatibility">Compatibility</a><a href="#charts">Charts</a><a href="#ncs2-research">NCS2 research</a><a href="#pilots">Full suite</a></nav>
   </header>
   <main class="shell">
     <div class="hero">
@@ -56,6 +56,39 @@
           <img src="./bankshot-latency.png" width="1320" height="957" loading="lazy" alt="BankShot warm median search latency ranged from 4.37 to 6.57 ms on CPU, 11.52 to 15.27 ms on NCS1, and 9.04 to 10.36 ms on NCS2.">
           <figcaption>Seven warm searches per query, excluding session setup. All three runtimes returned the same target ranks on five editorial cases. CPU was quickest on every query in this replay.</figcaption>
         </figure>
+      </div>
+    </section>
+
+    <section id="ncs2-research" aria-labelledby="ncs2-research-title">
+      <h2 id="ncs2-research-title">Tuning and model offload on NCS2</h2>
+      <p>These follow-up tests used one physical Myriad X on Windows with OpenVINO 2022.3.1. Allocations below list SHAVEs and CMX slices per stream, followed by the number of streams.</p>
+      <div class="chart-grid">
+        <figure>
+          <img src="./ncs2-allocation-tuning.png" width="1320" height="957" loading="lazy" alt="TinyStories 260K warm token p95 fell from 41.31 to 31.11 milliseconds. MobileNetV2 throughput rose from 47.71 to 70.35 inferences per second with a different configuration.">
+          <figcaption>One SHAVE, one CMX slice, and one stream cut TinyStories p95 by 25%. MobileNetV2 gained 47% throughput with four SHAVEs and eight CMX slices per stream across two streams.</figcaption>
+        </figure>
+        <figure>
+          <img src="./ncs2-embedding-offload.png" width="1320" height="957" loading="lazy" alt="Output-only EmbeddingGemma 2 offload took 0.96 seconds compared with 0.99 seconds on CPU. Offloading the output and per-layer projections took 2.04 seconds compared with 0.99 seconds on CPU.">
+          <figcaption>EmbeddingGemma 2 preserved all six top-ranked document results at 128, 256, 512, and 768 dimensions. Output-only offload showed overlapping timings. The larger offload ran 6.68 million learned weights on the stick and took about twice as long end to end.</figcaption>
+        </figure>
+      </div>
+      <h3>What qualified for generation</h3>
+      <div class="matrix">
+        <table aria-label="Selected full decoder results on a 128-token window">
+          <thead><tr><th scope="col">Checkpoint</th><th scope="col">CPU token agreement</th><th scope="col">Result</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">TinyStories 260K</th><td>191/192</td><td>Passed at 128 tokens and completed a 10-minute soak.</td></tr>
+            <tr><th scope="row">TinyStories 110M</th><td>186/192</td><td>Generated at 5.82 tokens/s. Missed the accuracy gate.</td></tr>
+            <tr><th scope="row">SmolLM2-135M</th><td>0/192</td><td>Loaded and selected token 0 throughout the comparison.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The qualified decoder puts all transformer blocks and the vocabulary projection on MYRIAD. The host manages tokenization, embedding lookup, sampling, and the KV cache. The 260K model missed the accuracy gate at both 256 and 512 tokens. EmbeddingGemma 2 used its text backbone on the CPU.</p>
+      <div class="source-list">
+        <a href="./ncs2-research.json">Download research data</a>
+        <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/NCS2_SHAVE_TUNING.md">SHAVE tuner and memory probes</a>
+        <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/NCS2_FULL_DECODER.md">Cached decoder and tuning profile</a>
+        <a href="https://github.com/chadstthomas-svg/myriadforge/blob/main/docs/NCS2_EMBEDDINGGEMMA2.md">EmbeddingGemma 2 shim</a>
       </div>
     </section>
 
